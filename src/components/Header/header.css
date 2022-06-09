@@ -1,0 +1,22 @@
+.logo {
+    transition: 1s ease;
+}
+
+.second_line_nav {
+    background-color: rgb(255, 255, 255);
+    /* background-color: #ff0; */
+
+}
+
+#banner-image {
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../Assets/banner-01.jpg);
+    background-size: cover;
+}
+
+#container {
+    color: white;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
