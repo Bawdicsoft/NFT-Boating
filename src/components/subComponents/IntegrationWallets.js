@@ -10,7 +10,7 @@ export function IntegrationWallets(props) {
 
   return (
     <div>
-      <button className='btn btn-primary py-2' title="Connect Wallet" onClick={handleShow}>Connect Wallet
+      <button className='navbar-button' title="Connect Wallet" onClick={handleShow}>Connect Wallet
       </button>
 
       <Modal show={show} onHide={handleClose} >

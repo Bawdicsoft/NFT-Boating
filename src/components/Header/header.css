@@ -8,6 +8,12 @@
 
 }
 
+.main-navbar {
+    border-bottom: rgba(255, 255, 255, 0.493) 2px solid;
+    background-color: rgba(0, 0, 0, 0.253);
+
+}
+
 #banner-image {
     height: 100vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../Assets/banner-01.jpg);
@@ -19,4 +25,67 @@
     height: 100vh;
     display: flex;
     align-items: center;
+}
+
+.m-auto {
+    width: 40%;
+    justify-content: space-evenly;
+    /* border: 1px solid red; */
+    border-radius: 15px;
+    padding: 8px 50px 8px 40px;
+    /* padding: 8px; */
+    font-weight: bolder;
+    font-size: 1.1rem;
+    /* color: red; */
+    /* background-color: rgba(4, 23, 46, 0.44); */
+
+
+}
+
+.nav-link:hover {
+    /* padding-left: 20px; */
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.329);
+}
+
+/* .nav-link:active{
+    background-color: rgba(0, 0, 0, 0.329);
+    border-radius: 15px;
+    
+} */
+.control-form {
+    border: none;
+    border-radius: 15px;
+    color: red;
+    background-color: rgba(21, 61, 111, 0.44);
+    margin-right: 20px;
+
+}
+
+
+#connect-wallet {
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: rgba(21, 61, 111, 0.44);
+    color: rgb(80, 144, 234);
+    font-weight: bolder;
+}
+
+#composition-button {
+    /* border: red solid 1px; */
+    background-color: rgba(4, 23, 46, 0.44);
+    background-color: rgba(4, 23, 46, 0.44);
+
+    padding: 15px;
+    border-radius: 15px;
+    font-weight: bolder;
+    color: rgb(80, 144, 234);
+    margin-right: 10px;
+}
+
+
+#container h1{
+    font-size: 150px;
+    font-weight: bolder;
 }
