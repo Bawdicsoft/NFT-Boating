@@ -1,3 +1,8 @@
+:root{
+    --color: white;
+    --background-color:rgba(4, 23, 46, 0.44);
+}
+
 .logo {
     transition: 1s ease;
 }
@@ -21,7 +26,7 @@
 }
 
 #container {
-    color: white;
+    color: var(--color);
     height: 100vh;
     display: flex;
     align-items: center;
@@ -36,7 +41,7 @@
     /* padding: 8px; */
     font-weight: bolder;
     font-size: 1.1rem;
-    /* color: red; */
+    color: var(--color);
     /* background-color: rgba(4, 23, 46, 0.44); */
 
 
@@ -56,8 +61,8 @@
 .control-form {
     border: none;
     border-radius: 15px;
-    color: red;
-    background-color: rgba(21, 61, 111, 0.44);
+    /* color: red; */
+    background-color: var(--background-color);
     margin-right: 20px;
 
 }
@@ -67,20 +72,18 @@
     border: none;
     padding: 15px;
     border-radius: 15px;
-    background-color: rgba(21, 61, 111, 0.44);
-    color: rgb(80, 144, 234);
+    background-color: var(--background-color);
+    color: var(--color);
     font-weight: bolder;
 }
 
 #composition-button {
     /* border: red solid 1px; */
-    background-color: rgba(4, 23, 46, 0.44);
-    background-color: rgba(4, 23, 46, 0.44);
-
+    background-color: var(--background-color);
     padding: 15px;
     border-radius: 15px;
     font-weight: bolder;
-    color: rgb(80, 144, 234);
+    color: var(--color);
     margin-right: 10px;
 }
 

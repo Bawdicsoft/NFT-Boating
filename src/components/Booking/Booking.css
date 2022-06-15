@@ -1,0 +1,14 @@
+*{
+    color: white;
+    /* background-color: black; */
+}
+.container{
+    display: flex;
+    justify-content: space-between;
+    /* flex-direction: column; */
+}
+
+.price-details{
+    display: flex;
+    justify-content: space-around;
+}

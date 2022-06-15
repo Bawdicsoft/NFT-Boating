@@ -1,20 +1,13 @@
 import * as React from 'react';
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import Navbarr from './Navbar'
 import { useContextAPI } from "../ContextAPI";
 import { IntegrationWallets } from "../subComponents/IntegrationWallets";
 import { MessageBox } from "../subComponents/MessageBox";
-import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import Grow from '@mui/material/Grow';
-import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
-import MenuList from '@mui/material/MenuList';
-import Stack from '@mui/material/Stack';
+import ethLogo from '../Assets/ethLogo.png';
 import {
   CoinbaseWallet,
   fortmatic,
@@ -23,6 +16,8 @@ import {
 } from "../wallets/Connectors";
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import "./header.css";
+import { log } from 'util';
+
 
 // Be sure to include styles at some point, probably during your bootstraping
 
@@ -38,6 +33,8 @@ export const Header = () => {
     account,
     chainId,
   } = useContextAPI();
+
+  console.log(chainId)
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -111,69 +108,8 @@ export const Header = () => {
 
   return (<>
     <div id="banner-image">
-      <Navbar className="main-navbar" collapseOnSelect expand="lg" variant="dark">
-        <Container>
-          <Navbar.Brand style={{fontWeight:'bolder'}} href="#home">LOGO</Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="m-auto">
-              <Nav.Link className="nav-link" href="#features">Home</Nav.Link>
-              <Nav.Link className="nav-link" href="#pricing">Buy Ownership</Nav.Link>
-              <Nav.Link className="nav-link" href="#pricing">Booking</Nav.Link>
-
-            </Nav>
-
-            <Nav>
-              <Button
-                ref={anchorRef}
-                id="composition-button"
-                aria-controls={open ? 'composition-menu' : undefined}
-                aria-expanded={open ? 'true' : undefined}
-                aria-haspopup="true"
-                onClick={handleToggle}
-              >
-                <CurrencyBitcoinIcon style={{marginRight:'10px'}}></CurrencyBitcoinIcon>
-                Dashboard
-              </Button>
-            </Nav>
-
-            <Nav>
-              <div >
-                {active ? (
-                  <button id='connect-wallet'
-                    className="btn btn-primary"
-                    title="Disconnect From Wallet"
-                    onClick={disconnect}
-                  >{`ChainID: ${chainId} 
-
-                ${account.slice(0, 5)}...
-                ${account.slice(
-                    -5
-                  )}`}</button>
-                ) : (
-                  <IntegrationWallets
-                    connectToMetaMask={conToMetaMask}
-                    connectToCoinBase={() => { activate(CoinbaseWallet) }}
-                    connectToPortis={() => {
-                      activate(portis);
-                    }}
-                    connectToFortmatic={() => {
-                      activate(fortmatic);
-                    }}
-                  />
-                )}
-                {dealMessageBox === 'primary' &&
-                  <MessageBox dealMessageBox={dealMessageBox} setDealMessageBox={setDealMessageBox} color="primary" show={show} MessageTitle="Wallet Connected" Message="Your wallet has been connected successfully" setShow={setShow} btnName="show message" />
-                }
-                {dealMessageBox === 'danger' &&
-                  <MessageBox dealMessageBox={dealMessageBox} setDealMessageBox={setDealMessageBox} color="danger" show={show} MessageTitle="Wallet Disconnected" Message="Your wallet has been connected successfully" setShow={setShow} btnName="show message" />
-                }
-              </div>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
+      
+    <Navbarr/>
       <Container id="container">
         <h1>RENT A <br /> YACHT</h1>
 
