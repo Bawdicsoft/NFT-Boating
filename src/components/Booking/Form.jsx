@@ -1,44 +1,83 @@
-import { render } from "react-dom";
-import { useForm } from "react-cool-form";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import './Booking.css'
 
-import "./form.scss";
 
-export function Form() {
+export default function Form() {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
 
-  const { form, use } = useForm({
-    defaultValues: { firstName: "", lastName: "", framework: "" },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
-  });
-  const errors = use("errors");
-
-  return (
-    <form style={{ padding:'20px'}} ref={form} noValidate>
-      <div>
-        <input type="text" name="Name" placeholder="name" required />
-        {errors.firstName && <p>{errors.firstName}</p>}
-      </div>
-      <div>
-        <input type="email" name="Email" placeholder="email" required />
-        {errors.lastName && <p>{errors.lastName}</p>}
-      </div>
-      <div>
-        <input type="phone" name="Phone" placeholder="phone" required />
-        {errors.lastName && <p>{errors.lastName}</p>}
-      </div>
-      <div>
-        <input type="date" name="Date of Birth" placeholder="date of birth" required />
-        {errors.lastName && <p>{errors.lastName}</p>}
-      </div>
-      {/* <select name="framework">
-        <option value="">I'm interesting in...</option>
-        <option value="react">React</option>
-        <option value="vue">Vue</option>
-        <option value="angular">Angular</option>
-        <option value="svelte">Svelte</option>
-      </select> */}
-      <input type="submit" />
-    </form>
-  );
+  return (<>
+       <div className='contain1'>
+        {/* <CssBaseline /> */}
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            // border:'red solid 1px'
+          }}
+        >
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="dob"
+              label="Date of Birth"
+              type="date"
+              id="dob"
+              autoComplete="dob"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Send
+            </Button>
+          </Box>
+        </Box>
+       </div>
+      </>);
 }
-
-// render(<Booking />, document.getElementById("root"));

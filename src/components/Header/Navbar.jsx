@@ -11,16 +11,12 @@ import {
   Injected,
   portis,
 } from "../wallets/Connectors";
-import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import "./header.css";
-import { log } from 'util';
 
 const Navbarr = () => {
     const [dealMessageBox, setDealMessageBox] = useState()
   const [show, setShow] = useState(false);
   const {
-    userInfo,
-    setUserInfo,
     active,
     activate,
     deactivate,
@@ -37,23 +33,9 @@ const Navbarr = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
 
-    setOpen(false);
-  };
 
-  function handleListKeyDown(event) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === 'Escape') {
-      setOpen(false);
-    }
-  }
-
+  
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
@@ -67,12 +49,7 @@ const Navbarr = () => {
 
 
 
-  const [age, setAge] = React.useState('');
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
+  
   async function conToMetaMask() {
 
 
@@ -94,11 +71,11 @@ const Navbarr = () => {
   };
 
 
-  const logout = () => {
-    disconnect();
-    sessionStorage.removeItem("userinfo");
-    setUserInfo("");
-  };
+  // const logout = () => {
+  //   disconnect();
+  //   sessionStorage.removeItem("userinfo");
+  //   setUserInfo("");
+  // };
     return (
         <div>
             <Navbar className="main-navbar" collapseOnSelect expand="lg" variant="dark">
@@ -107,8 +84,8 @@ const Navbarr = () => {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="m-auto">
-              <Nav.Link className="nav-link" href="#features">Home</Nav.Link>
-              <Nav.Link className="nav-link" href="#pricing">Buy Ownership</Nav.Link>
+              <Nav.Link className="nav-link" href="/">Home</Nav.Link>
+              <Nav.Link className="nav-link" href="/booking">Buy Ownership</Nav.Link>
               <Nav.Link className="nav-link" href="#pricing">Booking</Nav.Link>
 
             </Nav>

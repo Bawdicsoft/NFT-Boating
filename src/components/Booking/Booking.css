@@ -1,7 +1,7 @@
-*{
-    color: white;
-    /* background-color: black; */
-}
+/* *{
+    color: black;
+    background-color: black;
+} */
 .container{
     display: flex;
     justify-content: space-between;
@@ -10,5 +10,40 @@
 
 .price-details{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
+
+/* 
+.contain2{
+    margin-left: 40px !important;
+}
+*/
+.contain1{
+    /* margin-right: 40px !important; */
+    max-width: 444px;
+    margin-top: -24px;
+
+} 
+.containr1{
+    display: flex !important;
+    justify-content: space-between !important;
+    /* margin-top: 20px; */
+}
+.heading{
+    margin-top: 30px !important;
+    text-align: center;
+}
+
+/* @media (min-width: 600px){
+
+.contain2{
+    display: flex;
+    margin-left: 0px !important;
+    justify-content: center;
+}
+.contain1{
+    margin-left: auto 0px !important;
+    justify-content: center;
+
+}
+} */
