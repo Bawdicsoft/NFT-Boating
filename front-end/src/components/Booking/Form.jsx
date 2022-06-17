@@ -52,11 +52,11 @@ export default function Form() {
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              name="phone"
+              label="Phone"
+              type="number"
+              id="phone"
+              autoComplete="current-phone"
             />
             <TextField
               margin="normal"

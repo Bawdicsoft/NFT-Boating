@@ -90,12 +90,10 @@ contract NftBoating is ERC721 {
     uint256 public rate;
     uint public TokenID;
 
-    mapping (uint => address) public userAddress;
-
-    constructor() ERC721("MyToken", "MTK") {
+    constructor(address _USDT) ERC721("MyToken", "MTK") {
         owner = msg.sender;
         rate = 1;
-        USDT = IERC20(0x57aAc8C1F18b5dBd401f5A720081A43eD58fd73b);
+        USDT = IERC20(_USDT);
     }
 
     modifier onlyOwner() {
@@ -107,29 +105,50 @@ contract NftBoating is ERC721 {
         rate = _rate;
     }
 
-    function buyToken(uint256 _USDT) public {
+    struct _userDetails {
+        string  _name;
+        string  _email;
+        string  _phone;
+        string  _dob;
+    }
+
+    mapping(uint => _userDetails) public userDetails;
+    
+    function buyToken(
+        string memory _name,
+        string memory _email,
+        string memory _phone,
+        string memory _dob,
+        uint256 _USDT
+    ) public {
 
         require ( 
             USDT.balanceOf(msg.sender) >= _USDT, 
-            "error"
+            "No balance"
         );
 
         require ( 
             USDT.allowance( msg.sender,  address(this)) >= _USDT, 
-            "error"
+            "No allownace"
         );
 
         require ( 
             rate == _USDT, 
-            "error"
+            "Not suffecient USDT"
         );
 
         USDT.transferFrom( msg.sender, owner, _USDT );
 
         TokenID++;
+
+        userDetails[TokenID] = _userDetails(
+            _name,
+            _email,
+            _phone,
+            _dob
+        );
         _safeMint(msg.sender, TokenID);
 
-        userAddress[TokenID] = msg.sender;
     }
 
 }
