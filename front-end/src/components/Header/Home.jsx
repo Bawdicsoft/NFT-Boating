@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import Navbarr from './Navbar'
 import "./header.css";
 
@@ -10,7 +10,11 @@ export const Home = () => {
       
     <Navbarr/>
       <Container id="container">
-        <h1>RENT A <br /> YACHT</h1>
+        <h1>RENT A YACHT</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum, inventore.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+
+        <Button> BOOK NOW </Button>
 
 
       </Container>

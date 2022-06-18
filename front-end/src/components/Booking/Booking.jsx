@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-// import Navbarr from '../Header/Navbar'
+import Navbarr from '../Header/Navbar'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
@@ -13,11 +13,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 const Booking = () => {
-    return (<>
-        {/* <Navbarr /> */}
-        <Link to='/hello'>
+    return (<div id='bg-clr'>
+        <Navbarr />
+        {/* <Link to='/hello'>
         <ArrowBackIcon></ArrowBackIcon>
-        </Link>
+        </Link> */}
         <Typography className='heading' component="h1" variant="h4">
             Request to Book
         </Typography>
@@ -32,12 +32,12 @@ const Booking = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    border: 'grey solid 1px',
+                    // border: 'grey solid 1px',
                     borderRadius: '10px'
 
                 }}
             >
-                <div style={{ border: 'white solid 1px', width: '24rem', padding: '20px' }}>
+                <div style={{  width: '24rem', padding: '20px' }}>
                     <div>
                         <img style={{ marginRight: '15px', borderRadius: '10px' }} width='100%' src="https://imgs.yachthub.com/reviews/1/0_3.jpg" alt="" />
 
@@ -71,7 +71,7 @@ const Booking = () => {
 
             {/* </div> */}
         </Container>
-    </>);
+    </div>);
 }
 
 export default Booking;

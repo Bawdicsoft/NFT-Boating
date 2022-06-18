@@ -84,13 +84,12 @@ const Navbarr = () => {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="m-auto">
-              <Nav.Link className="nav-link" href="/">Home</Nav.Link>
-              <Nav.Link className="nav-link" href="/booking">Buy Ownership</Nav.Link>
-              <Nav.Link className="nav-link" href="#pricing">Booking</Nav.Link>
-
+              <Nav.Link className="nav-link" href="/">HOME</Nav.Link>
+              <Nav.Link className="nav-link" href="/booking">OWNERSHIP</Nav.Link>
+              <Nav.Link className="nav-link" href="#pricing">BOOKING</Nav.Link>
             </Nav>
 
-            <Nav>
+            <Nav style={{ display:'flex', flexDirection:'row'}}>
               <Button
                 ref={anchorRef}
                 id="composition-button"
@@ -109,9 +108,6 @@ const Navbarr = () => {
                 None
                 </>}
               </Button>
-            </Nav>
-
-            <Nav>
               <div >
                 {active ? (
                   <button id='connect-wallet'

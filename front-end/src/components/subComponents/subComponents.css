@@ -21,10 +21,15 @@
 
 /* Navbar Button */
 .navbar-button{
-    border: none;
-    padding: 15px;
+    border: white 1px solid;
+    padding: 10px;
     border-radius: 15px;
-    background-color: rgba(4, 23, 46, 0.44);
+    background-color: transparent;
     color: var(--color);
-    font-weight: bolder;
+    font-weight: bold;
+}
+
+.navbar-button:hover{
+    background-color: rgba(0, 0, 0, 0.329);
+    border-radius: 15px;
 }

@@ -1,6 +1,5 @@
-/* *{
-    color: black;
-    background-color: black;
+/* #bg-clr{
+    background-color: #0e021a;
 } */
 .container{
     display: flex;
@@ -22,11 +21,14 @@
     /* margin-right: 40px !important; */
     max-width: 444px;
     margin-top: -24px;
-
+    /* color: white; */
+    background-color: transparent;
+    
 } 
 .containr1{
     display: flex !important;
     justify-content: space-between !important;
+    background-color: transparent!important;
     /* margin-top: 20px; */
 }
 .heading{
