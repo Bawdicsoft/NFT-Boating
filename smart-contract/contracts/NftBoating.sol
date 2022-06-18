@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.4;
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 /**
@@ -122,6 +123,7 @@ contract NftBoating is ERC721 {
         uint256 _USDT
     ) public {
 
+
         require ( 
             USDT.balanceOf(msg.sender) >= _USDT, 
             "No balance"
@@ -137,6 +139,7 @@ contract NftBoating is ERC721 {
             "Not suffecient USDT"
         );
 
+        console.log("kuch bhi", owner, _USDT);
         USDT.transferFrom( msg.sender, owner, _USDT );
 
         TokenID++;

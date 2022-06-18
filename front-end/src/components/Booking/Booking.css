@@ -1,11 +1,7 @@
 /* #bg-clr{
     background-color: #0e021a;
 } */
-.container{
-    display: flex;
-    justify-content: space-between;
-    /* flex-direction: column; */
-}
+
 
 .price-details{
     display: flex;
