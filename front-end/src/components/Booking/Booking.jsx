@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Navbarr from '../Header/Navbar'
+import DarkNavbar from '../Header/DarkNavbar'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
@@ -14,7 +14,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Booking = () => {
     return (<div id='bg-clr'>
-        <Navbarr />
+        <DarkNavbar />
         {/* <Link to='/hello'>
         <ArrowBackIcon></ArrowBackIcon>
         </Link> */}
