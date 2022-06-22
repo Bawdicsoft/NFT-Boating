@@ -11,7 +11,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 
-
 const OwnerShip = () => {
     return (<div id='bg-clr'>
         <DarkNavbar />
