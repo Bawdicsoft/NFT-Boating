@@ -1,77 +1,106 @@
-import React from 'react';
-import Form from "./Form";
-import './Booking.css'
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Container from '@mui/material/Container';
+import { Container } from 'react-bootstrap';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import DarkNavbar from '../Header/DarkNavbar'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
-
-
+import './Booking.css';
 
 
 const Booking = () => {
-    return (<div id='bg-clr'>
-        <DarkNavbar />
-        {/* <Link to='/hello'>
-        <ArrowBackIcon></ArrowBackIcon>
-        </Link> */}
-        <Typography className='heading' component="h1" variant="h4">
-            Request to Book
-        </Typography>
-        <Container className='d-flex justify-content-evenly flex-wrap' component="main" maxWidth="s">
-            {/* <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}> */}
+    const [value, setValue] = useState(new Date('2018-01-01T00:00:00.000Z'));
+    const [date, setDate] = useState(('2018-01-01T00:00:00.000Z'));
 
-            <Form />
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        console.log({
+            email: data.get('email'),
+            password: data.get('password'),
+        });
+    };
+    return (<>
+        <DarkNavbar />  
+        <Container>
 
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    // border: 'grey solid 1px',
-                    borderRadius: '10px'
+            <Typography className='heading' component="h1" variant="h4">
+                Booking Details
+            </Typography>
+            {/* Form */}
+            <div className='contain1'>
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        // border:'red solid 1px'
+                    }}
+                >
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="dob"
+                            label="Date"
+                            type="date"
+                            id="dob"
+                            autoComplete="dob"
+                        />
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <Stack spacing={3}>
+                                <MobileTimePicker
+                                    label="Time"
+                                    value={value}
+                                    onChange={(newValue) => {
+                                        setValue(newValue);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Stack>
+                        </LocalizationProvider>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="where"
+                            label="Where"
+                            name="where"
+                            autoComplete="where"
+                            autoFocus
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="phone"
+                            label="Phone"
+                            type="number"
+                            id="phone"
+                            autoComplete="current-phone"
+                        />
 
-                }}
-            >
-                <div style={{  width: '24rem', padding: '20px' }}>
-                    <div>
-                        <img style={{ marginRight: '15px', borderRadius: '10px' }} width='100%' src="https://imgs.yachthub.com/reviews/1/0_3.jpg" alt="" />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            BOOK
+                        </Button>
+                    </Box>
+                </Box>
+            </div>
 
-                    </div>
-                    <div style={{ borderBottom: 'black solid 1px', marginTop: '10px' }}>
-                        <p>Terms and Conditions.
-                            <Link>
-                                click here
-                            </Link>
-                        </p>
-
-                    </div>
-                    <Typography style={{ marginTop: '10px' }} component="h1" variant="h5">
-                        Price Details
-                    </Typography>
-                    <div className='price-details'>
-                        <p>Hello</p>
-                        <p>20 eth</p>
-                    </div>
-                    <div style={{ borderBottom: '1px solid black' }} className='price-details'>
-                        <p>Hello</p>
-                        <p>30 rth</p>
-                    </div>
-                    <div className='price-details'>
-                        <p>Total Price</p>
-                        <p>50 eth</p>
-                    </div>
-                </div>
-            </Box>
-
-
-            {/* </div> */}
+            {/* Other Details */}
         </Container>
-    </div>);
+    </>);
 }
 
 export default Booking;

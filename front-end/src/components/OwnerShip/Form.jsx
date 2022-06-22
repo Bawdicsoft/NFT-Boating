@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import './Booking.css'
+import './OwnerShip.css'
 
 
 export default function Form() {
