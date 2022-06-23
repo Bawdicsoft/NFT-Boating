@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import { Container } from 'react-bootstrap';
 import Typography from '@mui/material/Typography';
 import DarkNavbar from '../Header/DarkNavbar'
-import MyApp from "./date";
+import SelectDate from "./Date";
 import './Booking.css';
 
 const Booking = () => {
@@ -37,8 +37,7 @@ const Booking = () => {
                     }}
                 >
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <MyApp 
-                        />
+                        <SelectDate/>
 
                         {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <Stack spacing={3}>

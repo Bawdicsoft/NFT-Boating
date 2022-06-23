@@ -24,7 +24,7 @@ const Navbarr = () => {
     chainId,
   } = useContextAPI();
 
-  console.log(chainId)
+  // console.log(chainId)
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);

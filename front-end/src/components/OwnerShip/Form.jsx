@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import firebase from 'firebase'
 import { db } from '../../firebase'
 import './OwnerShip.css'
+import { useNavigate } from "react-router-dom";
 
 
 export default function Form() {
-
+  let navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -20,74 +21,75 @@ export default function Form() {
       dob: data.get('dob'),
 
     })
+    alert("You Buy your Ownership Successfully")
+    navigate("/booking");
+    console.log("Data added", data);
+  };
 
-      console.log("Data added", data);
-    };
-    
-    return (<>
-      <div className='contain1'>
-        {/* <CssBaseline /> */}
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            // border:'red solid 1px'
-          }}
-        >
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              // onChange={e => setName(e.target.value)}
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="phone"
-              label="Phone"
-              type="number"
-              id="phone"
-              autoComplete="current-phone"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="dob"
-              label="Date of Birth"
-              type="date"
-              id="dob"
-              autoComplete="dob"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Send
-            </Button>
-          </Box>
+  return (<>
+    <div className='contain1'>
+      {/* <CssBaseline /> */}
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          // border:'red solid 1px'
+        }}
+      >
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            // onChange={e => setName(e.target.value)}
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Name"
+            name="name"
+            autoComplete="name"
+            autoFocus
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="phone"
+            label="Phone"
+            type="number"
+            id="phone"
+            autoComplete="current-phone"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="dob"
+            label="Date of Birth"
+            type="date"
+            id="dob"
+            autoComplete="dob"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Send
+          </Button>
         </Box>
-      </div>
-    </>);
-  }
+      </Box>
+    </div>
+  </>);
+}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { useContextAPI } from "../ContextAPI";
 import { IntegrationWallets } from "../subComponents/IntegrationWallets";
@@ -14,7 +14,7 @@ import {
 import "./header.css";
 
 const DarkNavbar = () => {
-    const [dealMessageBox, setDealMessageBox] = useState()
+  const [dealMessageBox, setDealMessageBox] = useState()
   const [show, setShow] = useState(false);
   const {
     active,
@@ -23,8 +23,6 @@ const DarkNavbar = () => {
     account,
     chainId,
   } = useContextAPI();
-
-  console.log(chainId)
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -68,11 +66,11 @@ const DarkNavbar = () => {
   //   sessionStorage.removeItem("userinfo");
   //   setUserInfo("");
   // };
-    return (
-        <div>
-            <Navbar style={{backgroundColor:'#1A1A40'}} className="main-navbar" collapseOnSelect expand="lg" variant="dark">
+  return (
+    <div>
+      <Navbar style={{ backgroundColor: '#1A1A40' }} className="main-navbar" collapseOnSelect expand="lg" variant="dark">
         <Container>
-          <Navbar.Brand style={{fontWeight:'bolder'}} href="#home">LOGO</Navbar.Brand>
+          <Navbar.Brand style={{ fontWeight: 'bolder' }} href="#home">LOGO</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="m-auto">
@@ -81,7 +79,7 @@ const DarkNavbar = () => {
               <Nav.Link className="nav-link" href="/booking">BOOKING</Nav.Link>
             </Nav>
 
-            <Nav style={{ display:'flex', flexDirection:'row'}}>
+            <Nav style={{ display: 'flex', flexDirection: 'row' }}>
               <Button
                 ref={anchorRef}
                 id="composition-button"
@@ -92,13 +90,13 @@ const DarkNavbar = () => {
               >
                 {/* <CurrencyBitcoinIcon style={{marginRight:'10px'}}></CurrencyBitcoinIcon> */}
                 {chainId === 1 ?
-                <>
-                <img style={{marginRight:'10px'}} width="15px" src={ethLogo} alt="" srcset="" />
-                Mainnet
-                </>:
-                <>
-                None
-                </>}
+                  <>
+                    <img style={{ marginRight: '10px' }} width="15px" src={ethLogo} alt="" srcset="" />
+                    Mainnet
+                  </> :
+                  <>
+                    None
+                  </>}
               </Button>
               <div >
                 {active ? (
@@ -135,8 +133,8 @@ const DarkNavbar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-        </div>
-    );
+    </div>
+  );
 }
 
 export default DarkNavbar;

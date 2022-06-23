@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { useState } from "react";
-import { Alert, Button } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 export const MessageBox = ({ color , setDeal ,show, setShow, btnName , MessageTitle , Message , setDealMessageBox }) => {
   useEffect(() => {

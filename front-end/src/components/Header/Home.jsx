@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEffect } from "react";
 import { Button, Container } from "react-bootstrap";
 import Navbarr from './Navbar'
 import "./header.css";
