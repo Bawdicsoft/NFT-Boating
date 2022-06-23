@@ -3,18 +3,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Container } from 'react-bootstrap';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import DarkNavbar from '../Header/DarkNavbar'
+import MyApp from "./date";
 import './Booking.css';
 
-
 const Booking = () => {
-    const [value, setValue] = useState(new Date('2018-01-01T00:00:00.000Z'));
-    const [date, setDate] = useState(('2018-01-01T00:00:00.000Z'));
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -25,7 +19,7 @@ const Booking = () => {
         });
     };
     return (<>
-        <DarkNavbar />  
+        <DarkNavbar />
         <Container>
 
             <Typography className='heading' component="h1" variant="h4">
@@ -43,17 +37,10 @@ const Booking = () => {
                     }}
                 >
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="dob"
-                            label="Date"
-                            type="date"
-                            id="dob"
-                            autoComplete="dob"
+                        <MyApp 
                         />
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+
+                        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <Stack spacing={3}>
                                 <MobileTimePicker
                                     label="Time"
@@ -64,7 +51,7 @@ const Booking = () => {
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Stack>
-                        </LocalizationProvider>
+                        </LocalizationProvider> */}
                         <TextField
                             margin="normal"
                             required
