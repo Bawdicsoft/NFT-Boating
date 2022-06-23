@@ -1,22 +1,31 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import './Booking.css'
+import firebase from 'firebase'
+import { db } from '../../firebase'
+import './OwnerShip.css'
 
 
 export default function Form() {
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    db.collection("userData").add({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      name: data.get('name'),
       email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+      phone: data.get('phone'),
+      dob: data.get('dob'),
 
-  return (<>
-       <div className='contain1'>
+    })
+
+      console.log("Data added", data);
+    };
+    
+    return (<>
+      <div className='contain1'>
         {/* <CssBaseline /> */}
         <Box
           sx={{
@@ -28,7 +37,8 @@ export default function Form() {
           }}
         >
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField 
+            <TextField
+              // onChange={e => setName(e.target.value)}
               margin="normal"
               required
               fullWidth
@@ -78,6 +88,6 @@ export default function Form() {
             </Button>
           </Box>
         </Box>
-       </div>
-      </>);
-}
+      </div>
+    </>);
+  }

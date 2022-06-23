@@ -33,9 +33,6 @@ const DarkNavbar = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-
-
-  
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
@@ -46,12 +43,7 @@ const DarkNavbar = () => {
     prevOpen.current = open;
   }, [open]);
 
-
-
-
-  
   async function conToMetaMask() {
-
 
     if (typeof window.ethereum == "undefined") {
       alert("MetaMask is Not installed!");
@@ -85,8 +77,8 @@ const DarkNavbar = () => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="m-auto">
               <Nav.Link className="nav-link" href="/">HOME</Nav.Link>
-              <Nav.Link className="nav-link" href="/booking">OWNERSHIP</Nav.Link>
-              <Nav.Link className="nav-link" href="#pricing">BOOKING</Nav.Link>
+              <Nav.Link className="nav-link" href="/ownership">OWNERSHIP</Nav.Link>
+              <Nav.Link className="nav-link" href="/booking">BOOKING</Nav.Link>
             </Nav>
 
             <Nav style={{ display:'flex', flexDirection:'row'}}>

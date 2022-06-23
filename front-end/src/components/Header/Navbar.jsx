@@ -85,8 +85,8 @@ const Navbarr = () => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="m-auto">
               <Nav.Link className="nav-link" href="/">HOME</Nav.Link>
-              <Nav.Link className="nav-link" href="/booking">OWNERSHIP</Nav.Link>
-              <Nav.Link className="nav-link" href="#pricing">BOOKING</Nav.Link>
+              <Nav.Link className="nav-link" href="/ownership">OWNERSHIP</Nav.Link>
+              <Nav.Link className="nav-link" href="/booking">BOOKING</Nav.Link>
             </Nav>
 
             <Nav style={{ display:'flex', flexDirection:'row'}}>
