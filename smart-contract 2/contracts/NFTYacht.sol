@@ -70,14 +70,16 @@ contract NFTYacht is ERC721, Ownable {
     function buyOwnership(
 
         uint256 _tOwnership,
-        uint256 _USDT,
-        string memory _tURI
+        string[] memory _tURI,
+        uint256 _USDT
 
         ) public {
 
         require ( USDT.balanceOf(msg.sender) >= _USDT, "!Balance");
         require ( USDT.allowance( msg.sender,  address(this)) >= _USDT, "!Allownace");
         require ( (rate.mul(_tOwnership)) == _USDT, "!Not suffecient USDT");
+        require ( _tOwnership > 0, "!tOwnership");
+        require ( _tURI.length == _tOwnership, "!tURI");
 
         USDT.transferFrom( msg.sender, owner(), _USDT );
 
@@ -85,7 +87,7 @@ contract NFTYacht is ERC721, Ownable {
             OwnershipID.increment();
             userOwnershipIDs[_msgSender()].push(OwnershipID.current());
             _safeMint(msg.sender, OwnershipID.current());
-            TURI[OwnershipID.current()] = _tURI;
+            TURI[OwnershipID.current()] = _tURI[i];
         }
 
     }
