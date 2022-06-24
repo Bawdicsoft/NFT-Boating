@@ -14,12 +14,17 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const TetherToken = await hre.ethers.getContractFactory("TetherToken");
+  const tetherToken = await TetherToken.deploy();
+  await tetherToken.deployed();
 
-  await greeter.deployed();
+  console.log("tetherToken deployed to:", tetherToken.address);
 
-  console.log("Greeter deployed to:", greeter.address);
+  // const NFTYacht = await hre.ethers.getContractFactory("NFTYacht");
+  // const nftYacht = await NFTYacht.deploy(tetherToken.address);
+  // await nftYacht.deployed();
+
+  // console.log("nftYacht deployed to:", nftYacht.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -28,3 +33,12 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+
+
+// DEPLOYMENT LINKS
+
+// tetherToken deployed to: 0x4A2E23c38AE796E65968471d7e43523C878dcD23
+
+// tetherToken deployed to: 0xee26B0F49E2170dc755ca094d0a5637924df63C2
+// nftYacht deployed to: 0xc452832aBd994c332087d526BF7deeC38EA44baA
