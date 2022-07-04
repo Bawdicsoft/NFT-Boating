@@ -18,28 +18,33 @@ const Booking = () => {
             password: data.get('password'),
         });
     };
-    return (<>
+    return (
+      <>
         <DarkNavbar />
         <Container>
+          <Typography className="heading" component="h1" variant="h4">
+            Booking Details
+          </Typography>
+          {/* Form */}
+          <div className="contain1">
+            <Box
+              sx={{
+                marginTop: 8,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                // border:'red solid 1px'
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
+              >
+                <SelectDate />
 
-            <Typography className='heading' component="h1" variant="h4">
-                Booking Details
-            </Typography>
-            {/* Form */}
-            <div className='contain1'>
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        // border:'red solid 1px'
-                    }}
-                >
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <SelectDate/>
-
-                        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <Stack spacing={3}>
                                 <MobileTimePicker
                                     label="Time"
@@ -51,42 +56,43 @@ const Booking = () => {
                                 />
                             </Stack>
                         </LocalizationProvider> */}
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="where"
-                            label="Where"
-                            name="where"
-                            autoComplete="where"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="phone"
-                            label="Phone"
-                            type="number"
-                            id="phone"
-                            autoComplete="current-phone"
-                        />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="where"
+                  label="Where"
+                  name="where"
+                  autoComplete="where"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="phone"
+                  label="Phone"
+                  type="number"
+                  id="phone"
+                  autoComplete="current-phone"
+                />
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            BOOK
-                        </Button>
-                    </Box>
-                </Box>
-            </div>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  BOOK
+                </Button>
+              </Box>
+            </Box>
+          </div>
 
-            {/* Other Details */}
+          {/* Other Details */}
         </Container>
-    </>);
+      </>
+    );
 }
 
 export default Booking;

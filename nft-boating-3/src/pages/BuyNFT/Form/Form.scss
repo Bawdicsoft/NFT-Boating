@@ -1,0 +1,17 @@
+.buyNftForm {
+
+    display: grid;
+    grid-template-columns: auto;
+    gap: 10px;
+
+    input {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    select {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+}

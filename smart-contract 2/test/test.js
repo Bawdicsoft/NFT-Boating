@@ -49,14 +49,35 @@ describe("TetherToken", function () {
 
   it("buyOwnership:", async () => {
     await NFTyacht.connect(owner).buyOwnership(
-      "Nabeel",
-      "Nabeel@gamil.com",
-      "111 111 1111",
-      "11 11 1111",
-      10,
-      toWei("10")
+      2,
+      ["https://www.google.com/", "https://www.coryrylan.com/"],
+      toWei("2")
     );
   });
 
+  it("tokenURI:", async () => {
+    // await NFTyacht.connect(owner).tokenURI(1);
+    console.log(await NFTyacht.connect(owner).tokenURI(1));
+    console.log(await NFTyacht.connect(owner).tokenURI(2));
+  });
+
+  it("balanceOf & ownerOf:", async () => {
+    console.log(await NFTyacht.connect(owner).balanceOf(owner.address));
+
+    console.log(await NFTyacht.connect(owner).ownerOf(1));
+    console.log(await NFTyacht.connect(owner).ownerOf(2));
+  });
+
+  it("bookDate:", async () => {
+    await NFTyacht.connect(owner).bookDate(2022, 7, 2, 8, 0, 0, 1);
+  });
+
+  it("offer:", async () => {
+    await NFTyacht.connect(owner).offer(1, 2, toWei("300"));
+  });
+
+  it("acceptOffer:", async () => {
+    await NFTyacht.connect(owner).acceptOffer(1);
+  });
 
 });

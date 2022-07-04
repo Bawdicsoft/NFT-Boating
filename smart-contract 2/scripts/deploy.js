@@ -1,44 +1,30 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
 
   // We get the contract to deploy
   const TetherToken = await hre.ethers.getContractFactory("TetherToken");
   const tetherToken = await TetherToken.deploy();
   await tetherToken.deployed();
 
+  const NFTYacht = await hre.ethers.getContractFactory("NFTYacht");
+  const nftYacht = await NFTYacht.deploy(
+    "0x03c901a1d894f8b6A7eFeF71E47fBA6aC776EB6d"
+  );
+  await nftYacht.deployed();
+
   console.log("tetherToken deployed to:", tetherToken.address);
+  console.log("nftYacht deployed to:", nftYacht.address);
 
-  // const NFTYacht = await hre.ethers.getContractFactory("NFTYacht");
-  // const nftYacht = await NFTYacht.deploy(tetherToken.address);
-  // await nftYacht.deployed();
+  // tetherToken deployed to: 0x00DF9E7FaF573Cb41f050e3a43fCF813Ce0609c2
+  // nftYacht deployed to: 0xf6396Ac2d3126567f618F443fFA806EB082Bb935
 
-  // console.log("nftYacht deployed to:", nftYacht.address);
+  // tetherToken deployed to: 0x03c901a1d894f8b6A7eFeF71E47fBA6aC776EB6d
+  // nftYacht deployed to: 0xe825314959493e2942162E0846a46E5A244fa222}
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
 
-
-
-// DEPLOYMENT LINKS
-
-// tetherToken deployed to: 0x4A2E23c38AE796E65968471d7e43523C878dcD23
-
-// tetherToken deployed to: 0xee26B0F49E2170dc755ca094d0a5637924df63C2
-// nftYacht deployed to: 0xc452832aBd994c332087d526BF7deeC38EA44baA

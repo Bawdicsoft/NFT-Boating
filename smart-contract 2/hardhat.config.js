@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-ganache");
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
 require("solidity-coverage");
@@ -22,9 +23,14 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: "0.8.12",
   networks: {
-    test: {
+    localhost: {
+      url: "HTTP://127.0.0.1:7545",
+      accounts:
+        "b7c46f935345fad91e5828d77e12ab28246fda95f984858d7b1cf3fee28b25f7",
+    },
+    testNet: {
       url: process.env.ROPSTEN_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
@@ -38,3 +44,4 @@ module.exports = {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
 };
+

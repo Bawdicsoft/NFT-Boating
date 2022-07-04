@@ -1,0 +1,59 @@
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { saveNFTData } from "../../../features/BuyNFT/BuySlice";
+import "./Form.scss";
+
+export const Form = ({ setState }) => {
+  const dispatch = useDispatch();
+  const base = useSelector((state) => state.base);
+  // const { register, handleSubmit } = useForm({ defaultValues: { base } });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  // const onSubmit = data => console.log(data);
+  const onSubmit = (data) => {
+    dispatch(saveNFTData(data));
+    setState(false);
+  };
+  console.log(errors);
+
+  return (
+      <form onSubmit={handleSubmit(onSubmit)} className="buyNftForm">
+        <input
+          type="text"
+          placeholder="First name"
+          {...register("First name", { required: true, maxLength: 80 })}
+        />
+        <input
+          type="text"
+          placeholder="Last name"
+          {...register("Last name", { required: true, maxLength: 100 })}
+        />
+        <input
+          type="text"
+          placeholder="Email"
+          {...register("Email", { required: true, pattern: /^\S+@\S+$/i })}
+        />
+        <input
+          type="tel"
+          placeholder="Mobile number"
+          {...register("Mobile number", {
+            required: true,
+            minLength: 6,
+            maxLength: 12,
+          })}
+        />
+        <select {...register("Title", { required: true })}>
+          <option value="Mr">Mr</option>
+          <option value="Mrs">Mrs</option>
+          <option value="Miss">Miss</option>
+          <option value="Dr">Dr</option>
+        </select>
+        <input type="submit" />
+      </form>
+  );
+};
