@@ -19,10 +19,33 @@ const Booking = () => {
             password: data.get('password'),
         });
     };
-    return (<>
+    return (
+      <>
         <DarkNavbar />
         <Container>
+          <Typography className="heading" component="h1" variant="h4">
+            Booking Details
+          </Typography>
+          {/* Form */}
+          <div className="contain1">
+            <Box
+              sx={{
+                marginTop: 8,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                // border:'red solid 1px'
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
+              >
+                <SelectDate />
 
+<<<<<<< HEAD
             <Typography className='heading' component="h1" variant="h4">
                 Booking Details
             </Typography>
@@ -41,6 +64,9 @@ const Booking = () => {
                         <SelectDate />
 
                         {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+=======
+                {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+>>>>>>> 84c027b6fbb7938391eab904b828e2a2f13f4baa
                             <Stack spacing={3}>
                                 <MobileTimePicker
                                     label="Time"
@@ -52,39 +78,40 @@ const Booking = () => {
                                 />
                             </Stack>
                         </LocalizationProvider> */}
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="where"
-                            label="Where"
-                            name="where"
-                            autoComplete="where"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="phone"
-                            label="Phone"
-                            type="number"
-                            id="phone"
-                            autoComplete="current-phone"
-                        />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="where"
+                  label="Where"
+                  name="where"
+                  autoComplete="where"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="phone"
+                  label="Phone"
+                  type="number"
+                  id="phone"
+                  autoComplete="current-phone"
+                />
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            BOOK
-                        </Button>
-                    </Box>
-                </Box>
-            </div>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  BOOK
+                </Button>
+              </Box>
+            </Box>
+          </div>
 
+<<<<<<< HEAD
             {/* Other Details */}
 
             <Box
@@ -128,8 +155,12 @@ const Booking = () => {
                     </div>
                 </div>
             </Box>
+=======
+          {/* Other Details */}
+>>>>>>> 84c027b6fbb7938391eab904b828e2a2f13f4baa
         </Container>
-    </>);
+      </>
+    );
 }
 
 export default Booking;

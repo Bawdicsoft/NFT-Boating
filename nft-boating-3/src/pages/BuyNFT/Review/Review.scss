@@ -1,0 +1,102 @@
+.Review {
+    .card {
+        width: 300px;
+        height: 480px;
+        margin: auto;
+        background-color: #4c4c4c;
+        border-radius: 12px;
+        color: white;
+
+        background-image: url(../../../Assets/Img/card-bg.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        display: grid;
+        align-items: end;
+        justify-content: center;
+
+
+        .cardNumber {
+            position: relative;
+            padding: 10px;
+            top: -80px;
+            font-size: 52px;
+            color: white;
+            text-align: right;
+
+            span {
+                font-size: 18px;
+                margin-right: 5px;
+            }
+        }
+
+        .cardContainer {
+            padding: 30px;
+
+            h6 {
+                font-size: 35px;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .cardDetails {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: 25px;
+                align-items: center;
+
+                .box {
+                    padding: 5px 5px 0 5px;
+                    background-color: white;
+                }
+
+                .userDetails {
+                    text-align: start;
+
+                    .userDetailsT {
+                        display: block;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+
+    .userFormDetails {
+        width: 300px;
+        margin: auto;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        text-align: left;
+
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 5px 10px;
+    }
+
+    .btn {
+        width: 300px;
+        margin: auto;
+        text-align: right;
+
+        button {
+            cursor: pointer;
+            padding: 10px 30px;
+            background-color: #00313c;
+            text-decoration: unset;
+            color: white;
+            font-weight: 600;
+            border: 1px solid #00313c;
+        }
+
+        .btn-back {
+            padding: 10px 30px;
+            background-color: #ffffff;
+            text-decoration: unset;
+            color: #00313c;
+            font-weight: 600;
+            border: 1px solid #ffffff;
+        }
+    }
+}

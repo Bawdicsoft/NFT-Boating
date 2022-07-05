@@ -17,11 +17,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <ContextProvider>
-      <React.StrictMode>
         <BrowserRouter>
         <App />
         </BrowserRouter>
-      </React.StrictMode>
     </ContextProvider>
   </Web3ReactProvider>
 );

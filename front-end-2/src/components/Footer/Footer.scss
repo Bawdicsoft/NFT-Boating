@@ -1,0 +1,53 @@
+.Footer {
+  
+  text-align: center;
+  color: black;
+  background-color: #dddddd;
+  padding: 50px 0 20px 0;
+
+  .useful-links {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: auto auto auto;
+
+    ul {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      gap: 6px;
+
+      li:first-child {
+        color: rgb(34, 34, 34);
+        font-weight: 800;
+        margin-bottom: 5px;
+      }
+    }
+
+    padding-bottom: 30px;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+  }
+
+  .Copy-right {
+    color: black;
+    font-size: 18px;
+
+    a {
+      color: black;
+      text-decoration: unset;
+    }
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .Footer-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+}
