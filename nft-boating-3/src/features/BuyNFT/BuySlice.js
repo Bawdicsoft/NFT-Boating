@@ -1,20 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  init: {},
+  nft: 0
+};
 
 export const buyNFTSlice = createSlice({
   name: "buyNFT",
   initialState,
   reducers: {
     saveNFTData: (state, action) => {
-      state = action.payload;
-      console.log({ state });
+      state.init = action.payload;
+      console.log("buyNFTSlice", state.init);
+    },
+    saveNFT: (state, action) => {
+      state.nft = action.payload;
+      console.log("buyNFTSlice", state.nft);
     },
   },
 });
 
-export const buyNFT = (state) => state.counter.value;;
+export const buyNFT = (state) => state.init.value;
 
-export const { saveNFTData } = buyNFTSlice.actions;
+export const { saveNFTData, saveNFT } = buyNFTSlice.actions;
 
 export default buyNFTSlice.reducer;

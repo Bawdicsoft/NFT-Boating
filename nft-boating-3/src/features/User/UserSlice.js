@@ -1,19 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  init: {}
+};
 
 export const userSlice = createSlice({
   name: "buyNFT",
   initialState,
   reducers: {
     saveUser: (state, action) => {
-      state = action.payload;
-      console.log("from state: ", state);
+      state.init = action.payload;
+      console.log("from state: ", state.init);
     },
   },
 });
 
-export const user = (state) => state.counter.value;
+export const user = (state) => state.init.value;
 
 export const { saveUser } = userSlice.actions;
 

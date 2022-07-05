@@ -1,5 +1,8 @@
 .buyNftForm {
 
+    max-width: 500px;
+    margin: auto;
+    
     display: grid;
     grid-template-columns: auto;
     gap: 10px;
@@ -12,6 +15,17 @@
     select {
         font-size: 18px;
         padding: 10px;
+    }
+
+    .btn-submit {
+        text-align: right;
+    }
+
+    .submit {
+        cursor: pointer;
+        width: fit-content;
+        padding: 10px 30px;
+        float: right;
     }
 
 }

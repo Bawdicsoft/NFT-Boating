@@ -5,7 +5,8 @@ import React from "react";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 
-// import Booking from "./pages/Booking/Booking";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Booking from "./pages/Booking/Booking";
 import BuyNFT from "./pages/BuyNFT/BuyNFT";
 import Home from "./pages/Home/Home";
 
@@ -15,8 +16,9 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/BuyNFT" element={<BuyNFT />} />
-        {/* <Route path="/booking" element={<Booking />} /> */}
+        <Route path="/buyNFT" element={<BuyNFT />} />
+        <Route path="/booking" element={<Booking />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
       <Footer />
     </>

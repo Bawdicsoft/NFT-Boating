@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { saveNFTData } from "../../../features/BuyNFT/BuySlice";
 import "./Form.scss";
 
-export const Form = ({ setState }) => {
+export const Form = ({ setInit }) => {
   const dispatch = useDispatch();
   const base = useSelector((state) => state.base);
   // const { register, handleSubmit } = useForm({ defaultValues: { base } });
@@ -14,46 +14,58 @@ export const Form = ({ setState }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  // const onSubmit = data => console.log(data);
   const onSubmit = (data) => {
     dispatch(saveNFTData(data));
-    setState(false);
+    setInit(1);
   };
-  console.log(errors);
+  console.log({ errors });
 
   return (
-      <form onSubmit={handleSubmit(onSubmit)} className="buyNftForm">
+    <form onSubmit={handleSubmit(onSubmit)} className="buyNftForm">
+      <h6>Personal Information</h6>
+      <div className="fullName">
         <input
           type="text"
           placeholder="First name"
-          {...register("First name", { required: true, maxLength: 80 })}
+          {...register("firstName", { required: true, maxLength: 80 })}
         />
         <input
           type="text"
           placeholder="Last name"
-          {...register("Last name", { required: true, maxLength: 100 })}
+          {...register("lastName", { required: true, maxLength: 100 })}
         />
+      </div>
+      <input
+        type="tel"
+        placeholder="Mobile number"
+        {...register("mobileNumber", {
+          required: true,
+          minLength: 6,
+          maxLength: 12,
+        })}
+      />
+      <input
+        type="text"
+        placeholder="Address Line 1"
+        {...register("address1", { required: true, maxLength: 100 })}
+      />
+      <input
+        type="text"
+        placeholder="Address Line 2"
+        {...register("address2", { required: true, maxLength: 100 })}
+      />
+      <div className="checkbox">
         <input
-          type="text"
-          placeholder="Email"
-          {...register("Email", { required: true, pattern: /^\S+@\S+$/i })}
+          type="checkbox"
+          placeholder="Accept Terms and Conditions"
+          {...register("Accept Terms and Conditions", { required: true })}
         />
-        <input
-          type="tel"
-          placeholder="Mobile number"
-          {...register("Mobile number", {
-            required: true,
-            minLength: 6,
-            maxLength: 12,
-          })}
-        />
-        <select {...register("Title", { required: true })}>
-          <option value="Mr">Mr</option>
-          <option value="Mrs">Mrs</option>
-          <option value="Miss">Miss</option>
-          <option value="Dr">Dr</option>
-        </select>
-        <input type="submit" />
-      </form>
+        <p>Accept Terms and Conditions</p>
+      </div>
+
+      <div className="btn-submit">
+        <input className="submit" type="submit" value="Next" />
+      </div>
+    </form>
   );
 };

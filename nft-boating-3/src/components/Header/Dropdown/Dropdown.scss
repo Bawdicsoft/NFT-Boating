@@ -93,6 +93,10 @@
         padding: 1rem;
         overflow: hidden;
         transition: height var(--speed) ease;
+
+        @media screen and (max-width: 800px) {
+            width: 75%;
+        }
     }
 
     .menu {

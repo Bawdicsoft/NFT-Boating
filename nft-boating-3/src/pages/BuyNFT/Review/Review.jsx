@@ -4,26 +4,19 @@ import "./Review.scss";
 import { useWeb3React } from "@web3-react/core";
 import { useContextAPI } from "../../../ContextAPI";
 import { auth, db } from "../../../DB/firebase-config";
-import {
-  getDocs,
-  collection,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-
+// import html2canvas from "html2canvas";
+import QRCode from "react-qr-code";
+import { formatEther, parseEther, toString } from "ethers/lib/utils";
+// import axios from "axios";
+import { getDocs, collection, doc, updateDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export const Review = () => {
+export const Review = ({ setInit }) => {
   const state = useSelector((state) => state);
   const { account, active } = useWeb3React();
 
   // smart contract calls
-  const { Contract } = useContextAPI();
-
-  const agency = async () => {
-    let ab = await Contract.isOnSell(1);
-    console.log(">>>", ab);
-  };
+  const { ContractYacht } = useContextAPI();
 
   // fireBase calls
   const [user, loading, error] = useAuthState(auth);
@@ -44,13 +37,80 @@ export const Review = () => {
       });
   }, []);
 
-  console.log({ data });
+  const [pinataHash, setPinataHash] = React.useState([]);
 
-  const addBuyNFT = async () => {
+  const Transaction = async () => {
+    // html2canvas(document.querySelector(".card")).then(async (canvas) => {
+    //   const API_KEY = "8d31bd2459d2316d1247";
+    //   const API_SECRET =
+    //     "de85fddf4b2b1e799ec8b9ff111514e449029d7f38d14569de3bb1385f8e1308";
+
+    //   console.log(canvas);
+    //   const URLforpinJSONtoIPFS = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+    //   console.log(canvas.toDataURL());
+
+    //   axios
+    //     .post(
+    //       URLforpinJSONtoIPFS,
+    //       {
+    //         name: `NFT Yacht`,
+    //         description: `Lorem ipsum dolor sit amet consectetur adipiscing elit nascetur, fames et euismod mi aliquam arcu libero litora urna, dui ornare justo scelerisque etiam placerat ligula. Blandit duis tempor vulputate lobortis cras faucibus habitasse sollicitudin ornare platea ullamcorper, integer est fusce libero phasellus curabitur morbi arcu praesent. Fames imperdiet class litora ligula pulvinar orci ut, tempor aenean eget dui quisque rhoncus, aliquet nunc sollicitudin tristique interdum consequat.`,
+    //         image: canvas.toDataURL(),
+    //       },
+    //       {
+    //         headers: {
+    //           pinata_api_key: API_KEY,
+    //           pinata_secret_api_key: API_SECRET,
+    //         },
+    //       }
+    //     )
+    //     .then(async function (response) {
+    //       const urlForTicketToken = `ipfs://${response.data.IpfsHash}`;
+
+    //       console.log(response);
+
+    //       // const tx1 = await RealEstateContract.createTicket(
+    //       //   item.id,
+    //       //   urlForTicketToken
+    //       // );
+    //       // await tx1.wait();
+
+    //       // const checkTicketTokenContract =
+    //       //   await TicketTokenContract.isApprovedOrOwner(
+    //       //     RealEstateContractAddress,
+    //       //     item.id
+    //       //   );
+
+    //       // if (!checkTicketTokenContract) {
+    //       //   const tx3 = await TicketTokenContract.approve(
+    //       //     RealEstateContractAddress,
+    //       //     item.id
+    //       //   );
+    //       //   await tx3.wait();
+    //       // }
+    //     })
+    //     .catch(function (error) {
+    //       //handle error here
+    //       console.log(error);
+    //     });
+    // });
+
+    // smart Contract call
+    let getRate = await ContractYacht.getRate();
+    getRate = formatEther(getRate);
+    getRate = getRate * state.buyNFT.nft;
+    getRate = parseEther(getRate.toString());
+    await ContractYacht.buyOwnership(state.buyNFT.nft, getRate.toString());
+
+    // firebase call
     const fieldToEdit = doc(db, "users", data.id);
-    await updateDoc(fieldToEdit, { buyNFT: state.buyNFT })
+    await updateDoc(fieldToEdit, { buyNFT: state.buyNFT.init })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
+  };;
+
+  const backFun = () => {
+    setInit(1);
   };
 
   return (
@@ -58,12 +118,15 @@ export const Review = () => {
       <div className="Review">
         <div className="card">
           <span className="cardNumber">
-            <span>#</span>1
+            <span>#</span>
+            {state.buyNFT.nft}
           </span>
           <div className="cardContainer">
             <h6>NFT Yacht</h6>
             <div className="cardDetails">
-              <div className="box"></div>
+              <div className="box">
+                <QRCode value={"Hello"} size={100} />
+              </div>
               <div className="userDetails">
                 <div>
                   <span className="userDetailsT">Address :</span>
@@ -81,9 +144,24 @@ export const Review = () => {
             </div>
           </div>
         </div>
-        {/* <pre>{JSON.stringify(buyNFT, null, 2)}</pre> */}
-        <button>back</button>
-        <button onClick={addBuyNFT}>Transaction</button>
+
+        <div className="userFormDetails">
+          <span>Name :</span>
+          <span>
+            {state.buyNFT.init.firstName} {state.buyNFT.init.lastName}
+          </span>
+          <span>Total NFT :</span>
+          <span>{state.buyNFT.nft}</span>
+        </div>
+
+        <div className="btn">
+          <button className="btn-back" onClick={backFun}>
+            back
+          </button>
+          <button className="Transaction" onClick={Transaction}>
+            Transaction
+          </button>
+        </div>
       </div>
     </>
   );

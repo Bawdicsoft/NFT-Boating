@@ -1,21 +1,23 @@
 import React from "react";
 import { Form } from "./Form/Form";
 import { Review } from "./Review/Review";
-import { Mint } from "./Mint/Mint";
-import "./BuyNFT.scss";
+import "./Booking.scss";
 
 function BuyNFT() {
-  const [init, setInit] = React.useState(0);
+  const [state, setState] = React.useState(0);
+
+  console.log(">>>>>>>>", state);
 
   return (
     <div className="BuyNFT">
       <div className="Container">
         <div>
-          <h1>BuyNFT</h1>
+          <h1>Booking</h1>
         </div>
-        {init == 0 && <Form setInit={setInit} />}
-        {init == 1 && <Mint setInit={setInit} />}
-        {init == 2 && <Review setInit={setInit} />}
+
+        {state == 0 && <Form setState={setState} />}
+        {state == 1 && <Review setState={setState} />}
+
       </div>
     </div>
   );

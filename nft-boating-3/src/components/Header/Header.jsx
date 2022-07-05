@@ -10,9 +10,12 @@ function Header() {
       <div className="Container">
         <h1>Header</h1>
         <div className="Nav">
-          <Link to="/">Home</Link>
-          <Link to="/BuyNFT">BuyNFT</Link>
-          <Link to="/booking">Booking</Link>
+          <div className="naveLink">
+            <Link to="/">Home</Link>
+            <Link to="/BuyNFT">BuyNFT</Link>
+            <Link to="/booking">Booking</Link>
+            <Link to="/Dashboard">Dashboard</Link>
+          </div>
 
           <Dropdown />
         </div>

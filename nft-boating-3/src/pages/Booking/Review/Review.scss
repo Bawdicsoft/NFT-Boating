@@ -16,11 +16,9 @@
         align-items: end;
         justify-content: center;
 
-
         .cardNumber {
             position: relative;
-            padding: 10px;
-            top: -80px;
+            top: -90px;
             font-size: 52px;
             color: white;
             text-align: right;
@@ -37,7 +35,6 @@
             h6 {
                 font-size: 35px;
                 margin-bottom: 30px;
-                text-align: center;
             }
 
             .cardDetails {
@@ -47,8 +44,8 @@
                 align-items: center;
 
                 .box {
-                    padding: 5px 5px 0 5px;
-                    background-color: white;
+                    padding-top: 100%;
+                    background-color: aliceblue;
                 }
 
                 .userDetails {

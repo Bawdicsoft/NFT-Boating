@@ -22,5 +22,14 @@
   }
 
   border-bottom: 1px solid #b5b5b5;
+
+  .naveLink {
+    display: block;
+    @media screen and (max-width: 800px) {
+      display: none;
+    }
+  }
+
+  
   
 }
