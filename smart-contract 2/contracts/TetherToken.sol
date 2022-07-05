@@ -7,4 +7,4 @@ contract TetherToken is ERC20 {
     constructor() ERC20("TetherToken", "USDT") {
         _mint(msg.sender, 1000 * 10 ** decimals());
     }
-}
+}è

@@ -6,6 +6,7 @@ import firebase from 'firebase'
 import { db } from '../../firebase'
 import './OwnerShip.css'
 import { useNavigate } from "react-router-dom";
+import { Card, Col, Text } from "@nextui-org/react";
 
 
 export default function Form() {
@@ -90,6 +91,29 @@ export default function Form() {
           </Button>
         </Box>
       </Box>
+
+      <Card id='card'>
+                <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+                    <Col>
+                        <Text size={20} weight="bold" transform="uppercase" color="#black">
+                            Ownership Details
+                        </Text>
+                        <Text h4 color="white">
+                            Name:
+                            Address:
+                            Phone:
+                        </Text>
+                    </Col>
+                </Card.Header>
+                <Card.Image
+                    src="https://images.unsplash.com/photo-1508272961731-dc692d634a79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=751&q=80"
+                    // width="100%"
+                    id='card-image'
+                    // height={540}
+                    objectFit="cover"
+                    alt="Card image background"
+                />
+            </Card>
     </div>
   </>);
 }

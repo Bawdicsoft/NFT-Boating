@@ -12,7 +12,7 @@ export const useContextAPI = () => {
 
 export const ContextProvider = ({children}) => {
     console.log("hello running");
-    const ContractAddress = '0x6C9C6c06d236bE43C642711D9043B020424a1064';
+    const ContractAddress = '0xB727a8AF43580366dEe14aEd4bDD1f562D2169D5';
     const provider = new ethers.providers.Web3Provider(window.ethereum).getSigner()
     const Contract = new ethers.Contract(ContractAddress, RealEstateAbi, provider);
     console.log(Contract);
