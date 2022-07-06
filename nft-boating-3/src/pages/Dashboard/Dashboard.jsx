@@ -50,7 +50,7 @@ function Dashboard() {
 
   const bookDate = (data) => {
     dispatch(saveBookingID(data));
-    navigate("/single-page");
+    navigate(`/single-page/${data}`);
   };
 
   return (
