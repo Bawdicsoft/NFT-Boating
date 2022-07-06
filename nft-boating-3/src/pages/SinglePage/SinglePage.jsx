@@ -1,14 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import "./Dashboard.scss";
+import "./SinglePage.scss";
 import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useContextAPI } from "../../ContextAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { saveBookingID } from "../../features/BookingID/BookingIDSlice";
 
-
-
-function Dashboard() {
+function SinglePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const init = useSelector((state) => state.base);
@@ -50,45 +48,49 @@ function Dashboard() {
 
   const bookDate = (data) => {
     dispatch(saveBookingID(data));
-    navigate("/single-page");
+    navigate("/booking");
   };
 
   return (
-    <div className="Dashboard">
-      <div className="cards">
-        <div className="Container">
-          <h2>Your NFTs</h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipiscing elit auctor,
-            cursus nascetur odio nam gravida vehicula lacus
-          </p>
+    <div className="SinglePage">
+      <div className="Container">
+        <div className="Grid">
+          <div>
+            <img
+              src={`https://gateway.pinata.cloud/ipfs/QmVvFRRb6HxtJ9832HbZ4sfuMvvTwrSnihdkwVe1VvrDRf`}
+              alt=""
+            />
+          </div>
+          <div className="Token-Details">
+            <div className="Token-options">
+              <h1>
+                Lorem ipsum dolor #<span>1</span>
+              </h1>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit egestas
+                tempus quam, neque facilisis pulvinar gravida pretium cubilia
+                cursus at.
+              </p>
+              <button className="bookDate" onClick={() => bookDate(1)}>
+                Book Date
+              </button>
+            </div>
 
-          <div className="Grid">
-            {User ? (
-              <>
-                {UserData.map((User) => (
-                  <div className="Grid-item" key={User.id} onClick={() => bookDate(User.Token)}>
-                    {/* <div className="Box">{User.TokenURI}</div> */}
-                    <img
-                      src={`https://gateway.pinata.cloud/ipfs/QmVvFRRb6HxtJ9832HbZ4sfuMvvTwrSnihdkwVe1VvrDRf`}
-                      alt=""
-                    />
-                    <div className="cardDetails">
-                      <h5>{`${account.slice(0, 5)}...${account.slice(-5)}`}</h5>
-                      <p>{User.Token}</p>
-                    </div>
-                  </div>
-                ))}
-              </>
-            ) : (
-              <>
-                <div></div>
-                <Link className="BuyNFT" to="/BuyNFT">
-                  Buy Your NFTs
-                </Link>
-                <div></div>
-              </>
-            )}
+            <div className="Offers-Section">
+              <div className="Offers-Title">
+                <span>Offers</span>
+              </div>
+              <div className="Offers-detail">
+                <ul className="Offers-list">
+                  <li>
+                    <span>0x0000000000</span>
+                    <span>
+                      USDT <span>300</span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -96,4 +98,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default SinglePage;

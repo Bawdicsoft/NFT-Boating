@@ -374,6 +374,35 @@ export const NFTYachtABI = [
         type: "uint256",
       },
     ],
+    name: "getBookedDate",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_blockTimestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_DateAndTime",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_newYear",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_id",
+        type: "uint256",
+      },
+    ],
     name: "getOffer",
     outputs: [
       {

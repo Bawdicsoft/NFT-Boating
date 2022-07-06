@@ -46,7 +46,7 @@ export const Form = ({ setState }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="buyNftForm">
       <input
-        type="datetime-local"
+        type="date"
         placeholder="Chose Time AND Date"
         {...register("TimeAndDate", { required: true })}
       />

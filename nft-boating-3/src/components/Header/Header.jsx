@@ -15,6 +15,7 @@ function Header() {
             <Link to="/BuyNFT">BuyNFT</Link>
             <Link to="/booking">Booking</Link>
             <Link to="/Dashboard">Dashboard</Link>
+            <Link to="/single-page">Single Page</Link>
           </div>
 
           <Dropdown />

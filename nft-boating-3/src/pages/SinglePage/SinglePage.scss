@@ -1,0 +1,72 @@
+.SinglePage {
+
+    padding: 100px 0;
+
+    img {
+        width: 100%;
+    }
+
+    .Grid {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 60px;
+
+        .Token-Details {
+
+            padding-top: 30px;
+
+            .Token-options {
+                margin-bottom: 30px;
+
+                p {
+                    font-size: 20px;
+                }
+            }
+
+            .Offers-Section {
+                
+                background-color: beige;
+
+                .Offers-Title {
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    padding: 10px 20px;
+                    border-bottom: 1px solid #dbdbc3;
+                }
+
+                .Offers-detail {
+
+                    padding: 10px 20px;
+
+                    ul.Offers-list {
+
+                        list-style: none;
+                        padding: 0;
+
+                        li {
+                            display: flex;
+                            justify-content: space-between;
+                            flex-wrap: wrap;
+                        }
+                    }
+                }
+            }
+
+            .token-id {
+
+                font-size: 3rem;
+
+                span {
+                    font-size: 6rem;
+                }
+            }
+
+            .bookDate {
+                margin-top: 20px;
+                cursor: pointer;
+                padding: 10px 30px;
+                font-size: 18px;
+            }
+        }
+    }
+}

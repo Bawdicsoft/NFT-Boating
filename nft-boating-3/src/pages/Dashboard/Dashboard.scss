@@ -41,6 +41,10 @@
         grid-template-columns: 1fr;
       }
 
+      .Grid-item {
+        cursor: pointer;
+      }
+
       img {
         width: 100%;
       }

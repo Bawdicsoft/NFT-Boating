@@ -90,6 +90,12 @@ contract NFTYacht is ERC721, Ownable {
         _isInserted = booking.isInserted(_id);
     }
 
+    function getBookedDate(uint _id) public view returns (
+        uint _blockTimestamp, uint _DateAndTime, uint _newYear ) {
+
+        (_blockTimestamp, _DateAndTime, _newYear) = booking.getTime(_id);
+    }
+
     function getOffer(uint _id) public view returns (
 
         address _user, uint _price, uint _time, uint _userID
@@ -182,24 +188,31 @@ contract NFTYacht is ERC721, Ownable {
 
         ) public {
 
+        require(_exists(_id), "Query for nonexistent token");
+
+        require(
+            _msgSender() == ownerOf(_id) || isApprovedForAll(ownerOf(_id), _msgSender()),
+            "ERC721: approve caller is not owner nor approved for all"
+        );
+
         require ( DateTimeLibrary.isValidDate(year, month, day), "inValid Date");
-        uint newDAte = DateTimeLibrary.timestampFromDate(year, month, day);
+        uint _newDAte = DateTimeLibrary.timestampFromDate(year, month, day);
 
         (, uint _DateAndTime, uint _newYear) = booking.getTime(_id);
 
         if (booking.isInserted(_id)) {
-            require ( newDAte > _newYear, "Token Already Booked");
+            require ( _newDAte > _newYear, "Token Already Booked");
         }
 
-        require(_DateAndTime != newDAte, "Date Already Booked");
+        require(_DateAndTime != _newDAte, "Date Already Booked");
         
         uint _blockTimestamp = block.timestamp;
-        console.log((_blockTimestamp + bookingBefore), "newDAte", newDAte);
-        require ( (_blockTimestamp + bookingBefore) < newDAte, "!booking Before");
-        require ( (_blockTimestamp + bookingAfter ) > newDAte, "!booking After");
+        console.log((_blockTimestamp + bookingBefore), "newDAte", _newDAte);
+        require ( (_blockTimestamp + bookingBefore) < _newDAte, "!booking Before");
+        require ( (_blockTimestamp + bookingAfter ) > _newDAte, "!booking After");
 
         uint newYear = DateTimeLibrary.timestampFromDate(year.add(1), 12, 31);
-        booking.set(_id, _msgSender(), _blockTimestamp, newDAte, newYear);
+        booking.set(_id, _msgSender(), _blockTimestamp, _newDAte, newYear);
 
         emit booked(_id, _msgSender());
 
@@ -217,9 +230,6 @@ contract NFTYacht is ERC721, Ownable {
         require(ownerOf(_userID) == _msgSender, "!Owner");
 
         require ( booking.isInserted(_id), "!Booked");
-
-        // require ( booking.isInserted(_id), "!Booked");
-        // have to use Auto _userID add loop
 
         require ( offerPrice == _USDT, "!OfferPrice");
 

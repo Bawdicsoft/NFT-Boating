@@ -16,3 +16,5 @@ npx hardhat help
 
 npx hardhat --network localhost test
 npx hardhat run --network localhost scripts/deploy.js 
+
+npx hardhat verify --contract "contracts/NFTYacht.sol:NFTYacht" --network localhost 0x26e3e87873265237172194E7418a20Df204Fbb7D "0x921e00B13562F4C3f4B677f6CaD7639562595c33"

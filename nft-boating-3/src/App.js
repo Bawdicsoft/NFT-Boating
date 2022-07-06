@@ -5,6 +5,7 @@ import React from "react";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 
+import SinglePage from "./pages/SinglePage/SinglePage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Booking from "./pages/Booking/Booking";
 import BuyNFT from "./pages/BuyNFT/BuyNFT";
@@ -19,6 +20,7 @@ function App() {
         <Route path="/buyNFT" element={<BuyNFT />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/single-page" element={<SinglePage />} />
       </Routes>
       <Footer />
     </>
