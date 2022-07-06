@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 
 function Dropdown() {
+
   return (
     <Navbar>
       <span>
@@ -36,6 +37,9 @@ function Navbar(props) {
 function NavItem(props) {
   const [open, setOpen] = useState(false);
 
+  // const handleClose = () => {
+  //   setOpen(false)
+  // }
   return (
     <li className="nav-item">
       {/* <a href="#" className="img-button" onClick={() => setOpen(!open)}>
@@ -100,13 +104,13 @@ function DropdownMenu() {
       setName(data.name);
     } catch (err) {
       console.error(err);
-      alert("An error occured while fetching user data");
+      // alert("An error occured while fetching user data");
     }
   };
 
   useEffect(() => {
     if (loading) return;
-    if (!user) return navigate("/");
+    if (!user) return;
 
     fetchUserName();
   }, [user, loading]);

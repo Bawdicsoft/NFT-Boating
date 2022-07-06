@@ -60,7 +60,7 @@ export const Mint = ({ setInit }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="Mint">
-      <h6>mint</h6>
+      <h6>Mint</h6>
       <div className="userAddress">
         <p>Wallet Address :</p>
         <p>{active ? account : "Connect MetaMask"}</p>

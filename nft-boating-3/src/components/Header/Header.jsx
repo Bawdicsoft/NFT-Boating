@@ -8,7 +8,7 @@ function Header() {
   return (
     <div className="Header">
       <div className="Container">
-        <h1>Header</h1>
+        <h1>LOGO</h1>
         <div className="Nav">
           <div className="naveLink">
             <Link to="/">Home</Link>
