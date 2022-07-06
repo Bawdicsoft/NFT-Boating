@@ -23,7 +23,7 @@ export const ContextProvider = ({ children }) => {
 
 
   const usdtAddress = "0x921e00B13562F4C3f4B677f6CaD7639562595c33";
-  const NFTYacht = "0x26e3e87873265237172194E7418a20Df204Fbb7D";
+  const NFTYacht = "0x0Ed9A23dF7f01CA7D0C19bE4Dd59c5B2c25F670c";
 
   // const ContractAddress = '';
   const provider = new ethers.providers.Web3Provider(
