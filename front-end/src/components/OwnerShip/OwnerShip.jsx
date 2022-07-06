@@ -10,6 +10,7 @@ import DarkNavbar from '../Header/DarkNavbar'
 
 
 
+
 const OwnerShip = () => {
     return (<div id='bg-clr'>
         <DarkNavbar />
@@ -22,7 +23,9 @@ const OwnerShip = () => {
         <Container className='d-flex justify-content-evenly flex-wrap' component="main" maxWidth="s">
             {/* <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}> */}
 
-            <Form />
+            <Form/>
+
+            
 
             <Box
                 sx={{
@@ -35,7 +38,7 @@ const OwnerShip = () => {
 
                 }}
             >
-                <div style={{  width: '24rem', padding: '20px' }}>
+                <div style={{ width: '24rem', padding: '20px' }}>
                     <div>
                         <img style={{ marginRight: '15px', borderRadius: '10px' }} width='100%' src="https://imgs.yachthub.com/reviews/1/0_3.jpg" alt="" />
 

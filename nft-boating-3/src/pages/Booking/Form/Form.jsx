@@ -5,10 +5,21 @@ import { saveBooking } from "../../../features/Booking/BookingSlice";
 import "./Form.scss";
 import { useContextAPI } from "../../../ContextAPI";
 
+// Date
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
+
 export const Form = ({ setState }) => {
   const dispatch = useDispatch();
   const base = useSelector((state) => state);
   const { ContractYacht } = useContextAPI();
+
+  // DATE
+  // const [date, setDate] = useState(new Date());
+  // const [days, setDays] = useState(new Date().setDate(new Date().getDate() + 20));
+  // var availDate = new Date(days);
+  // var daysAdded = availDate;
+  // console.log("added 20m days", daysAdded);
 
   console.log("buy form nft number", base.BookingID.init);
 
@@ -45,6 +56,24 @@ export const Form = ({ setState }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="buyNftForm">
+      {/* <DatePicker
+        name="invoiceDate"
+        className="form-control form-control-sm"
+        type="text"
+        size="sm"
+        placeholder=""
+        selected={date}
+        minDate={new Date()}
+        maxDate={daysAdded}
+        value={date}
+        onChange={(d) => {
+          setDate(d);
+        }}
+        dateFormat="dd/MM/yyyy"
+        onKeyDown={(e) => {
+          e.preventDefault();
+        }}
+      /> */}
       <input
         type="date"
         placeholder="Chose Time AND Date"
