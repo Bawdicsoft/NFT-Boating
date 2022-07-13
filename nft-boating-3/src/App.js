@@ -17,10 +17,10 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/buyNFT" element={<BuyNFT />} />
-        <Route path="/booking" element={<Booking />} />
+        <Route path="/become-a-member" element={<BuyNFT />} />
+        <Route path="/booking/:id" element={<Booking />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/single-page" element={<SinglePage />} />
+        <Route path="/single-page/:id" element={<SinglePage />} />
       </Routes>
       <Footer />
     </>

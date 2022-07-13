@@ -1,4 +1,4 @@
-.buyNftForm {
+.bookingForm {
 
     display: grid;
     grid-template-columns: auto;
@@ -7,6 +7,13 @@
     input {
         font-size: 18px;
         padding: 10px;
+        text-align: left;
+    }
+
+    .DatePicker {
+        input {
+            width: calc(100% - 22px);
+        }
     }
 
     select {
@@ -14,11 +21,7 @@
         padding: 10px;
     }
 
-    .fullName {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-    }
+    
     
     textarea {
         font-size: 18px;
@@ -26,19 +29,18 @@
         min-height: 120px;
     }
 
-    .checkbox {
-        display: flex;
-        align-items: center;
+    
 
-        input {
-            margin-right: 10px;
-        }
+    .btn-submit {
+        display: flex;
+        justify-content: flex-end;
     }
 
     .submit {
         cursor: pointer;
+        width: fit-content;
+        padding: 10px 30px;
     }
-
 
 
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "./Header.scss";
 import Dropdown from "./Dropdown/Dropdown";
+import logo from "./../../Assets/logo.png"
 import React from "react";
 
 
@@ -8,14 +9,14 @@ function Header() {
   return (
     <div className="Header">
       <div className="Container">
-        <h1>LOGO</h1>
+        <img src={logo} alt="NFT Yacht" />
         <div className="Nav">
           <div className="naveLink">
             <Link to="/">Home</Link>
-            <Link to="/BuyNFT">BuyNFT</Link>
-            <Link to="/booking">Booking</Link>
-            <Link to="/Dashboard">Dashboard</Link>
-            <Link to="/single-page">Single Page</Link>
+            <Link to="/become-a-member">Become a Member</Link>
+            {/* <Link to="/booking">Booking</Link> */}
+            <Link to="/dashboard">Dashboard</Link>
+            {/* <Link to="/single-page">Single Page</Link> */}
           </div>
 
           <Dropdown />

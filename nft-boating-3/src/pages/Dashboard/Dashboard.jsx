@@ -50,7 +50,7 @@ function Dashboard() {
 
   const bookDate = (data) => {
     dispatch(saveBookingID(data));
-    navigate(`/single-page/${data}`);
+    navigate(`/single-page`);
   };
 
   return (
@@ -67,17 +67,21 @@ function Dashboard() {
             {User ? (
               <>
                 {UserData.map((User) => (
-                  <div className="Grid-item" key={User.id} onClick={() => bookDate(User.Token)}>
+                  <Link
+                    className="Grid-item"
+                    key={User.id}
+                    to={`/single-page/${User.Token}`}
+                  >
                     {/* <div className="Box">{User.TokenURI}</div> */}
                     <img
-                      src={`https://gateway.pinata.cloud/ipfs/QmVvFRRb6HxtJ9832HbZ4sfuMvvTwrSnihdkwVe1VvrDRf`}
+                      src={`https://cloudflare-ipfs.com/ipfs/Qmacuvgf1m4j35prXdbUJhmkycpYDk2Km9rZEhMv2Causz/${User.Token}.png`}
                       alt=""
                     />
                     <div className="cardDetails">
                       <h5>{`${account.slice(0, 5)}...${account.slice(-5)}`}</h5>
                       <p>{User.Token}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </>
             ) : (

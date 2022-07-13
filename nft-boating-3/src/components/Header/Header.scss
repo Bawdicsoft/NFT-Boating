@@ -4,6 +4,10 @@
   padding: 15px 0;
   border: none;
 
+  img {
+    width: 180px;
+  }
+
   .Container {
     display: flex;
     align-items: center;
@@ -42,7 +46,7 @@
   margin: 15px;
   font-weight: bold;
   text-transform: uppercase;
-  color: white;
+  color: black;
 }
 
 

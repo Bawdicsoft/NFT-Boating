@@ -9,6 +9,11 @@ import { BrowserRouter } from "react-router-dom";
 import { Web3ReactProvider } from "@web3-react/core";
 import { ethers } from "ethers";
 import { ContextProvider } from "./ContextAPI";
+import Modal from "react-modal";
+
+
+
+Modal.setAppElement("#root");
 
 const getLibrary = (provider) => {
   return new ethers.providers.Web3Provider(provider);

@@ -3,13 +3,13 @@ import { Form } from "./Form/Form";
 import { Review } from "./Review/Review";
 import "./Booking.scss";
 
-function BuyNFT() {
+function Booking() {
   const [state, setState] = React.useState(0);
 
   console.log(">>>>>>>>", state);
 
   return (
-    <div className="BuyNFT">
+    <div className="Booking">
       <div className="Container">
         <div>
           <h1>Booking</h1>
@@ -17,10 +17,9 @@ function BuyNFT() {
 
         {state == 0 && <Form setState={setState} />}
         {state == 1 && <Review setState={setState} />}
-
       </div>
     </div>
   );
 };
 
-export default BuyNFT;
+export default Booking;

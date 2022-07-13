@@ -33,7 +33,8 @@ contract NFTYacht is ERC721, Ownable {
     IERC20 private USDT;
     uint256 private rate;
 
-    uint256 totalSupply = 365;
+    uint256 public totalSupply = 365;
+    string public baseExtension = ".json";
     
     uint public bookingBefore =  0; // user can't book date Before (bookingBefore)date
     uint public bookingAfter  =  604800; // user can't book date After  (bookingAfter)date
@@ -55,11 +56,12 @@ contract NFTYacht is ERC721, Ownable {
     mapping(uint => bool) public acceptedOffers;
 
     // mapping(uint => string) private tURI;
-    string public tURI;
+    string public baseURI;
 
-    constructor(address _USDT) ERC721("Yacht", "Y") {
+    constructor(address _USDT, string memory baseURI_) ERC721("Yacht", "Y") {
         rate = 1 ether;
         USDT = IERC20(_USDT);
+        baseURI = baseURI_;
     }
 
     event mint(uint token, address user);
@@ -88,6 +90,10 @@ contract NFTYacht is ERC721, Ownable {
         bool _isInserted
         ) {
         _isInserted = booking.isInserted(_id);
+    }
+
+    function currentID() public view returns(uint) {
+        return OwnershipToken.current();
     }
 
     function getBookedDate(uint _id) public view returns (
@@ -161,24 +167,27 @@ contract NFTYacht is ERC721, Ownable {
 
 
 
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "Query for nonexistent token");
-        return tURI;
-    }
-
     // function tokenURI(uint256 tokenId) public view override returns (string memory) {
     //     require(_exists(tokenId), "Query for nonexistent token");
-
-    //     string memory baseURI = _baseURI();
-    //     return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString())) : "";
-    // }
-
-    // function _baseURI() internal view override returns (string memory) {
     //     return tURI;
     // }
 
-    function updateTokenURI(string memory _tokenURI) public onlyOwner {
-        tURI = _tokenURI;
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(_exists(tokenId), "Query for nonexistent token");
+
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(_baseURI(), tokenId.toString(), baseExtension)) : "";
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return baseURI;
+    }
+
+    function setBaseURI(string memory _newBaseURI) public onlyOwner {
+        baseURI = _newBaseURI;
+    }
+
+    function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+        baseExtension = _newBaseExtension;
     }
 
 
@@ -211,11 +220,33 @@ contract NFTYacht is ERC721, Ownable {
         require ( (_blockTimestamp + bookingBefore) < _newDAte, "!booking Before");
         require ( (_blockTimestamp + bookingAfter ) > _newDAte, "!booking After");
 
-        uint newYear = DateTimeLibrary.timestampFromDate(year.add(1), 12, 31);
-        booking.set(_id, _msgSender(), _blockTimestamp, _newDAte, newYear);
+        uint __newYear = DateTimeLibrary.timestampFromDate(year.add(1), 12, 31);
+
+        if (newYear != __newYear) newYear = __newYear;
+        allBookedDates[newYear].push(_bookDates(year, month, day));
+        bookDateID[year][month][day] = _id;
+
+        booking.set(_id, _msgSender(), _blockTimestamp, _newDAte, __newYear);
 
         emit booked(_id, _msgSender());
 
+    }
+
+    uint public newYear;
+    struct _bookDates {
+        uint _year;
+        uint _month;
+        uint _day;
+    }
+    mapping ( uint => _bookDates[] ) public allBookedDates;
+    mapping ( uint => mapping ( uint => mapping ( uint => uint ) ) ) public bookDateID;
+
+    function getAllBookedDates(uint _newYear) public view returns(_bookDates[] memory) {
+        return allBookedDates[_newYear];
+    }
+
+    function getBookDateID(uint year, uint month, uint day) public view returns(uint) {
+        return bookDateID[year][month][day];
     }
 
 
@@ -257,6 +288,9 @@ contract NFTYacht is ERC721, Ownable {
         (, uint _dateAndTime, uint _newYear) = booking.getTime(_id);
         booking.remove(_id);
         booking.set(offers[_id].userID, offers[_id].User, block.timestamp, _dateAndTime, _newYear);
+
+        (uint year, uint month, uint day) = DateTimeLibrary.timestampToDate(_dateAndTime);
+        bookDateID[year][month][day] = offers[_id].userID;
 
         acceptedOffers[_id] = true;
         USDT.transfer(_msgSender(), offers[_id].Price);

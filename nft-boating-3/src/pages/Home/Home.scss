@@ -1,21 +1,23 @@
 .Home {
-
   .Hero {
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-top: -77px;
     min-height: 450px;
-    padding: 70px 0;
+    padding: 25vh 0;
     // background-image: url(../../Assets/Img/banner-home.jpg), linear-gradient(#eb01a5, #d13531);
-    background: linear-gradient( 180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,0.6502976190476191) 100% ),url(../../Assets/Img/banner-home.jpg);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(0, 0, 0, 0.6502976190476191) 100%
+      ),
+      url(../../Assets/Img/banner-home.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 
     .Container {
-
       color: white;
 
       text-align: center;
@@ -38,28 +40,22 @@
         cursor: pointer;
         padding: 10px 30px;
         background-color: white;
-        
+
         text-decoration: unset;
         color: black;
         font-weight: 600;
-
-         
       }
     }
-
   }
-  
-
 
   .Services {
-
     padding: 100px 0 50px 0;
 
     h2 {
       font-size: 40px;
       text-align: center;
     }
-    
+
     p {
       font-size: 18px;
       max-width: 62ch;
@@ -68,7 +64,6 @@
       margin: 0 auto;
       margin-bottom: 40px;
     }
-
 
     .Grid {
       display: grid;
@@ -96,22 +91,57 @@
       h5 {
         font-size: 18px;
       }
-
     }
-
   }
 
-  
+  .how-its-work {
+
+    padding: 50px 0;
+ 
+    .Grid {
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+
+      @media screen and (max-width: 800px) {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      @media screen and (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+
+      .Box {
+        padding-top: 100%;
+        // height: 400px;
+        background-color: #b5b5b5;
+        margin-bottom: 20px;
+        border-radius: 15px;
+
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      h5 {
+        font-size:40px;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 20px;
+      }
+    }
+  }
 
   .instagram-feed {
-    
     padding: 50px 0 10px 0;
 
     h2 {
       font-size: 40px;
       text-align: center;
     }
-    
+
     p {
       font-size: 18px;
       max-width: 62ch;
@@ -120,7 +150,6 @@
       margin: 0 auto;
       margin-bottom: 40px;
     }
-
 
     .Grid {
       display: grid;
@@ -143,9 +172,6 @@
         background-repeat: no-repeat;
         background-size: cover;
       }
-
     }
   }
-
 }
-

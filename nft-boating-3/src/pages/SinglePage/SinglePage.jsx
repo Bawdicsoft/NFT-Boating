@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./SinglePage.scss";
 import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
@@ -7,27 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { saveBookingID } from "../../features/BookingID/BookingIDSlice";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
+import { formatEther, parseEther, toString } from "ethers/lib/utils";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-  form: {
-    border: "1px solid black",
-  },
-};
-
-Modal.setAppElement("#root");
 
 function SinglePage() {
+  const { id } = useParams();
+  console.log({ id });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const init = useSelector((state) => state);
+  // const init = useSelector((state) => state);
 
   const { account, active } = useWeb3React();
   const { ContractYacht } = useContextAPI();
@@ -41,30 +29,46 @@ function SinglePage() {
     setIsOpen(true);
   }
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    // subtitle.style.color = "#f00";
+  const [UserIDs, setUserIDs] = useState([]);
+  console.log(UserIDs.length);
+  async function afterOpenModal() {
+    console.log("run");
+    const userIds = await ContractYacht.getUserIDs(account);
+    setUserIDs(userIds);
+    console.log(UserIDs.length );
   }
 
   function closeMakeOffer() {
     setIsOpen(false);
   }
 
-  const [bookedDate, setBookedDate] = useState("00 0000 00:00:00");
+  const [bookedDate, setBookedDate] = useState();
+  const [BookingTrue, setBookingTrue] = useState(false);
   const [Offers, setOffers] = useState({});
+  const [ownerOf, setOwnerOf] = useState();
   console.log(bookedDate);
 
   const getUserData = async () => {
-    // let userDateDetails = await ContractYacht.getBookedDate(1);
-    const [userDateDetails, getOffer] = await Promise.all([
-      ContractYacht.getBookedDate(1),
-      ContractYacht.getOffer(1),
+    const [userDateDetails, getOffer, ownerOf] = await Promise.all([
+      // ContractYacht.getBookedDate(init.BookingID.init),
+      // ContractYacht.getOffer(init.BookingID.init),
+
+      ContractYacht.getBookedDate(id),
+      ContractYacht.getOffer(id),
+      ContractYacht.ownerOf(id),
     ]);
 
+    console.log({ userDateDetails, getOffer, ownerOf });
+
+    setOwnerOf(ownerOf.toString());
+
     console.log(userDateDetails[1].toString());
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(userDateDetails[1].toString()).toLocaleString();
-    setBookedDate(t.toString());
+    if (userDateDetails[1].toString() != 0) {
+      var t = new Date(1970, 0, 1); // Epoch
+      t.setSeconds(userDateDetails[1].toString()).toLocaleString();
+      setBookedDate(t.toString());
+      setBookingTrue(true);
+    }
 
     if (getOffer._time.toString() > 0) {
       const Offer = {
@@ -96,8 +100,21 @@ function SinglePage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const sendOffer = async (data) => {
+    console.log(data.TokenID);
+    await ContractYacht.offer(
+      // init.BookingID.init,
+      id,
+      data.TokenID,
+      "300000000000000000000"
+    );
+  };
   console.log(errors);
+
+  const AcceptOffer = async () => {
+    // await ContractYacht.acceptOffer(init.BookingID.init);
+    await ContractYacht.acceptOffer(id);
+  };
 
   return (
     <div className="SinglePage">
@@ -105,18 +122,23 @@ function SinglePage() {
         <div className="Grid">
           <div>
             <img
-              src={`https://gateway.pinata.cloud/ipfs/QmVvFRRb6HxtJ9832HbZ4sfuMvvTwrSnihdkwVe1VvrDRf`}
+              src={`https://cloudflare-ipfs.com/ipfs/Qmacuvgf1m4j35prXdbUJhmkycpYDk2Km9rZEhMv2Causz/${id}.png`}
               alt=""
             />
           </div>
           <div className="Token-Details">
             <div className="Token-options">
-              <div className="bookedDate">
-                <p>Booked Date: </p>
-                <p className="date">{bookedDate.slice(0, 15)}</p>
-              </div>
+              {BookingTrue ? (
+                <div className="bookedDate">
+                  <p>Booked Date: </p>
+                  <p className="date">{bookedDate.slice(0, 15)}</p>
+                </div>
+              ) : (
+                ""
+              )}
               <h1>
-                Lorem ipsum dolor #<span>{init.BookingID.init}</span>
+                {/* Lorem ipsum dolor #<span>{init.BookingID.init}</span> */}
+                Lorem ipsum dolor #<span>{id}</span>
               </h1>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipiscing elit egestas
@@ -126,13 +148,24 @@ function SinglePage() {
               <div className="buttons">
                 <button
                   className="bookDate"
-                  onClick={() => bookDate(init.BookingID.init)}
+                  // onClick={() => bookDate(init.BookingID.init)}
+                  onClick={() => navigate(`/booking/${id}`)}
                 >
                   Book Date
                 </button>
-                <button className="bookDate" onClick={makeOffer}>
-                  Make Offer
-                </button>
+                {ownerOf && bookedDate ? (
+                  <>
+                    {ownerOf != account ? (
+                      <button className="bookDate" onClick={makeOffer}>
+                        Make Offer
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
 
@@ -140,7 +173,6 @@ function SinglePage() {
               isOpen={modalIsOpen}
               onAfterOpen={afterOpenModal}
               onRequestClose={closeMakeOffer}
-              //   style={customStyles}
               contentLabel="Example Modal"
               className="Modal"
               overlayClassName="Overlay"
@@ -148,20 +180,47 @@ function SinglePage() {
               <button className="x-button" onClick={closeMakeOffer}>
                 X
               </button>
-              <div className="title-modal">
-                Make Offer for: {bookedDate.slice(0, 15)}
-              </div>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <select
-                  {...register("Select your Token ID", { required: true })}
-                >
-                  <option value="1">1</option>
-                  <option value=" 2">2</option>
-                  <option value=" 3">3</option>
-                </select>
 
-                <input type="submit" />
-              </form>
+              {UserIDs.length ? (
+                <>
+                  {BookingTrue ? (
+                    <div className="title-modal">
+                      Make Offer for: {bookedDate.slice(0, 15)}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <form
+                    className="Modal-form-offer"
+                    onSubmit={handleSubmit(sendOffer)}
+                  >
+                    <p>Select your token id</p>
+                    <select {...register("TokenID", { required: true })}>
+                      {UserIDs.map((userID) => (
+                        <option
+                          key={userID.toString()}
+                          value={userID.toString()}
+                        >
+                          {userID.toString()}
+                        </option>
+                      ))}
+                    </select>
+
+                    <div className="btn-submit">
+                      <input className="submit" type="submit" />
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <div className="BuyNFT-link-container">
+                  <p className="BuyNFT-link-p">
+                    you didn't have any NFT for the booking.
+                  </p>
+                  <Link className="BuyNFT-link" to="/BuyNFT">
+                    Buy Your NFTs
+                  </Link>
+                </div>
+              )}
             </Modal>
 
             {Offers.Price ? (
@@ -172,11 +231,11 @@ function SinglePage() {
                 <div className="Offers-detail">
                   <ul className="Offers-list">
                     <li>
-                      <span>0x0000000000</span>
+                      <span>{Offers.User.slice(0, 6)}</span>
                       <span>
-                        USDT <span>300</span>
+                        USDT <span>{formatEther(Offers.Price)}</span>
                       </span>
-                      <span>Accept</span>
+                      <button onClick={AcceptOffer}>Accept</button>
                     </li>
                   </ul>
                 </div>

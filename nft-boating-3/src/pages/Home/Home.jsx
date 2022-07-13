@@ -37,26 +37,92 @@ function Home() {
 
           <div className="Grid">
             <div>
-              <div style={{backgroundImage: `url(${yachtImg})`}} className="Box">
-                {/* <img width="50px" src={fishingImg} alt="" srcset="" /> */}
+              <div
+                style={{ backgroundImage: `url(${yachtImg})` }}
+                className="Box"
+              >
               </div>
               <h5>Yacht</h5>
             </div>
             <div>
-              <div style={{backgroundImage: `url(${weddingImg})`}} className="Box"></div>
+              <div
+                style={{ backgroundImage: `url(${weddingImg})` }}
+                className="Box"
+              ></div>
               <h5>Wedding</h5>
             </div>
             <div>
-              <div style={{backgroundImage: `url(${fishingImg})`}} className="Box"></div>
+              <div
+                style={{ backgroundImage: `url(${fishingImg})` }}
+                className="Box"
+              ></div>
               <h5>Fishing</h5>
             </div>
             <div>
-              <div style={{backgroundImage: `url(${cateringImg})`}} className="Box"></div>
+              <div
+                style={{ backgroundImage: `url(${cateringImg})` }}
+                className="Box"
+              ></div>
               <h5>Catering</h5>
             </div>
           </div>
         </div>
       </div>
+
+      {/* <div className="how-its-work">
+        <div className="Container">
+          <h1>How it's Work</h1>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum,
+            inventore. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          </p>
+          <br />
+          <div className="Grid">
+            <div
+              style={{ backgroundImage: `url(${yachtImg})` }}
+              className="Box"
+            >
+            </div>
+            <div>
+              <h5>Become a Member</h5>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit, egestas
+                ac suscipit montes id porttitor aliquet, aliquam sem duis quis
+                risus dapibus. Pellentesque porttitor vulputate parturient
+                viverra turpis quis non id ligula curae, sapien blandit lacinia
+                ultricies dictumst imperdiet sed aenean eros, eleifend ornare
+                metus ridiculus penatibus augue rhoncus ultrices fermentum.
+                Convallis dignissim auctor est proin nisl habitant fringilla
+                dui, tincidunt etiam sapien bibendum cursus laoreet viverra
+                ligula neque, congue vivamus senectus ultrices imperdiet
+                tristique mus.
+              </p>
+            </div>
+          </div>
+          <div className="Grid">
+            <div>
+              <h5>Become a Member</h5>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit, egestas
+                ac suscipit montes id porttitor aliquet, aliquam sem duis quis
+                risus dapibus. Pellentesque porttitor vulputate parturient
+                viverra turpis quis non id ligula curae, sapien blandit lacinia
+                ultricies dictumst imperdiet sed aenean eros, eleifend ornare
+                metus ridiculus penatibus augue rhoncus ultrices fermentum.
+                Convallis dignissim auctor est proin nisl habitant fringilla
+                dui, tincidunt etiam sapien bibendum cursus laoreet viverra
+                ligula neque, congue vivamus senectus ultrices imperdiet
+                tristique mus.
+              </p>
+            </div>
+            <div
+              style={{ backgroundImage: `url(${yachtImg})` }}
+              className="Box"
+            >
+            </div>
+          </div>
+        </div>
+      </div> */}
 
       <div className="instagram-feed">
         <div className="Container">
@@ -69,19 +135,34 @@ function Home() {
 
         <div className="Grid">
           <div>
-            <div style={{backgroundImage: `url(${image1})`}} className="Box"></div>
+            <div
+              style={{ backgroundImage: `url(${image1})` }}
+              className="Box"
+            ></div>
           </div>
           <div>
-            <div style={{backgroundImage: `url(${image2})`}} className="Box"></div>
+            <div
+              style={{ backgroundImage: `url(${image2})` }}
+              className="Box"
+            ></div>
           </div>
           <div>
-            <div style={{backgroundImage: `url(${image3})`}} className="Box"></div>
+            <div
+              style={{ backgroundImage: `url(${image3})` }}
+              className="Box"
+            ></div>
           </div>
           <div>
-            <div style={{backgroundImage: `url(${image4})`}} className="Box"></div>
+            <div
+              style={{ backgroundImage: `url(${image4})` }}
+              className="Box"
+            ></div>
           </div>
           <div>
-            <div style={{backgroundImage: `url(${image5})`}} className="Box"></div>
+            <div
+              style={{ backgroundImage: `url(${image5})` }}
+              className="Box"
+            ></div>
           </div>
         </div>
       </div>

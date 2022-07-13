@@ -1,137 +1,174 @@
 .Modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 30px;
-    padding-top: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 30px;
+  padding-top: 50px;
 
-    .x-button {
-        background: #dfdfdf;
-        border: none;
-        font-size: 20px;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        padding: 8px 13px;
-        border-radius: 28px;
-        cursor: pointer;
+  .x-button {
+    background: #dfdfdf;
+    border: none;
+    font-size: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 13px;
+    border-radius: 28px;
+    cursor: pointer;
+  }
+
+  .title-modal {
+    margin-bottom: 20px;
+  }
+
+  .Modal-form-offer {
+    width: 400px;
+    display: grid;
+    gap: 10px;
+
+    select {
+      font-size: 18px;
+      padding: 10px;
     }
+
+    .btn-submit {
+      text-align: right;
+    }
+
+    .submit {
+      cursor: pointer;
+      width: fit-content;
+      padding: 10px 30px;
+      float: right;
+    }
+  }
+
+  .BuyNFT-link-container {
+    width: 300px;
+    text-align: center;
+    padding: 70px 20px 30px 20px;
+
+    .BuyNFT-link {
+    cursor: pointer;
+    background-color: #cbcbcb;
+    color: black;
+    padding: 10px 50px;
+    text-decoration: none;
+    border: 1px solid;
+  }
+  .BuyNFT-link-p {
+    margin-bottom: 30px;
+  }
+  }
+
+  
 }
 
 .Overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(204, 204, 204, 0.432);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(204, 204, 204, 0.432);
 }
 
 .SinglePage {
+  padding: 100px 0;
 
-    padding: 100px 0;
+  img {
+    width: 100%;
+  }
 
-    img {
-        width: 100%;
-    }
+  .Grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
 
-    .Grid {
-        display: grid;
-        grid-template-columns: 1fr 1.5fr;
-        gap: 60px;
+    .Token-Details {
+      padding-top: 30px;
 
-        .Token-Details {
+      .Token-options {
+        margin-bottom: 30px;
 
-            padding-top: 30px;
+        .bookedDate {
+          display: flex;
+          flex-wrap: wrap;
+          background-color: beige;
+          color: rgb(255, 0, 0);
+          padding: 10px 15px 2px 15px;
+          margin-bottom: 20px;
 
-            .Token-options {
-                margin-bottom: 30px;
+          p {
+            font-weight: 600;
+          }
 
-                .bookedDate {
-                    display: flex;
-                    flex-wrap: wrap;
-                    background-color: beige;
-                    color: rgb(255, 0, 0);
-                    padding: 10px 15px 2px 15px;
-                    margin-bottom: 20px;
-
-                    p {
-                        font-weight: 600;
-                    }
-
-                    .date{
-                        margin-left: 10px;
-                    }
-                }
-
-                H1 {
-                    margin-bottom: 20PX;
-                }
-
-                p {
-                    font-size: 20px;
-                    margin-bottom: 10PX;
-                }
-
-                .buttons {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
-                    gap: 10px;
-                }
-            }
-
-              
-
-
-            .Offers-Section {
-                
-                background-color: beige;
-
-                .Offers-Title {
-                    font-size: 1.2rem;
-                    font-weight: 700;
-                    padding: 10px 20px;
-                    border-bottom: 1px solid #dbdbc3;
-                }
-
-                .Offers-detail {
-
-                    padding: 10px 20px;
-
-                    ul.Offers-list {
-
-                        list-style: none;
-                        padding: 0;
-
-                        li {
-                            display: flex;
-                            justify-content: space-between;
-                            flex-wrap: wrap;
-                        }
-                    }
-                }
-            }
-
-            .token-id {
-
-                font-size: 3rem;
-
-                span {
-                    font-size: 6rem;
-                }
-            }
-
-            .bookDate {
-                margin-top: 20px;
-                cursor: pointer;
-                padding: 10px 30px;
-                font-size: 18px;
-            }
+          .date {
+            margin-left: 10px;
+          }
         }
+
+        H1 {
+          margin-bottom: 20px;
+        }
+
+        p {
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+
+        .buttons {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 10px;
+        }
+      }
+
+      .Offers-Section {
+        background-color: beige;
+
+        .Offers-Title {
+          font-size: 1.2rem;
+          font-weight: 700;
+          padding: 10px 20px;
+          border-bottom: 1px solid #dbdbc3;
+        }
+
+        .Offers-detail {
+          padding: 10px 20px;
+
+          ul.Offers-list {
+            list-style: none;
+            padding: 0;
+
+            li {
+              display: flex;
+              justify-content: space-between;
+              flex-wrap: wrap;
+            }
+          }
+        }
+      }
+
+      .token-id {
+        font-size: 3rem;
+
+        span {
+          font-size: 6rem;
+        }
+      }
+
+      .bookDate {
+        margin-top: 20px;
+        cursor: pointer;
+        padding: 10px 30px;
+        font-size: 18px;
+      }
     }
+  }
 }

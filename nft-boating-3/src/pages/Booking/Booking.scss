@@ -1,4 +1,4 @@
-.BuyNFT {
+.Booking {
     padding: 100px 0;
     text-align: center;
 
@@ -8,5 +8,11 @@
 
     .Container {
         max-width: 700px;
+    }
+
+    .fullName {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
 }
