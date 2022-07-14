@@ -1,0 +1,31 @@
+.BookedDates {
+    padding: 100px 0 50px 0;
+
+    .table-offer{
+      table {
+        width: 100%;
+      }
+
+      tr {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          align-items: center;
+          gap: 30px;
+          text-align: left;
+      }
+
+      thead {
+        tr {
+          padding: 10px 20px;
+        }
+      }
+      tbody {
+        tr {
+          background-color: #ededed;
+          padding: 15px 20px;
+        }
+      }
+
+    }
+
+}

@@ -22,8 +22,8 @@ export const ContextProvider = ({ children }) => {
   const [user, loading, error] = useAuthState(auth);
 
 
-  const usdtAddress = "0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B";
-  const NFTYacht = "0x31bc944d5A6A6beB34371a737C7cF9982bE38c88";
+  const usdtAddress = "0x3cDDe7A730A552897425D3d79CF773B3f711C3C1";
+  const NFTYacht = "0xEEf40717d140A1D9Bceb0Ff474F12FeA63D78fF9";
 
   // const ContractAddress = '';
   const provider = new ethers.providers.Web3Provider(

@@ -51,6 +51,7 @@ contract NFTYacht is ERC721, Ownable {
     }
 
     mapping ( uint => _offer) public offers;
+    mapping ( address => uint[]) public userAllOffers;
     
     mapping(uint => bool) public offerdID;
     mapping(uint => bool) public acceptedOffers;
@@ -113,6 +114,10 @@ contract NFTYacht is ERC721, Ownable {
         _time    = offers[_id].Time;
         _userID  = offers[_id].userID;
 
+    }
+
+    function getUserAllOffers(address _user) public view returns(uint[] memory) {
+        return userAllOffers[_user];
     }
 
 
@@ -223,6 +228,7 @@ contract NFTYacht is ERC721, Ownable {
         uint __newYear = DateTimeLibrary.timestampFromDate(year.add(1), 12, 31);
 
         if (newYear != __newYear) newYear = __newYear;
+        indexOfBookedDates[_id] = allBookedDates[newYear].length;
         allBookedDates[newYear].push(_bookDates(year, month, day));
         bookDateID[year][month][day] = _id;
 
@@ -231,6 +237,9 @@ contract NFTYacht is ERC721, Ownable {
         emit booked(_id, _msgSender());
 
     }
+
+    mapping ( uint => uint ) indexOfBookedDates;
+
 
     uint public newYear;
     struct _bookDates {
@@ -247,6 +256,37 @@ contract NFTYacht is ERC721, Ownable {
 
     function getBookDateID(uint year, uint month, uint day) public view returns(uint) {
         return bookDateID[year][month][day];
+    }
+
+    uint cancelBefore = 86400;
+    event _cancelBooking(uint id, uint year, uint month, uint day);
+
+    function cancelBooking(uint _id) public {
+
+        require (booking.isInserted(_id), "!Booked");
+        require (booking.getOwner(_id) == _msgSender(), "!Owner");
+
+        (, uint _DateAndTime ,) = booking.getTime(_id);
+        require (_DateAndTime > (block.timestamp.sub(cancelBefore)), "Cant Cancel Booking Now");
+
+        (uint _year, uint _month, uint _day) = DateTimeLibrary.timestampToDate(_DateAndTime);
+
+        booking.remove(_id);
+        delete bookDateID[_year][_month][_day];
+
+        uint index = indexOfBookedDates[_id];
+        uint lastIndex = allBookedDates[newYear].length - 1;
+        uint year = allBookedDates[newYear][lastIndex]._year;
+        uint month = allBookedDates[newYear][lastIndex]._month;
+        uint day = allBookedDates[newYear][lastIndex]._day;
+
+        delete indexOf[_id];
+
+        allBookedDates[newYear][index] = _bookDates( year, month, day );
+        allBookedDates[newYear].pop();
+
+        emit _cancelBooking(_id, _year, _month, _day);
+
     }
 
 
@@ -271,10 +311,38 @@ contract NFTYacht is ERC721, Ownable {
         USDT.transferFrom( _msgSender, address(this), _USDT);
 
         offers[_id] = _offer (_msgSender, _USDT, (_DateAndTime.sub(acceptOfferBefore)), _userID);
+        indexOf[_id] = userAllOffers[_msgSender].length;
+        userAllOffers[_msgSender].push(_id);
         offerdID[_id] = true;
 
         emit offered(_id, _msgSender);
 
+    }
+
+
+    mapping ( uint => uint ) indexOf;
+
+    function cancelOffer(uint _id) public {
+
+        require(offerdID[_id],"!offerd");
+
+        address _msgSender = _msgSender();
+        require(offers[_id].User == _msgSender, "!User");
+
+        USDT.transfer( _msgSender, offers[_id].Price);
+
+        uint index = indexOf[_id];
+        uint lastIndex = userAllOffers[_msgSender].length - 1;
+        uint lastKey = userAllOffers[_msgSender][lastIndex];
+
+        indexOf[lastKey] = index;
+        delete indexOf[_id];
+
+        userAllOffers[_msgSender][index] = lastKey;
+        userAllOffers[_msgSender].pop();
+
+        delete offers[_id];
+        delete offerdID[_id];
     }
 
 

@@ -116,6 +116,10 @@ function SinglePage() {
     await ContractYacht.acceptOffer(id);
   };
 
+  const handleCancel = async () => {
+    await ContractYacht.cancelBooking(id);
+  };
+
   return (
     <div className="SinglePage">
       <div className="Container">
@@ -146,13 +150,30 @@ function SinglePage() {
                 cursus at.
               </p>
               <div className="buttons">
-                <button
-                  className="bookDate"
-                  // onClick={() => bookDate(init.BookingID.init)}
-                  onClick={() => navigate(`/booking/${id}`)}
-                >
-                  Book Date
-                </button>
+                {bookedDate ? (
+                  <>
+                    {ownerOf != account ? (
+                      ""
+                    ) : (
+                      <button className="bookDate" onClick={handleCancel}>
+                        Cancel Booking
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {ownerOf != account ? (
+                      ""
+                    ) : (
+                      <button
+                        className="bookDate"
+                        onClick={() => navigate(`/booking/${id}`)}
+                      >
+                        Book Date
+                      </button>
+                    )}
+                  </>
+                )}
                 {ownerOf && bookedDate ? (
                   <>
                     {ownerOf != account ? (

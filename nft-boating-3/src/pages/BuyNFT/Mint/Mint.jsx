@@ -20,11 +20,23 @@ export const Mint = ({ setInit }) => {
   const { ContractYacht, ContractUSDT, NFTYacht } = useContextAPI();
 
   const [GetRate, setGetRate] = useState();
+  const [TotalSupply, setTotalSupply] = useState();
+  const [CurrentID, setCurrentID] = useState();
   const [Allowance, setAllowance] = useState();
+  const [BalanceUSDT, setBalanceUSDT] = useState();
 
   const getDataFromSmartContract = async () => {
     let getRate = await ContractYacht.getRate();
     setGetRate(formatEther(getRate));
+
+    let totalSupply = await ContractYacht.totalSupply();
+    setTotalSupply(totalSupply.toString());
+
+    let currentID = await ContractYacht.currentID();
+    setCurrentID(currentID.toString());
+
+    const balanceOf = await ContractUSDT.balanceOf(account);
+    setBalanceUSDT(formatEther(balanceOf));
 
     const allowance = await ContractUSDT.allowance(account, NFTYacht);
     setAllowance(formatEther(allowance));
@@ -128,11 +140,13 @@ export const Mint = ({ setInit }) => {
       <div className="contractInfo">
         <div>
           <p>Supply</p>
-          <p>00/00</p>
+          <p>
+            {CurrentID ? CurrentID : "00"}/{TotalSupply ? TotalSupply : "00"}
+          </p>
         </div>
         <div>
-          <p>Sale status</p>
-          <p>Close</p>
+          <p>USDT Balance</p>
+          <p>{BalanceUSDT ? BalanceUSDT : "00.00"}</p>
         </div>
       </div>
       <div>

@@ -1,0 +1,53 @@
+.OwnerShips {
+    padding: 100px 0 50px 0;
+    
+    .Grid {
+      
+
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+
+      @media screen and (max-width: 800px) {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      @media screen and (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+
+      .Grid-item {
+        cursor: pointer;
+      }
+
+      img {
+        width: 100%;
+      }
+
+      .cardDetails {
+        display: flex;
+        justify-content: space-between;
+
+        p {
+          max-width: auto;
+          margin: 0;
+        }
+      }
+
+      // .Box {
+      //   padding-top: 100%;
+      //   background-color: #b5b5b5;
+      //   margin-bottom: 20px;
+      //   border-radius: 15px;
+
+      //   background-image: url(../../Assets/Img/box.jpg);
+
+      //   background-position: center;
+      //   background-repeat: no-repeat;
+      //   background-size: cover;
+      // }
+
+      
+
+    }
+}

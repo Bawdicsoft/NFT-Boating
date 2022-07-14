@@ -8,11 +8,6 @@ import { documentId } from "firebase/firestore";
 function BuyNFT() {
   const [init, setInit] = React.useState(0);
 
-//  if (init = 0) {
-// <p> Formmm</p>
-// } else {
-//   <p>else</p>
-//  }
   return (
     <div className="BuyNFT">
       <div className="Container BuyNFT-grid">
@@ -53,23 +48,6 @@ function BuyNFT() {
                   <span>Mint</span>
                 </>
               )}
-              {/* {init == 2 ? (
-                <>
-                  <span
-                    style={{ color: "#2d2dc2", borderBottom: "2px solid blue" }}
-                  >
-                    Review Token
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span>Review Token</span>
-                </>
-              )} */}
-              {/* <span>Form:</span><span>Mint:</span><span>Review</span> */}
-              {/* <li>{init == 0 && <>Form</>}</li>
-          <li>{init == 1 && <>Mint</>}</li>
-          <li>{init == 2 && <>Review</>}</li> */}
             </div>
           </div>
           {init == 0 && <Form setInit={setInit} />}
