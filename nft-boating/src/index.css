@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @import h-full bg-gray-100;
+}
+
+body {
+  @import h-full;
+}
+
+.DatePicker {
+  position: relative;
+  display: inline-block;
+  z-index: 0 !important;
+  width: 100%;
+}
+
+input.DatePicker__input.-ltr {
+  width: 100%;
+  text-align: left;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 16px;
+}

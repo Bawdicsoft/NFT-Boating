@@ -6,7 +6,12 @@ import { useForm } from "react-hook-form";
 import { saveBooking } from "../../../features/Booking/BookingSlice";
 import "./Form.scss";
 import { useContextAPI } from "../../../ContextAPI";
+import FoodMenu from "./../FoodMenu/FoodMenu";
 import { useWeb3React } from "@web3-react/core";
+import Modal from "react-modal";
+import { getDocs, collection, doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../../DB/firebase-config";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
 import DatePicker, {
@@ -18,6 +23,7 @@ export const Form = ({ setState }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const base = useSelector((state) => state);
+  // console.log("base", base.user.init[0].id);
   const { ContractYacht } = useContextAPI();
   const { account, active } = useWeb3React();
 
@@ -33,47 +39,41 @@ export const Form = ({ setState }) => {
   var daysAdded = availDate.toISOString().split("T")[0];
 
   const currentDate = new Date().setDate(new Date().getDate() + 20);
-  // console.log({ currentDate });
+
   const maximumDate = {
     year: daysAdded.slice(0, 4),
     month: daysAdded.slice(5, 7),
     day: daysAdded.slice(8, 10),
-    // 2022-07-26
   };
+
   const minimumDate = {
     year: date.slice(0, 4),
     month: date.slice(5, 7),
     day: date.slice(8, 10),
-    // 2022-07-26
   };
-  // console.log({ maximumDate, minimumDate });
 
   const [selectedDay, setSelectedDay] = useState(null);
 
-  console.log("selectedDay", selectedDay);
-
   const [dateError, setDateError] = useState();
   const [getBookDateID, setGetBookDateID] = useState();
+
   const handleDisabledSelect = async (disabledDay) => {
-    console.log("Tried selecting a disabled day", disabledDay);
     for (let i = 0; i < disabledDays.length; i++) {
       if (disabledDays[i].day === disabledDay.day) {
-         await ContractYacht.getBookDateID(
+        await ContractYacht.getBookDateID(
           disabledDay.year,
           disabledDay.month,
           disabledDay.day
         ).then((res) => {
-          setGetBookDateID( res.toString());
-           setDateError(disabledDay);
+          setGetBookDateID(res.toString());
+          setDateError(disabledDay);
         });
       }
     }
   };
 
   const [disabledDays, setDisabledDays] = useState([]);
-  console.log({ disabledDays });
   async function afterOpenModal() {
-    console.log("run");
     setDisabledDays([]);
 
     let newYear = await ContractYacht.newYear();
@@ -81,16 +81,8 @@ export const Form = ({ setState }) => {
       newYear.toString()
     );
 
-    // console.log("allBookedDates", allBookedDates[0]._day.toString());
-
     if (Number(newYear.toString())) {
       for (let i = 0; i < allBookedDates.length; i++) {
-        console.log(i);
-        // var t = new Date(1970, 0, 1); // Epoch
-        // t.setSeconds(allBookedDates[i].toString()).toLocaleString();
-        // console.log(">>>>", t);
-
-        // const BookedDate = new Date(t.toString()).toISOString().slice(0, 10);
         setDisabledDays((prev) =>
           prev.concat({
             year: Number(allBookedDates[i]._year.toString()),
@@ -98,7 +90,6 @@ export const Form = ({ setState }) => {
             day: Number(allBookedDates[i]._day.toString()),
           })
         );
-        console.log(allBookedDates);
       }
     }
   }
@@ -121,6 +112,8 @@ export const Form = ({ setState }) => {
     formState: { errors },
   } = useForm();
 
+  const [user, loading, error] = useAuthState(auth);
+
   const onSubmit = async (data) => {
     console.log(id, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     await ContractYacht.bookDate(
@@ -131,15 +124,36 @@ export const Form = ({ setState }) => {
     )
       .then((res) => {
         console.log(res);
-        dispatch(saveBooking(data));
-        navigate(`/single-page/${id}`);
-        // setState(1);
       })
       .catch((e) => {
         console.log(e.reason);
       });
+
+
+    const fieldToEdit = doc(db, "users", base.user.init[0].id);
+
+    const Booking = `Booking for ${selectedDay.year} ${selectedDay.month} ${selectedDay.day}`;
+    const bookingData = [{ Booking: data }, { food: Food }];
+
+    await updateDoc(fieldToEdit, { [Booking]: bookingData })
+      .then((res) => {
+        console.log(res);
+        navigate(`/single-page/${id}`);
+      })
+      .catch((err) => console.log(err));
   };
   // console.log(errors);
+
+  const [Food, setFood] = useState({ name: "" });
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function closeMakeOffer() {
+    setIsOpen(false);
+  }
+
+  const PickYourFood = () => {
+    setIsOpen(true);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="bookingForm">
@@ -170,6 +184,33 @@ export const Form = ({ setState }) => {
       />
 
       <input
+        type="text"
+        autoComplete="off"
+        value={Food.name}
+        onClick={PickYourFood}
+        placeholder="Pick You'r Food"
+        {...register("food")}
+      />
+
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeMakeOffer}
+        contentLabel="Example Modal"
+        className="Modal-PickYourFood"
+        overlayClassName="Overlay"
+      >
+        <button className="x-button" onClick={closeMakeOffer}>
+          X
+        </button>
+
+        <div className="col">
+          <h4>Pick You'r Food</h4>
+          <FoodMenu setFood={setFood} setIsOpen={setIsOpen} />
+        </div>
+      </Modal>
+
+      <input
         type="tel"
         placeholder="Mobile number"
         {...register("Mobile number", {
@@ -178,6 +219,7 @@ export const Form = ({ setState }) => {
           maxLength: 12,
         })}
       />
+
       <input
         type="number"
         placeholder="How many person will you be with?"

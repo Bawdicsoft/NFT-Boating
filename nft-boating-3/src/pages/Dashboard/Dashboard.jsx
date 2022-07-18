@@ -1,40 +1,28 @@
 import "./Dashboard.scss";
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
-import OffersMade from "./OffersMade/OffersMade";
-import OffersReceived from "./OffersReceived/OffersReceived";
-import BookedDates from "./BookedDates/BookedDates";
-import OwnerShips from "./OwnerShips/OwnerShips";
+
 
 function Dashboard() {
-  const [DBMenu, setDBMenu] = useState("OwnerShips");
-
   return (
     <div className="Dashboard">
       <div className="Container second-menu">
         <ul>
-          <li onClick={() => setDBMenu("OwnerShips")}>OwnerShips</li>
-          <li onClick={() => setDBMenu("BookedDates")}>BookedDates</li>
-          <li onClick={() => setDBMenu("OffersMade")}>Offers Made</li>
-          <li onClick={() => setDBMenu("OffersReceived")}>Offers Received</li>
+          <li>
+            <Link to="/owner-ships">Owner Ships</Link>
+          </li>
+          <li>
+            <Link to="/booked-Dates">Booked Dates</Link>
+          </li>
+          <li>
+            <Link to="/offers-made">Offers Made</Link>
+          </li>
+          <li>
+            <Link to="/offers-received">Offers Received</Link>
+          </li>
         </ul>
       </div>
-
-      {(() => {
-        switch (DBMenu) {
-          case "OwnerShips":
-            return <OwnerShips />;
-
-          case "BookedDates":
-            return <BookedDates />;
-
-          case "OffersMade":
-            return <OffersMade />;
-
-          case "OffersReceived":
-            return <OffersReceived />;
-        }
-      })()}
     </div>
   );
 }

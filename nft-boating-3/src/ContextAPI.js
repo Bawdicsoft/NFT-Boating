@@ -56,9 +56,10 @@ export const ContextProvider = ({ children }) => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
       const doc = await getDocs(q);
-      const data = doc.docs[0].data();
-      console.log({ data });
+      // console.log(doc.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       dispatch(saveUser(data));
+      console.log("userID", data[0].id);
     } catch (err) {
       console.error(err);
     }

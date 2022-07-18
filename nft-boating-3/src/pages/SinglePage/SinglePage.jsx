@@ -9,7 +9,6 @@ import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 import { formatEther, parseEther, toString } from "ethers/lib/utils";
 
-
 function SinglePage() {
   const { id } = useParams();
   console.log({ id });
@@ -35,7 +34,7 @@ function SinglePage() {
     console.log("run");
     const userIds = await ContractYacht.getUserIDs(account);
     setUserIDs(userIds);
-    console.log(UserIDs.length );
+    console.log(UserIDs.length);
   }
 
   function closeMakeOffer() {
@@ -89,11 +88,6 @@ function SinglePage() {
     }
   }, [account]);
 
-  const bookDate = (data) => {
-    dispatch(saveBookingID(data));
-    navigate("/booking");
-  };
-
   // offer function on onSubmit
   const {
     register,
@@ -107,17 +101,23 @@ function SinglePage() {
       id,
       data.TokenID,
       "300000000000000000000"
-    );
+    ).then((r) => {
+      navigate(`/offers-made`);
+    }).catch((e) => console.log(e));
   };
   console.log(errors);
 
   const AcceptOffer = async () => {
-    // await ContractYacht.acceptOffer(init.BookingID.init);
     await ContractYacht.acceptOffer(id);
   };
 
   const handleCancel = async () => {
-    await ContractYacht.cancelBooking(id);
+    await ContractYacht.cancelBooking(id)
+      .then((r) => {
+        setBookingTrue(false);
+        setBookedDate();
+      })
+      .catch((e) => e.reason);
   };
 
   return (
@@ -244,13 +244,13 @@ function SinglePage() {
               )}
             </Modal>
 
-            {Offers.Price ? (
-              <div className="Offers-Section">
-                <div className="Offers-Title">
-                  <span>Offers</span>
-                </div>
-                <div className="Offers-detail">
-                  <ul className="Offers-list">
+            <div className="Offers-Section">
+              <div className="Offers-Title">
+                <span>Offers</span>
+              </div>
+              <div className="Offers-detail">
+                <ul className="Offers-list">
+                  {Offers.Price ? (
                     <li>
                       <span>{Offers.User.slice(0, 6)}</span>
                       <span>
@@ -258,12 +258,12 @@ function SinglePage() {
                       </span>
                       <button onClick={AcceptOffer}>Accept</button>
                     </li>
-                  </ul>
-                </div>
+                  ) : (
+                    <li>No offers yet</li>
+                  )}
+                </ul>
               </div>
-            ) : (
-              ""
-            )}
+            </div>
           </div>
         </div>
       </div>

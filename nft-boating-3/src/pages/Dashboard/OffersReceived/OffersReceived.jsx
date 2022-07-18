@@ -5,7 +5,8 @@ import "./OffersReceived.scss";
 import { useWeb3React } from "@web3-react/core";
 import { useContextAPI } from "../../../ContextAPI";
 import { formatEther, parseEther, toString } from "ethers/lib/utils";
-import { Button } from "@mui/material";
+
+import Dashboard from "./../Dashboard";
 
 function OffersReceived() {
   const { account, active } = useWeb3React();
@@ -17,7 +18,6 @@ function OffersReceived() {
   const getUserOfferedIDs = async () => {
     setUserOfferedIDs([]);
     let UserIDs = await ContractYacht.getUserIDs(account);
-    
 
     for (let i = 0; i < UserIDs.length; i++) {
       let OfferData = await ContractYacht.getOffer(UserIDs[i].toString());
@@ -57,10 +57,11 @@ function OffersReceived() {
   };
 
   return (
-    <div>
+    <>
+      <Dashboard />
       <div className="OffersReceived">
         <div className="Container">
-          <h2>Your All Offers</h2>
+          <h2>Received Offers</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur adipiscing elit auctor,
             cursus nascetur odio nam gravida vehicula lacus
@@ -71,7 +72,8 @@ function OffersReceived() {
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Address</th>
                     <th>Price</th>
                     <th>Button</th>
                   </tr>
@@ -81,16 +83,16 @@ function OffersReceived() {
                   {UserOfferedIDs.map((offer) => (
                     <tr key={offer.id}>
                       <td>
-                        <Link to="#">{`${offer.user.slice(
-                          0,
-                          6
-                        )}...${offer.user.slice(-5)}`}</Link>
+                        <Link to={`/single-page/${offer.id}`}>#{offer.id}</Link>
                       </td>
-                      <td>{offer.price}</td>
                       <td>
-                        <Button onClick={() => handelAccept(offer.id)}>
+                        {`${offer.user.slice(0, 6)}...${offer.user.slice(-5)}`}
+                      </td>
+                      <td>USDT {offer.price}</td>
+                      <td>
+                        <button onClick={() => handelAccept(offer.id)}>
                           Accept
-                        </Button>
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -102,7 +104,7 @@ function OffersReceived() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

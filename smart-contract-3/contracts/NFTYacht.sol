@@ -48,6 +48,7 @@ contract NFTYacht is ERC721, Ownable {
         uint Price;
         uint Time;
         uint userID;
+        uint offeredDate;
     }
 
     mapping ( uint => _offer) public offers;
@@ -105,7 +106,7 @@ contract NFTYacht is ERC721, Ownable {
 
     function getOffer(uint _id) public view returns (
 
-        address _user, uint _price, uint _time, uint _userID
+        address _user, uint _price, uint _time, uint _userID, uint _offeredDate
 
         ) {
 
@@ -113,8 +114,11 @@ contract NFTYacht is ERC721, Ownable {
         _price   = offers[_id].Price;
         _time    = offers[_id].Time;
         _userID  = offers[_id].userID;
+        _offeredDate  = offers[_id].offeredDate;
 
     }
+
+    
 
     function getUserAllOffers(address _user) public view returns(uint[] memory) {
         return userAllOffers[_user];
@@ -310,7 +314,7 @@ contract NFTYacht is ERC721, Ownable {
 
         USDT.transferFrom( _msgSender, address(this), _USDT);
 
-        offers[_id] = _offer (_msgSender, _USDT, (_DateAndTime.sub(acceptOfferBefore)), _userID);
+        offers[_id] = _offer (_msgSender, _USDT, (_DateAndTime.sub(acceptOfferBefore)), _userID, _DateAndTime);
         indexOf[_id] = userAllOffers[_msgSender].length;
         userAllOffers[_msgSender].push(_id);
         offerdID[_id] = true;
@@ -318,6 +322,9 @@ contract NFTYacht is ERC721, Ownable {
         emit offered(_id, _msgSender);
 
     }
+
+
+    
 
 
     mapping ( uint => uint ) indexOf;

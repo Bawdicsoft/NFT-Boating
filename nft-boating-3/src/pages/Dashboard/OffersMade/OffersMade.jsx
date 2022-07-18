@@ -6,7 +6,9 @@ import { useWeb3React } from "@web3-react/core";
 import { useContextAPI } from "../../../ContextAPI";
 import { formatEther, parseEther, toString } from "ethers/lib/utils";
 import { async } from "@firebase/util";
-import { Button } from "@mui/material";
+
+import Dashboard from "./../Dashboard";
+
 
 function OffersMade() {
   const { account, active } = useWeb3React();
@@ -49,16 +51,18 @@ function OffersMade() {
     await ContractYacht.cancelOffer(OfferTokenID)
         .then((res) => {
             console.log({ res });
+            getUserAllOffers();
         }).catch((err) => {
             console.log(err.reason || err.massage)
         });
   }
 
   return (
-    <div>
+    <>
+      <Dashboard />
       <div className="OffersMade">
         <div className="Container">
-          <h2>Your All Offers</h2>
+          <h2>Offers Made</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur adipiscing elit auctor,
             cursus nascetur odio nam gravida vehicula lacus
@@ -69,7 +73,7 @@ function OffersMade() {
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th>ID</th>
                     <th>Price</th>
                     <th>Button</th>
                   </tr>
@@ -79,28 +83,25 @@ function OffersMade() {
                   {userOffers.map((offer) => (
                     <tr key={offer.id}>
                       <td>
-                        <Link to="#">{`${offer.user.slice(
-                          0,
-                          6
-                        )}...${offer.user.slice(-5)}`}</Link>
+                        <Link to={`/single-page/${offer.id}`}>#{offer.id}</Link>
                       </td>
-                      <td>{offer.price}</td>
+                      <td>USDT {offer.price}</td>
                       <td>
-                        <Button onClick={() => handelCancel(offer.id)}>
+                        <button onClick={() => handelCancel(offer.id)}>
                           Cancel
-                        </Button>
+                        </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-                <p>No offers yet</p>
+              <p>No offers yet</p>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

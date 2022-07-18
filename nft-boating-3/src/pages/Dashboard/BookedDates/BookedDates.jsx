@@ -5,7 +5,8 @@ import "./BookedDates.scss";
 import { useWeb3React } from "@web3-react/core";
 import { useContextAPI } from "../../../ContextAPI";
 import { formatEther, parseEther, toString } from "ethers/lib/utils";
-import { Button } from "@mui/material";
+
+import Dashboard from "./../Dashboard";
 
 function BookedDates() {
   const { account, active } = useWeb3React();
@@ -62,10 +63,11 @@ function BookedDates() {
   };
 
   return (
-    <div>
+    <>
+      <Dashboard />
       <div className="BookedDates">
         <div className="Container">
-          <h2>Your All Offers</h2>
+          <h2>Booked Dates</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur adipiscing elit auctor,
             cursus nascetur odio nam gravida vehicula lacus
@@ -88,9 +90,9 @@ function BookedDates() {
                       <td>{date.BookingDate}</td>
                       <td>{date.BookDate}</td>
                       <td>
-                        <Button onClick={() => handelCancel(date.id)}>
+                        <button onClick={() => handelCancel(date.id)}>
                           Cancel
-                        </Button>
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -102,7 +104,7 @@ function BookedDates() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

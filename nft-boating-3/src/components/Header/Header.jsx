@@ -14,9 +14,7 @@ function Header() {
           <div className="naveLink">
             <Link to="/">Home</Link>
             <Link to="/become-a-member">Become a Member</Link>
-            {/* <Link to="/booking">Booking</Link> */}
-            <Link to="/dashboard">Dashboard</Link>
-            {/* <Link to="/single-page">Single Page</Link> */}
+            <Link to="/owner-ships">Dashboard</Link>
           </div>
 
           <Dropdown />
