@@ -1,15 +1,88 @@
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import { useImmer } from "use-immer";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { useContextAPI } from "./../../ContextAPI";
+import { useWeb3React } from "@web3-react/core";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
 export default function BuyForm() {
+  const { Contract } = useParams();
+  const { NFTYacht, provider, ContractUSDT } = useContextAPI();
+  const { account, active } = useWeb3React();
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors }
   } = useForm();
 
-  const handleApprove = () => {};
+  const [State, SetState] = useImmer({
+    userBalance: "0.0",
+    supply: "00",
+    mint: "00",
+    price: "0.0",
+    totalMint: 0
+  });
 
-  const onSubmit = data => console.log(data);
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const supply = await ContractNFTYacht.totalSupply();
+        const mint = await ContractNFTYacht.currentID();
+        const price = await ContractNFTYacht.getRate();
+
+        SetState(draft => {
+          draft.supply = supply.toString();
+          draft.mint = mint.toString();
+          draft.price = formatEther(price.toString());
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    run();
+  }, [Contract]);
+
+  useEffect(() => {
+    if (active) {
+      const run = async () => {
+        console.log(account);
+        try {
+          const userBalance = await ContractUSDT.balanceOf(account);
+
+          SetState(draft => {
+            draft.userBalance = formatEther(userBalance.toString());
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      run();
+    }
+  }, [active]);
+
+  const totalMint = watch("totalMint");
+
+  const handleApprove = async () => {
+    try {
+      const value = totalMint * State.price;
+      await ContractUSDT.approve(Contract, value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onSubmit = async data => {
+    const value = totalMint * State.price;
+    try {
+      await ContractNFTYacht.buyOwnership(totalMint, value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   console.log(errors);
 
   return (
@@ -41,6 +114,7 @@ export default function BuyForm() {
                       <input
                         type="text"
                         placeholder="0x0000000000000000000000000000000000000000"
+                        value={account}
                         {...register("Last name", {
                           required: true,
                           maxLength: 100
@@ -54,7 +128,7 @@ export default function BuyForm() {
                         Supply
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                        00/00
+                        {State.mint}/{State.supply}
                       </p>
                     </div>
 
@@ -63,7 +137,7 @@ export default function BuyForm() {
                         Your USDT Balance
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                        00.00
+                        {State.userBalance}
                       </p>
                     </div>
 
@@ -71,10 +145,14 @@ export default function BuyForm() {
 
                     <div className="col-span-6 sm:col-span-6">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Total Price USDT:<span> 0.0</span>
+                        Total Price of 1 Token in USDT:
+                        <span> {State.price}</span>
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                        USDT : <span>0.0</span>
+                        USDT :{" "}
+                        <span>
+                          {State.price ? totalMint * State.price : 0.0}
+                        </span>
                       </p>
                     </div>
 
@@ -93,7 +171,7 @@ export default function BuyForm() {
                         {...register("totalMint", {
                           required: true,
                           max: 10,
-                          min: 0
+                          min: 1
                         })}
                         className="w-full py-2.5 px-3 border mb-4 rounded-md "
                       />
@@ -103,14 +181,14 @@ export default function BuyForm() {
                       <input
                         onClick={handleApprove}
                         className="cursor-pointer text-center w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        value="Approve"
+                        defaultValue="Approve"
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <input
                         className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         type="submit"
-                        value="Transaction"
+                        defaultValue="Transaction"
                       />
                     </div>
                   </div>

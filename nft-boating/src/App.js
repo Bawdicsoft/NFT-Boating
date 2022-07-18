@@ -25,9 +25,9 @@ export default function App() {
       <Routes>
         {/* Pages Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/Contract" element={<Contract />} />
-        <Route path="/buy-nft" element={<BuyForm />} />
-        <Route path="/Booking-form" element={<BookingForm />} />
+        <Route path="/Contract/:Contract" element={<Contract />} />
+        <Route path="/Contract/:Contract/buy-nft" element={<BuyForm />} />
+        <Route path="/Contract/:Contract/Booking-form/:id" element={<BookingForm />} />
         <Route path="/create-new" element={<CreateNew />} />
 
         {/* Dashboard Routes */}

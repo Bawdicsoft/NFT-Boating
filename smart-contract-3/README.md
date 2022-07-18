@@ -15,9 +15,7 @@ npx hardhat help
 ```
 
 npx hardhat --network localhost test
-npx hardhat run --network localhost scripts/deploy.js 
-
-
+npx hardhat run --network localhost scripts/deploy.js
 
 0x6F2363Dd7e534C28AAd9619521813C19A41d11Bc
 
@@ -26,14 +24,20 @@ npx hardhat run --network localhost scripts/deploy.js
 0x8F03C5754Eb275406622a3B06040D1e604917Cf0
 
 npx hardhat run --network localhost scripts/deploy.js
-npx hardhat verify --contract "contracts/NFTYacht.sol:NFTYacht" --network test 0x31bc944d5A6A6beB34371a737C7cF9982bE38c88 "0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B" "ipfs://Qmb6UB5AtMgXzUyfz98StkFnNfa3Jesv9QnimojmRP4z6c/"
-
+npx hardhat verify --contract "contracts/NFTYacht.sol:NFTYacht" --network test 0x3a2c6af0aB4622a03C0909Beb57e7906c04Ac862 "name" "n" "360" "1000000000000" "0x03c5f270eb58ea580Bfeb38156c23c4044d57D78" "ipfs://Qmb6UB5AtMgXzUyfz98StkFnNfa3Jesv9QnimojmRP4z6c/"
 
 local
 
 0x3cDDe7A730A552897425D3d79CF773B3f711C3C1 0xbD8CC993c4178Dd0A6fD63F8DE61B7893B020b69
 
-test 
+test
 0x51487B8fA2B615708711299eA8F5C46599155b27 0x1F4A4D534fdb55A5853C9C9D947f4064F24BF200
 0xF59f38d488668061A284560b82B9Bf7E737A32Fe 0xC8A9775d713c586a0bC97e74958024d684BED572
 0x31bc944d5A6A6beB34371a737C7cF9982bE38c88 0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B
+
+0x3a2c6af0aB4622a03C0909Beb57e7906c04Ac862
+
+factory:
+npx hardhat verify --contract "contracts/Factory.sol:Factory" --network test 0x1Edc9ED3CF4aa6B7901bA1e4B1c297613d8D9588
+
+0x1Edc9ED3CF4aa6B7901bA1e4B1c297613d8D9588

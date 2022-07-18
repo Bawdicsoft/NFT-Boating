@@ -1,4 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useImmer } from "use-immer";
+import { useContextAPI } from "./../../ContextAPI";
+import { ethers } from "ethers";
+import { useWeb3React } from "@web3-react/core";
+import { useEffect } from "react";
 
 /* This example requires Tailwind CSS v2.0+ */
 import { PencilIcon } from "@heroicons/react/solid";
@@ -33,18 +38,74 @@ const callouts = [
 ];
 
 export default function Created() {
+  const { account, active } = useWeb3React();
+  const { ContractFactory, NFTYacht, provider } = useContextAPI();
+
+  const [state, SetState] = useImmer({
+    data: [],
+    userNFT: 0
+  });
+
+  useEffect(() => {
+    if (active) {
+      const run = async () => {
+        let addresses;
+        try {
+          addresses = await ContractFactory.getUserAllContractAddress(account);
+        } catch (e) {
+          console.log(e);
+        }
+
+        if (addresses.length) {
+          for (let i = 0; i < addresses.length; i++) {
+            const ContractUSDT = new ethers.Contract(
+              addresses[i],
+              NFTYacht,
+              provider
+            );
+
+            const name = await ContractUSDT.name();
+            const symbol = await ContractUSDT.symbol();
+
+            const date = {
+              id: i,
+              name: name,
+              symbol: symbol,
+              address: addresses[i],
+              imageSrc:
+                "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+              imageAlt: "Front of men's Basic Tee in black."
+            };
+
+            SetState(draft => {
+              draft.userNFT = addresses.length;
+              draft.data.push(date);
+            });
+          }
+        } else {
+          SetState(draft => {
+            draft.userNFT = 0;
+          });
+        }
+      };
+      run();
+    }
+  }, [active]);
+
   const navigate = useNavigate();
   const createNew = () => {
     navigate(`/create-new`);
   };
 
   return (
-    <div className="OffersMade min-h-full">
+    <div className="Created min-h-full">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-bold text-gray-900">Created</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Created {state.userNFT}
+              </h1>
             </div>
             <div className="mt-5 flex lg:mt-0 lg:ml-4">
               <span className="sm:ml-3">
@@ -68,7 +129,7 @@ export default function Created() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto py-10 sm:py-10 lg:py-10 lg:max-w-none">
             <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
-              {callouts.map(callout => (
+              {state.data.map(callout => (
                 <div key={callout.name} className="group relative">
                   <div className="relative w-full h-80 bg-white rounded-lg overflow-hidden group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
                     <img
@@ -78,14 +139,14 @@ export default function Created() {
                     />
                   </div>
                   <h3 className="mt-6 text-sm text-gray-500">
-                    <a href={callout.href}>
+                    <a href={callout.address}>
                       <span className="absolute inset-0" />
                       {callout.name}
                     </a>
                   </h3>
-                  <p className="text-base font-semibold text-gray-900">
+                  {/* <p className="text-base font-semibold text-gray-900">
                     {callout.description}
-                  </p>
+                  </p> */}
                 </div>
               ))}
             </div>

@@ -6,7 +6,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Contracts/Ownable.sol";
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -33,7 +33,7 @@ contract NFTYacht is ERC721, Ownable {
     IERC20 private USDT;
     uint256 private rate;
 
-    uint256 public totalSupply = 365;
+    uint256 public totalSupply;
     string public baseExtension = ".json";
     
     uint public bookingBefore =  0; // user can't book date Before (bookingBefore)date
@@ -60,10 +60,19 @@ contract NFTYacht is ERC721, Ownable {
     // mapping(uint => string) private tURI;
     string public baseURI;
 
-    constructor(address _USDT, string memory baseURI_) ERC721("Yacht", "Y") {
-        rate = 1 ether;
-        USDT = IERC20(_USDT);
+    constructor(
+
+        string memory name_, string memory symbol_, uint totalSupply_,
+        uint price_, address ownerAddress_, string memory baseURI_
+        
+        ) ERC721(name_, symbol_) Ownable(ownerAddress_) {
+
+        totalSupply = totalSupply_;
+        rate = price_ * 10 ** 18;
         baseURI = baseURI_;
+
+        USDT = IERC20(0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B);
+    
     }
 
     event mint(uint token, address user);

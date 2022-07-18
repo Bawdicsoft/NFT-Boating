@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
+import { ethers } from "ethers";
+
 import DatePicker, {
   utils
 } from "@amir04lm26/react-modern-calendar-date-picker";
 import Food from "./Food";
+import { useContextAPI } from "./../../ContextAPI";
+import { useWeb3React } from "@web3-react/core";
+import { useParams } from "react-router-dom";
 
 export default function BookingForm() {
+  const { Contract, id } = useParams();
+  const { NFTYacht, provider, ContractUSDT } = useContextAPI();
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
+  const { account, active } = useWeb3React();
+
   // handle Side Panel
   const [open, setOpen] = useState(false);
   const [food, setFood] = useState({ name: "" });
@@ -30,10 +40,52 @@ export default function BookingForm() {
     day: daysAdded.slice(8, 10)
   };
 
-  const handleDisabledSelect = async disabledDay => {};
+  const [dateError, setDateError] = useState();
+  const [getBookDateID, setGetBookDateID] = useState();
 
-  // handle Approve
-  const handleApprove = () => {};
+  const handleDisabledSelect = async disabledDay => {
+    for (let i = 0; i < disabledDays.length; i++) {
+      if (disabledDays[i].day === disabledDay.day) {
+        await ContractNFTYacht.getBookDateID(
+          disabledDay.year,
+          disabledDay.month,
+          disabledDay.day
+        ).then(res => {
+          setGetBookDateID(res.toString());
+          setDateError(disabledDay);
+        });
+      }
+    }
+  };
+
+  async function afterOpenModal() {
+    setDisabledDays([]);
+
+    let newYear = await ContractNFTYacht.newYear();
+    let allBookedDates = await ContractNFTYacht.getAllBookedDates(
+      newYear.toString()
+    );
+
+    if (Number(newYear.toString())) {
+      for (let i = 0; i < allBookedDates.length; i++) {
+        setDisabledDays(prev =>
+          prev.concat({
+            year: Number(allBookedDates[i]._year.toString()),
+            month: Number(allBookedDates[i]._month.toString()),
+            day: Number(allBookedDates[i]._day.toString())
+          })
+        );
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    } else {
+      afterOpenModal();
+    }
+  }, [account]);
 
   // submit data
   const {
@@ -41,7 +93,20 @@ export default function BookingForm() {
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const onSubmit = data => console.log(data);
+  const onSubmit = async data => {
+    await ContractNFTYacht.bookDate(
+      selectedDay.year,
+      selectedDay.month,
+      selectedDay.day,
+      id
+    )
+      .then(res => {
+        console.log(res);
+      })
+      .catch(e => {
+        console.log(e.reason);
+      });
+  };
   console.log(errors);
 
   return (

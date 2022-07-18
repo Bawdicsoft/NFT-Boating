@@ -21,9 +21,12 @@
   }
   ```
 */
-import { useState } from "react";
-import { StarIcon } from "@heroicons/react/solid";
-import { RadioGroup } from "@headlessui/react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { ethers } from "ethers";
+import { useContextAPI } from "./../../ContextAPI";
+import { useImmer } from "use-immer";
+import { Link, useNavigate } from "react-router-dom";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -77,15 +80,32 @@ const product = {
   details:
     'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.'
 };
-const reviews = { href: "#", average: 4, totalCount: 117 };
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Contract() {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+  const { Contract } = useParams();
+  const { NFTYacht, provider } = useContextAPI();
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
+
+  const [State, SetState] = useImmer({
+    Contract: {
+      name: "name",
+      symbol: "symbol"
+    }
+  });
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const name = await ContractNFTYacht.name();
+        const symbol = await ContractNFTYacht.symbol();
+        SetState(draft => {
+          draft.name = name;
+          draft.symbol = symbol;
+        });
+      } catch (e) {}
+    };
+    run();
+  }, [Contract]);
 
   return (
     <div className="bg-white">
@@ -168,13 +188,25 @@ export default function Contract() {
         <div className="max-w-2xl mx-auto pt-10 pb-16 px-4 sm:px-6 lg:max-w-7xl lg:pt-16 lg:pb-24 lg:px-8 lg:grid lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8">
           <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
             <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-              {product.name}
+              {State.name} ({State.symbol})
             </h1>
           </div>
 
           {/* Options */}
           <div className="mt-4 lg:mt-0 lg:row-span-3">
             <h2 className="sr-only">Buy MemberShip Form</h2>
+            <Link
+              to={`/Contract/${Contract}/buy-nft`}
+              className="mb-5 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Buy NFT
+            </Link>
+            <Link
+              to={`/Contract/${Contract}/Booking-form/1`}
+              className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Book Dates
+            </Link>
           </div>
 
           <div className="py-10 lg:pt-6 lg:pb-16 lg:col-start-1 lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">

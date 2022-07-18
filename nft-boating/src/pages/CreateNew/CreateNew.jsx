@@ -1,13 +1,48 @@
 import { useForm } from "react-hook-form";
+import { useContextAPI } from "./../../ContextAPI";
+import { useWeb3React } from "@web3-react/core";
+import { useImmer } from "use-immer";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function CreateNew() {
+  const { account, active } = useWeb3React();
+  const { ContractFactory } = useContextAPI();
+  const navigate = useNavigate();
+
+  const [State, SetState] = useImmer({
+    SetBtnDisable: false
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
 
-  const onSubmit = data => console.log(data);
+  const onSubmit = async data => {
+    SetState(draft => {
+      draft.SetBtnDisable = true;
+    });
+
+    try {
+      await ContractFactory.deploy(
+        data.name_,
+        data.symbol_,
+        data.totalSupply_,
+        data.price_,
+        data.ownerAddress_,
+        data.baseURI_
+      );
+    } catch (e) {
+      SetState(draft => {
+        draft.SetBtnDisable = false;
+      });
+    }
+
+    ContractFactory.on("deploy_", _Contract => {
+      navigate(`/contract/${_Contract}`);
+    });
+  };
   console.log(errors);
 
   return (
@@ -47,10 +82,8 @@ export default function CreateNew() {
                           <input
                             type="text"
                             placeholder="Name"
-                            {...register("Name", {
-                              required: true,
-                              minLength: 6,
-                              maxLength: 12
+                            {...register("name_", {
+                              required: true
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -66,10 +99,8 @@ export default function CreateNew() {
                           <input
                             type="text"
                             placeholder="Symbol"
-                            {...register("Symbol", {
-                              required: true,
-                              minLength: 6,
-                              maxLength: 12
+                            {...register("symbol_", {
+                              required: true
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -85,10 +116,8 @@ export default function CreateNew() {
                           <input
                             type="number"
                             placeholder="Total Supply"
-                            {...register("Total Supply", {
-                              required: true,
-                              minLength: 6,
-                              maxLength: 12
+                            {...register("totalSupply_", {
+                              required: true
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -104,10 +133,10 @@ export default function CreateNew() {
                           <input
                             type="number"
                             placeholder="Price"
-                            {...register("Price", {
+                            {...register("price_", {
                               required: true,
-                              minLength: 6,
-                              maxLength: 12
+                              minLength: 1,
+                              maxLength: 100
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -121,9 +150,9 @@ export default function CreateNew() {
                             Owner Address
                           </label>
                           <input
-                            type="number"
+                            type="text"
                             placeholder="0x0000000000000000000000000000000000000000"
-                            {...register("Owner Address", {
+                            {...register("ownerAddress_", {
                               required: true,
                               maxLength: 100
                             })}
@@ -145,7 +174,7 @@ export default function CreateNew() {
                             <input
                               type="text"
                               placeholder="Qmxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                              {...register("Last name", {
+                              {...register("baseURI_", {
                                 required: true,
                                 maxLength: 100
                               })}
@@ -160,9 +189,10 @@ export default function CreateNew() {
 
                         <div className="col-span-6 sm:col-span-6">
                           <input
-                            className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             type="submit"
                             value="Book Dates"
+                            disabled={State.btnDisable}
                           />
                         </div>
                       </div>
