@@ -1,0 +1,103 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+import "./NFTYacht.sol";
+
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+import "./Contracts/Ownable.sol";
+import "./library/UserMapping.sol";
+
+
+
+contract Factory is Ownable {
+
+    using Counters for Counters.Counter;
+    using UserMapping for UserMapping.Map;
+
+
+    IERC20 private USDT;
+    constructor () {
+        USDT = IERC20(0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B);
+    }
+
+
+
+    /******************************************************
+    *           Deploy New Smart Contract (loigc)
+    *******************************************************/
+
+    event deploy_(address _Contract);
+
+    address[] private allContractAddress;
+    mapping (address => address[]) private userAllContractAddress;
+
+    function getAllContractAddress() public view returns(address[] memory) {
+        return allContractAddress;
+    }
+
+    function getUserAllContractAddress(address user_) public view returns(address[] memory) {
+        return userAllContractAddress[user_];
+    }
+
+    function deploy(
+        string memory name_, string memory symbol_, uint totalSupply_,
+        uint price_, address ownerAddress_, string memory baseURI_
+    ) public {
+        
+        address _Contract = address(new NFTYacht{salt: keccak256(abi.encode(name_, symbol_, price_, ownerAddress_))}
+                (name_, symbol_, totalSupply_, price_, ownerAddress_, baseURI_));
+
+        allContractAddress.push(_Contract);
+        userAllContractAddress[ownerAddress_].push(_Contract);
+        emit deploy_(_Contract);
+
+    }
+
+
+    /******************************************************
+    *                   Buy NFT (loigc)
+    *******************************************************/
+
+    event mint(uint token, address user);
+
+    UserMapping.Map private User;
+    Counters.Counter private OwnershipToken;
+    uint256 public totalSupply;
+    uint256 private rate;
+
+
+    function buyOwnership (
+
+        uint256 _tOwnership,
+        uint256 _USDT
+
+        ) public {
+
+        require ( totalSupply >= (OwnershipToken.current().add(_tOwnership)), "!Total Supply");
+        require ( (rate.mul(_tOwnership)) == _USDT, "!Not suffecient USDT");
+        require ( _tOwnership > 0, "!tOwnership");
+
+        USDT.transferFrom( msg.sender, owner(), _USDT );
+
+        for (uint256 i = 0; i < _tOwnership; i++) {
+
+            OwnershipToken.increment();
+            uint _current = OwnershipToken.current();
+
+            User.set(_msgSender(), _current);
+            _safeMint(msg.sender, _current); // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            emit mint(_current, msg.sender);
+
+        }
+
+    }
+
+
+
+    /******************************************************
+    *                   Buy NFT (loigc)
+    *******************************************************/
+
+}
