@@ -116,7 +116,9 @@ export default function Home() {
       let addresses;
       try {
         addresses = await ContractFactory.getAllContractAddress();
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
 
       for (let i = 0; i < addresses.length; i++) {
         const ContractUSDT = new ethers.Contract(
