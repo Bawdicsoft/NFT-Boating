@@ -14,38 +14,45 @@ export default function CreateNew() {
     SetBtnDisable: false,
   });
 
-  const [accountWalletAddress, setAccountWalletAddress] = useState(account)
-  
+  const [accountWalletAddress, setAccountWalletAddress] = useState(account);
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
 
+  const image = watch("images")
+
+
   const onSubmit = async (data) => {
+
+    console.log({data});
+
+
     SetState((draft) => {
       draft.SetBtnDisable = true;
     });
 
-    try {
-      await ContractFactory.deploy(
-        data.name_,
-        data.symbol_,
-        data.totalSupply_,
-        data.price_,
-        data.ownerAddress_,
-        data.baseURI_
-      );
-    } catch (e) {
-      SetState((draft) => {
-        draft.SetBtnDisable = false;
-      });
-    }
+    // try {
+    //   await ContractFactory.deploy(
+    //     data.name_,
+    //     data.symbol_,
+    //     data.totalSupply_,
+    //     data.price_,
+    //     data.ownerAddress_,
+    //     data.baseURI_
+    //   );
+    // } catch (e) {
+    //   SetState((draft) => {
+    //     draft.SetBtnDisable = false;
+    //   });
+    // }
 
-    ContractFactory.on("deploy_", (_Contract) => {
-      navigate(`/contract/${_Contract}`);
-    });
+    // ContractFactory.on("deploy_", (_Contract) => {
+    //   navigate(`/contract/${_Contract}`);
+    // });
   };
   console.log(errors);
 
@@ -82,7 +89,9 @@ export default function CreateNew() {
                   </div>
 
                   <div className="border-t border-gray-200 pt-4">
-                    <dt className="font-medium text-gray-900">Considerations</dt>
+                    <dt className="font-medium text-gray-900">
+                      Considerations
+                    </dt>
                     <dd className="mt-2 text-sm text-gray-500">
                       Made from natural materials. Grain and color vary with
                       each item.
@@ -181,10 +190,10 @@ export default function CreateNew() {
                             {...register("ownerAddress_", {
                               value: accountWalletAddress || account,
                               required: true,
-                              onChange: (e) => setAccountWalletAddress(e.target.value),
+                              onChange: (e) =>
+                                setAccountWalletAddress(e.target.value),
                               maxLength: 100,
                             })}
-
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
                         </div>
@@ -211,8 +220,72 @@ export default function CreateNew() {
                             />
                           </div>
                           <p className="mt-2 text-sm text-gray-500">
-                           Please get this hash from <a className="text-blue-600 visited:text-purple-600 ..." onClick={() => window.open('https://www.pinata.cloud/', '_blank')}>Pinata</a>
+                            Please get this hash from{" "}
+                            <a
+                              className="text-blue-600 visited:text-purple-600 ..."
+                              onClick={() =>
+                                window.open(
+                                  "https://www.pinata.cloud/",
+                                  "_blank"
+                                )
+                              }
+                            >
+                              Pinata
+                            </a>
                           </p>
+                        </div>
+
+                        {console.log(image)}
+
+                        <div className="col-span-6 sm:col-span-6 mb-3">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Boat Images
+                          </label>
+                          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                            <div className="space-y-1 text-center">
+                              <svg
+                                className="mx-auto h-12 w-12 text-gray-400"
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 48 48"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                  strokeWidth={2}
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              <div className="flex text-sm text-gray-600">
+                                <label
+                                  htmlFor="file-upload"
+                                  className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                >
+                                  <span>Upload a file</span>
+                                  <input
+                                    type="file"
+                                    className="sr-only"
+                                    id="file-upload"
+                                    // name="file-upload"
+                                    multiple
+                                    {...register("images", {
+                                      // value: accountWalletAddress || account,
+                                      // required: true,
+                                      // onChange: (e) =>
+                                      //   setAccountWalletAddress(e.target.value),
+                                      // maxLength: 100,
+                                    })}
+
+                                  />
+                                </label>
+                                <p className="pl-1">or drag and drop</p>
+                              </div>
+                              <p className="text-xs text-gray-500">
+                                PNG, JPG, GIF up to 10MB
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
                         <div className="col-span-6 sm:col-span-6">
@@ -220,7 +293,9 @@ export default function CreateNew() {
                             className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             type="submit"
                             disabled={State.btnDisable}
-                          >Create</button>
+                          >
+                            Create
+                          </button>
                         </div>
                       </div>
                     </div>

@@ -136,7 +136,7 @@ export default function Home() {
           symbol: symbol,
           address: addresses[i],
           imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9S6_bhnGv0Gh--081Azem3rSTXXd-_sc9jA&usqp=CAU",
           imageAlt: "Front of men's Basic Tee in black."
         };
 
