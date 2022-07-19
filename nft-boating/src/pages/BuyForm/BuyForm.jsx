@@ -72,7 +72,7 @@ export default function BuyForm() {
     try {
       await ContractUSDT.approve(Contract, parseEther(value.toString()));
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
@@ -85,10 +85,10 @@ export default function BuyForm() {
         parseEther(value.toString())
       );
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
-  console.log(errors);
+  console.error(errors);
 
   return (
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
