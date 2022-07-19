@@ -46,20 +46,41 @@ export default function Created() {
     userNFT: 0
   });
 
+  const getUserData = async () => {
+    setUserData([]);
+    let userID = await ContractYacht.getUserIDs(account);
+
+    if (userID.length === 0) {
+      setUser(false);
+    } else {
+      for (let i = 0; i < userID.length; i++) {
+        let tokenURI = await ContractYacht.tokenURI(userID[i].toString());
+        console.log({ tokenURI });
+        setUserData(prev =>
+          prev.concat({
+            Token: userID[i].toString(),
+            TokenURI: tokenURI,
+            id: Date.now()
+          })
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     console.log(">");
     if (active) {
       const run = async () => {
-        let addresses;
+        let userIDs;
         try {
-          addresses = await ContractFactory.getUserAllContractAddress(account);
+          userIDs = await ContractFactory.getUserIDs(account);
         } catch (e) {
           console.log(e);
         }
         console.log(addresses, account);
 
-        if (addresses.length) {
-          for (let i = 0; i < addresses.length; i++) {
+        if (userIDs.length) {
+          for (let i = 0; i < userIDs.length; i++) {
             const ContractNFTYacht = new ethers.Contract(
               addresses[i],
               NFTYacht,

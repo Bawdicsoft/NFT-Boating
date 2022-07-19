@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useImmer } from "use-immer";
 import { PencilIcon } from "@heroicons/react/solid";
 
 const callouts = [
@@ -36,6 +37,59 @@ export default function Collected() {
     navigate(`/`);
   };
 
+  const [state, SetState] = useImmer({
+    data: [],
+    userNFT: 0
+  });
+
+  useEffect(() => {
+    console.log(">");
+    if (active) {
+      const run = async () => {
+        let addresses;
+        try {
+          addresses = await ContractFactory.getUserAllContractAddress(account);
+        } catch (e) {
+          console.log(e);
+        }
+        console.log(addresses, account);
+
+        if (addresses.length) {
+          for (let i = 0; i < addresses.length; i++) {
+            const ContractNFTYacht = new ethers.Contract(
+              addresses[i],
+              NFTYacht,
+              provider
+            );
+
+            const name = await ContractNFTYacht.name();
+            const symbol = await ContractNFTYacht.symbol();
+
+            const date = {
+              id: i,
+              name: name,
+              symbol: symbol,
+              address: addresses[i],
+              imageSrc:
+                "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+              imageAlt: "Front of men's Basic Tee in black."
+            };
+
+            SetState(draft => {
+              draft.userNFT = addresses.length;
+              draft.data.push(date);
+            });
+          }
+        } else {
+          SetState(draft => {
+            draft.userNFT = 0;
+          });
+        }
+      };
+      run();
+    }
+  }, [active]);
+
   return (
     <div className="Collected min-h-full">
       <header className="bg-white shadow">
@@ -65,25 +119,33 @@ export default function Collected() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto py-10 sm:py-10 lg:py-10 lg:max-w-none">
             <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
-              {callouts.map(callout => (
-                <div key={callout.name} className="group relative">
-                  <div className="relative w-full h-80 bg-white rounded-lg overflow-hidden group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
+              {state.data.map(Contract => (
+                <Link
+                  to={`/contract/${Contract.address}`}
+                  key={Contract.id}
+                  className="group relative"
+                >
+                  <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
                     <img
-                      src={callout.imageSrc}
-                      alt={callout.imageAlt}
-                      className="w-full h-full object-center object-cover"
+                      src={Contract.imageSrc}
+                      alt={Contract.imageAlt}
+                      className="w-full h-full object-center object-cover lg:w-full lg:h-full"
                     />
                   </div>
-                  <h3 className="mt-6 text-sm text-gray-500">
-                    <a href={callout.href}>
-                      <span className="absolute inset-0" />
-                      {callout.name}
-                    </a>
-                  </h3>
-                  <p className="text-base font-semibold text-gray-900">
-                    {callout.description}
-                  </p>
-                </div>
+                  <div className="mt-4 flex justify-between">
+                    <div>
+                      <h3 className="text-sm text-gray-700">
+                        <a href="#">
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-0"
+                          />
+                          {Contract.name}
+                        </a>
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
