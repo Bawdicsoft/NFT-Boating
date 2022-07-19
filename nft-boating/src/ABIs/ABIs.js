@@ -1023,18 +1023,8 @@ export const NFTYacht = [
         type: "string"
       },
       {
-        internalType: "uint256",
-        name: "totalSupply_",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "price_",
-        type: "uint256"
-      },
-      {
         internalType: "address",
-        name: "ownerAddress_",
+        name: "factoryAddress_",
         type: "address"
       },
       {
@@ -1119,6 +1109,19 @@ export const NFTYacht = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address"
+      }
+    ],
+    name: "Paused",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: "address",
         name: "from",
@@ -1145,186 +1148,13 @@ export const NFTYacht = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "year",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "month",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "day",
-        type: "uint256"
-      }
-    ],
-    name: "_cancelBooking",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "token",
-        type: "uint256"
-      },
-      {
-        indexed: false,
         internalType: "address",
-        name: "user",
+        name: "account",
         type: "address"
       }
     ],
-    name: "booked",
+    name: "Unpaused",
     type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "token",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "user",
-        type: "address"
-      }
-    ],
-    name: "mint",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "token",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "user",
-        type: "address"
-      }
-    ],
-    name: "offerAccepted",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "token",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "user",
-        type: "address"
-      }
-    ],
-    name: "offered",
-    type: "event"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      }
-    ],
-    name: "acceptOffer",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "acceptOfferBefore",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "acceptedOffers",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "allBookedDates",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "_year",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_month",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_day",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
   },
   {
     inputs: [
@@ -1393,195 +1223,6 @@ export const NFTYacht = [
     inputs: [
       {
         internalType: "uint256",
-        name: "year",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "month",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "day",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      }
-    ],
-    name: "bookDate",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "bookDateID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "bookingAfter",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "bookingBefore",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_tOwnership",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_USDT",
-        type: "uint256"
-      }
-    ],
-    name: "buyOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      }
-    ],
-    name: "cancelBooking",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      }
-    ],
-    name: "cancelOffer",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "currentID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_newYear",
-        type: "uint256"
-      }
-    ],
-    name: "getAllBookedDates",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "_year",
-            type: "uint256"
-          },
-          {
-            internalType: "uint256",
-            name: "_month",
-            type: "uint256"
-          },
-          {
-            internalType: "uint256",
-            name: "_day",
-            type: "uint256"
-          }
-        ],
-        internalType: "struct NFTYacht._bookDates[]",
-        name: "",
-        type: "tuple[]"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getAllUser",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "tokenId",
         type: "uint256"
       }
@@ -1592,173 +1233,6 @@ export const NFTYacht = [
         internalType: "address",
         name: "",
         type: "address"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "year",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "month",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "day",
-        type: "uint256"
-      }
-    ],
-    name: "getBookDateID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      }
-    ],
-    name: "getBookedDate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "_blockTimestamp",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_DateAndTime",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_newYear",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      }
-    ],
-    name: "getOffer",
-    outputs: [
-      {
-        internalType: "address",
-        name: "_user",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "_price",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_time",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_userID",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_offeredDate",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "getRate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_user",
-        type: "address"
-      }
-    ],
-    name: "getUserAllOffers",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      }
-    ],
-    name: "getUserData",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "_isInserted",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "user",
-        type: "address"
-      }
-    ],
-    name: "getUserIDs",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]"
       }
     ],
     stateMutability: "view",
@@ -1803,126 +1277,6 @@ export const NFTYacht = [
   },
   {
     inputs: [],
-    name: "newYear",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_userID",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "_USDT",
-        type: "uint256"
-      }
-    ],
-    name: "offer",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "offerBefore",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "offerPrice",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "offerdID",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "offers",
-    outputs: [
-      {
-        internalType: "address",
-        name: "User",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "Price",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "Time",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "offeredDate",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
     name: "owner",
     outputs: [
       {
@@ -1955,7 +1309,45 @@ export const NFTYacht = [
   },
   {
     inputs: [],
+    name: "pause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "paused",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address"
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256"
+      }
+    ],
+    name: "safeMint",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function"
@@ -2032,45 +1424,6 @@ export const NFTYacht = [
   {
     inputs: [
       {
-        internalType: "string",
-        name: "_newBaseExtension",
-        type: "string"
-      }
-    ],
-    name: "setBaseExtension",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_newBaseURI",
-        type: "string"
-      }
-    ],
-    name: "setBaseURI",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_rate",
-        type: "uint256"
-      }
-    ],
-    name: "setRate",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
         internalType: "bytes4",
         name: "interfaceId",
         type: "bytes4"
@@ -2120,19 +1473,6 @@ export const NFTYacht = [
     type: "function"
   },
   {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -2169,14 +1509,8 @@ export const NFTYacht = [
     type: "function"
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_number",
-        type: "uint256"
-      }
-    ],
-    name: "updateAcceptOfferBefore",
+    inputs: [],
+    name: "unpause",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function"
@@ -2184,12 +1518,12 @@ export const NFTYacht = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_number",
-        type: "uint256"
+        internalType: "string",
+        name: "baseExtension_",
+        type: "string"
       }
     ],
-    name: "updateBookingAfter",
+    name: "updateBaseExtension",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function"
@@ -2197,64 +1531,14 @@ export const NFTYacht = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_number",
-        type: "uint256"
+        internalType: "string",
+        name: "symbol_",
+        type: "string"
       }
     ],
-    name: "updateBookingBefore",
+    name: "updateBaseURI",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_number",
-        type: "uint256"
-      }
-    ],
-    name: "updateOfferBefore",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_number",
-        type: "uint256"
-      }
-    ],
-    name: "updateOfferPrice",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address"
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    name: "userAllOffers",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
     type: "function"
   }
 ];
