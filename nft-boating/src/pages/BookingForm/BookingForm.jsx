@@ -135,7 +135,7 @@ export default function BookingForm() {
                           htmlFor="last-name"
                           className="block text-sm font-medium text-gray-700 mb-2"
                         >
-                          Mobile number
+                          Select Date
                         </label>
                         <DatePicker
                           value={selectedDay}

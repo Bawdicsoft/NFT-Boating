@@ -32,6 +32,7 @@ const callouts = [
 
 export default function Collected() {
   const navigate = useNavigate();
+  
   const buyNew = () => {
     navigate(`/`);
   };
