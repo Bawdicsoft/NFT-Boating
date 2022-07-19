@@ -34,7 +34,7 @@ export const ContextProvider = ({ children }) => {
     conToMetamask();
   }, []);
 
-  const values = { ContractUSDT, ContractFactory, NFTYacht, provider };
+  const values = { ContractUSDT, ContractFactory, NFTYacht, provider , FactoryAddress };
 
   return <ContextAPI.Provider value={values}>{children}</ContextAPI.Provider>;
 };

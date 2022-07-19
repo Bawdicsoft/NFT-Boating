@@ -9,9 +9,10 @@ import { formatEther, parseEther } from "ethers/lib/utils";
 
 export default function BuyForm() {
   const { Contract } = useParams();
-  const { NFTYacht, provider, ContractUSDT } = useContextAPI();
+  const { NFTYacht, provider, ContractUSDT , ContractFactory , FactoryAddress } = useContextAPI();
   const { account, active } = useWeb3React();
   const navigate = useNavigate();
+
 
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
   const {
@@ -22,24 +23,38 @@ export default function BuyForm() {
   } = useForm();
 
   const [State, SetState] = useImmer({
-    userBalance: "0.0",
-    supply: "00",
-    mint: "00",
+    baseURI: "",
+    name: "",
+    ownerAddress: "",
     price: "0.0",
-    totalMint: 0
+    symbol: "",
+    tOwnership: "0.0",
+    tsupply: "0.0",
   });
 
   useEffect(() => {
     const run = async () => {
       try {
-        const supply = await ContractNFTYacht.totalSupply();
-        const mint = await ContractNFTYacht.currentID();
-        const price = await ContractNFTYacht.getRate();
+        const ContractInfo = await  ContractFactory.getContractInfo(Contract);
+        console.log({ContractInfo});
+
+        const baseURI = ContractInfo.baseURI
+        const name = ContractInfo.name
+        const ownerAddress = ContractInfo.ownerAddress
+        const price = parseInt(ContractInfo.price._hex,16)
+        const symbol = ContractInfo.symbol
+        const tOwnership = formatEther(ContractInfo.tOwnership._hex)
+        const tsupply = parseInt(ContractInfo.tSupply._hex, 16)
+
 
         SetState(draft => {
-          draft.supply = supply.toString();
-          draft.mint = mint.toString();
-          draft.price = formatEther(price.toString());
+          draft.baseURI = baseURI;
+          draft.name = name;
+          draft.ownerAddress = ownerAddress;
+          draft.price = price;
+          draft.symbol = symbol;
+          draft.tOwnership = tOwnership
+          draft.tsupply = tsupply;
         });
       } catch (e) {
         console.log(e);
@@ -70,9 +85,9 @@ export default function BuyForm() {
 
   const handleApprove = async () => {
     const value = totalMint * State.price;
-    console.log("Approve", Contract, value);
+    console.log("Approve", FactoryAddress, value);
     try {
-      await ContractUSDT.approve(Contract, parseEther(value.toString()));
+      await ContractUSDT.approve(FactoryAddress, value);
     } catch (e) {
       console.error(e);
     }
@@ -82,9 +97,10 @@ export default function BuyForm() {
     const value = totalMint * State.price;
     console.log("Submit", totalMint, value);
     try {
-      const tx = await ContractNFTYacht.buyOwnership(
+      const tx = await ContractFactory.buyOwnership(
         totalMint,
-        parseEther(value.toString())
+        value,
+        Contract
       );
 
       await tx.wait()
@@ -139,7 +155,7 @@ export default function BuyForm() {
                         Supply
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                        {State.mint}/{State.supply}
+                        {State.tOwnership}/{State.tsupply}
                       </p>
                     </div>
 
@@ -189,10 +205,10 @@ export default function BuyForm() {
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <button
+                      <span
                         onClick={handleApprove}
                         className="cursor-pointer text-center w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >Approve</button>
+                      >Approve</span>
                     </div>
                     <div className="col-span-6 sm:col-span-3">
                       <button
