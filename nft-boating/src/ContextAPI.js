@@ -13,7 +13,7 @@ export const useContextAPI = () => {
 export const ContextProvider = ({ children }) => {
   const { activate, account } = useWeb3React();
 
-  const FactoryAddress = "0xF60B991F0c08fd7779cD4d1Ee69389b99793bAc3";
+  const FactoryAddress = "0xa8971B7B5b6a6e0B297eB915507Fdb52180e0729";
   const USDTAddress = "0x3cDDe7A730A552897425D3d79CF773B3f711C3C1";
 
   const provider = new ethers.providers.Web3Provider(

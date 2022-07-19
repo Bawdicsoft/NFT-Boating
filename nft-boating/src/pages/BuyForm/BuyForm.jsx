@@ -67,9 +67,10 @@ export default function BuyForm() {
   const totalMint = watch("totalMint");
 
   const handleApprove = async () => {
+    const value = totalMint * State.price;
+    console.log("Approve", Contract, value);
     try {
-      const value = totalMint * State.price;
-      await ContractUSDT.approve(Contract, value);
+      await ContractUSDT.approve(Contract, parseEther(value.toString()));
     } catch (e) {
       console.log(e);
     }
@@ -77,8 +78,12 @@ export default function BuyForm() {
 
   const onSubmit = async data => {
     const value = totalMint * State.price;
+    console.log("Submit", totalMint, value);
     try {
-      await ContractNFTYacht.buyOwnership(totalMint, value);
+      await ContractNFTYacht.buyOwnership(
+        totalMint,
+        parseEther(value.toString())
+      );
     } catch (e) {
       console.log(e);
     }

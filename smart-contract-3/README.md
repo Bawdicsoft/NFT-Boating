@@ -40,4 +40,4 @@ test
 factory:
 npx hardhat verify --contract "contracts/Factory.sol:Factory" --network test 0x1Edc9ED3CF4aa6B7901bA1e4B1c297613d8D9588
 
-0x1Edc9ED3CF4aa6B7901bA1e4B1c297613d8D9588
+0xa8971B7B5b6a6e0B297eB915507Fdb52180e0729

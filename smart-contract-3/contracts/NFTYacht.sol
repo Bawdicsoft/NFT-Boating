@@ -71,7 +71,7 @@ contract NFTYacht is ERC721, Ownable {
         rate = price_ * 10 ** 18;
         baseURI = baseURI_;
 
-        USDT = IERC20(0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B);
+        USDT = IERC20(0x3cDDe7A730A552897425D3d79CF773B3f711C3C1);
     
     }
 
