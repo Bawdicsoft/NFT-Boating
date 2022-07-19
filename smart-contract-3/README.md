@@ -24,7 +24,7 @@ npx hardhat run --network localhost scripts/deploy.js
 0x8F03C5754Eb275406622a3B06040D1e604917Cf0
 
 npx hardhat run --network localhost scripts/deploy.js
-npx hardhat verify --contract "contracts/NFTYacht.sol:NFTYacht" --network test 0x3a2c6af0aB4622a03C0909Beb57e7906c04Ac862 "name" "n" "360" "1000000000000" "0x03c5f270eb58ea580Bfeb38156c23c4044d57D78" "ipfs://Qmb6UB5AtMgXzUyfz98StkFnNfa3Jesv9QnimojmRP4z6c/"
+npx hardhat verify --contract "contracts/NFTYacht.sol:NFTYacht" --network test 0x92dec0D5Ec82600158e08e599b8F4b13B0d30431 "name" "n" "360" "1000000000000" "0x03c5f270eb58ea580Bfeb38156c23c4044d57D78" "ipfs://Qmb6UB5AtMgXzUyfz98StkFnNfa3Jesv9QnimojmRP4z6c/"
 
 local
 
@@ -38,6 +38,6 @@ test
 0x3a2c6af0aB4622a03C0909Beb57e7906c04Ac862
 
 factory:
-npx hardhat verify --contract "contracts/Factory.sol:Factory" --network test 0x15368A97Dc459F1D5C7B20f62D0836E6D57a2023
+npx hardhat verify --contract "contracts/Factory.sol:Factory" --network test 0x0568E0791e85B8d7f6125e63eDE3D1D5cf1D2539
 
 0xa8971B7B5b6a6e0B297eB915507Fdb52180e0729

@@ -55,8 +55,12 @@ contract Factory is Ownable {
 
 
 
-    function getUserIDs(address user) public view returns (uint256[] memory) {
-        return User.getTokens(user);
+    function getUserIDs(address _contract, address user) public view returns (uint256[] memory) {
+        return User.getTokens(_contract, user);
+    }
+
+    function getAllContractAddress(address _user) public view returns (address[] memory) {
+        return User.getAllContractAddress(_user);
     }
 
     function getAllUser() public view returns (address[] memory) {
@@ -224,7 +228,7 @@ contract Factory is Ownable {
             contractDitals[contractAddress_].tOwnership++;
             uint _current = contractDitals[contractAddress_].tOwnership;
 
-            User.set(_msgSender(), _current);
+            User.set(contractAddress_, _msgSender(), _current);
             IContract.safeMint(msg.sender, _current);
 
             emit mint(_current, msg.sender);
