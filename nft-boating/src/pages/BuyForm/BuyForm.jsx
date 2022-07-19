@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContextAPI } from "./../../ContextAPI";
 import { useWeb3React } from "@web3-react/core";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -11,6 +11,8 @@ export default function BuyForm() {
   const { Contract } = useParams();
   const { NFTYacht, provider, ContractUSDT } = useContextAPI();
   const { account, active } = useWeb3React();
+  const navigate = useNavigate();
+
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
   const {
     register,
@@ -80,10 +82,14 @@ export default function BuyForm() {
     const value = totalMint * State.price;
     console.log("Submit", totalMint, value);
     try {
-      await ContractNFTYacht.buyOwnership(
+      const tx = await ContractNFTYacht.buyOwnership(
         totalMint,
         parseEther(value.toString())
       );
+
+      await tx.wait()
+
+      navigate(`/collected`);
     } catch (e) {
       console.error(e);
     }
@@ -183,18 +189,16 @@ export default function BuyForm() {
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <input
+                      <button
                         onClick={handleApprove}
                         className="cursor-pointer text-center w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        defaultValue="Approve"
-                      />
+                      >Approve</button>
                     </div>
                     <div className="col-span-6 sm:col-span-3">
-                      <input
+                      <button
                         className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        type="submit"
-                        defaultValue="Transaction"
-                      />
+                        type="submit"                        
+                      >Confirm</button>
                     </div>
                   </div>
                 </div>

@@ -30,15 +30,16 @@ module.exports = {
     },
   },
   networks: {
-    test: {
-      url: process.env.URL,
-      accounts: [process.env.PVT_KEY],
-    },
+    // test: {
+    //   url: process.env.URL,
+    //   accounts: [process.env.PVT_KEY],
+    // },
     localhost: {
       url: "http://127.0.0.1:7545",
     },
   },
-  etherscan: {
-    apiKey: process.env.API_KEY,
-  },
+  // etherscan: {
+  //   apiKey: process.env.API_KEY,
+  // },
 };
+d
