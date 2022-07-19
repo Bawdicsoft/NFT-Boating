@@ -11,7 +11,7 @@ export default function CreateNew() {
   const navigate = useNavigate();
 
   const [State, SetState] = useImmer({
-    SetBtnDisable: false,
+    SetBtnDisable: false
   });
 
   const [accountWalletAddress, setAccountWalletAddress] = useState(account);
@@ -20,39 +20,36 @@ export default function CreateNew() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors }
   } = useForm();
 
-  const image = watch("images")
+  const image = watch("images");
 
+  const onSubmit = async data => {
+    console.log({ data });
 
-  const onSubmit = async (data) => {
-
-    console.log({data});
-
-
-    SetState((draft) => {
+    SetState(draft => {
       draft.SetBtnDisable = true;
     });
 
-    // try {
-    //   await ContractFactory.deploy(
-    //     data.name_,
-    //     data.symbol_,
-    //     data.totalSupply_,
-    //     data.price_,
-    //     data.ownerAddress_,
-    //     data.baseURI_
-    //   );
-    // } catch (e) {
-    //   SetState((draft) => {
-    //     draft.SetBtnDisable = false;
-    //   });
-    // }
+    try {
+      await ContractFactory.deploy(
+        data.name_,
+        data.symbol_,
+        data.totalSupply_,
+        data.price_,
+        data.ownerAddress_,
+        data.baseURI_
+      );
+    } catch (e) {
+      SetState(draft => {
+        draft.SetBtnDisable = false;
+      });
+    }
 
-    // ContractFactory.on("deploy_", (_Contract) => {
-    //   navigate(`/contract/${_Contract}`);
-    // });
+    ContractFactory.on("deploy_", _Contract => {
+      navigate(`/contract/${_Contract}`);
+    });
   };
   console.log(errors);
 
@@ -115,7 +112,7 @@ export default function CreateNew() {
                             type="text"
                             placeholder="Name"
                             {...register("name_", {
-                              required: true,
+                              required: true
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -132,7 +129,7 @@ export default function CreateNew() {
                             type="text"
                             placeholder="Symbol"
                             {...register("symbol_", {
-                              required: true,
+                              required: true
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -149,7 +146,7 @@ export default function CreateNew() {
                             type="number"
                             placeholder="Total Supply"
                             {...register("totalSupply_", {
-                              required: true,
+                              required: true
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -168,7 +165,7 @@ export default function CreateNew() {
                             {...register("price_", {
                               required: true,
                               minLength: 1,
-                              maxLength: 100,
+                              maxLength: 100
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -190,9 +187,9 @@ export default function CreateNew() {
                             {...register("ownerAddress_", {
                               value: accountWalletAddress || account,
                               required: true,
-                              onChange: (e) =>
+                              onChange: e =>
                                 setAccountWalletAddress(e.target.value),
-                              maxLength: 100,
+                              maxLength: 100
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -214,7 +211,7 @@ export default function CreateNew() {
                               placeholder="Qmxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                               {...register("baseURI_", {
                                 required: true,
-                                maxLength: 100,
+                                maxLength: 100
                               })}
                               className="w-full py-2.5 px-3 flex-1 block rounded-none rounded-r-md border"
                             />
@@ -276,7 +273,6 @@ export default function CreateNew() {
                                       //   setAccountWalletAddress(e.target.value),
                                       // maxLength: 100,
                                     })}
-
                                   />
                                 </label>
                                 <p className="pl-1">or drag and drop</p>

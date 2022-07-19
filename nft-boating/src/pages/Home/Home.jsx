@@ -113,7 +113,7 @@ export default function Home() {
 
   useEffect(() => {
     const run = async () => {
-      let addresses = [];
+      let addresses;
       try {
         addresses = await ContractFactory.getAllContractAddress();
       } catch (e) {

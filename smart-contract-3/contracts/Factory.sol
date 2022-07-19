@@ -59,7 +59,7 @@ contract Factory is Ownable {
         return User.getTokens(_contract, user);
     }
 
-    function getAllContractAddress(address _user) public view returns (address[] memory) {
+    function getMapUserAllContractAddress(address _user) public view returns (address[] memory) {
         return User.getAllContractAddress(_user);
     }
 

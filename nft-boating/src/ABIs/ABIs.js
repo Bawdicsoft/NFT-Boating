@@ -454,25 +454,6 @@ export const Factory = [
     type: "function"
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_user",
-        type: "address"
-      }
-    ],
-    name: "getAllContractAddress",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [],
     name: "getAllContractAddress",
     outputs: [
@@ -605,6 +586,25 @@ export const Factory = [
         internalType: "string",
         name: "baseURI",
         type: "string"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address"
+      }
+    ],
+    name: "getMapUserAllContractAddress",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]"
       }
     ],
     stateMutability: "view",
