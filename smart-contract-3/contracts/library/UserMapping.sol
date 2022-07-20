@@ -52,6 +52,7 @@ library UserMapping {
             map.inserted[_contract][key] = true;
             map.tokens[_contract][key].push(tokensID);
             map.indexOf[_contract][key] = map.user.length;
+            map.Contract[key].push(_contract);
             map.user.push(key);
         }
     }
