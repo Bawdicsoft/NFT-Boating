@@ -32,7 +32,7 @@ export default function Collected() {
         } catch (e) {
           console.log(e);
         }
-        console.log(addresses);
+        console.log('addresses',addresses);
 
         if (addresses.length) {
           // for (let i = 0; i < addresses.length; i++) {
@@ -67,7 +67,7 @@ export default function Collected() {
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-bold text-gray-900">Created</h1>
+              <h1 className="text-3xl font-bold text-gray-900">OwnerShips</h1>
             </div>
             <div className="mt-5 flex lg:mt-0 lg:ml-4">
               <span className="sm:ml-3">

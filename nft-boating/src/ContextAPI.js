@@ -1,8 +1,11 @@
-import { useContext, useEffect, createContext } from "react";
+import { useContext, useEffect, createContext, useState } from "react";
 import { ethers } from "ethers";
 import { Factory, NFTYacht, USDT } from "./ABIs/ABIs";
 import { Injected } from "./Comp/Wallets/Connectors";
 import { useWeb3React } from "@web3-react/core";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db, signInWithGoogle } from "./DB/firebase-config";
+import { query, collection, getDocs, where } from "firebase/firestore";
 
 export const ContextAPI = createContext();
 
@@ -12,6 +15,8 @@ export const useContextAPI = () => {
 
 export const ContextProvider = ({ children }) => {
   const { activate, account } = useWeb3React();
+  const [user, loading, error] = useAuthState(auth);
+
 
   const FactoryAddress = "0xBb919196fF46153D4B551156cf8ED5e1F7020FE8";
   const USDTAddress = "0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B";
@@ -33,6 +38,35 @@ export const ContextProvider = ({ children }) => {
     };
     conToMetamask();
   }, []);
+
+
+  const [UserData, setUserData] = useState();
+
+  console.log({UserData});
+
+  useEffect(() => {
+    if (loading) {
+      // maybe trigger a loading screen
+      return;
+    } else {
+      fetchUserName();
+    }
+  }, [user, loading]);
+
+  const fetchUserName = async () => {
+    try {
+      console.log({user});
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+      const doc = await getDocs(q);
+      // console.log(doc.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setUserData(data);
+      console.log("userID", data[0].id);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   const values = { ContractUSDT, ContractFactory, NFTYacht, provider , FactoryAddress };
 

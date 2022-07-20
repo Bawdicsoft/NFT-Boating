@@ -6,20 +6,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContextAPI } from "./../../ContextAPI";
 import { useWeb3React } from "@web3-react/core";
 import { formatEther, parseEther } from "ethers/lib/utils";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, signInWithGoogle } from "../../DB/firebase-config";
 
 export default function BuyForm() {
   const { Contract } = useParams();
-  const { NFTYacht, provider, ContractUSDT , ContractFactory , FactoryAddress } = useContextAPI();
+  const { NFTYacht, provider, ContractUSDT, ContractFactory, FactoryAddress } =
+    useContextAPI();
   const { account, active } = useWeb3React();
   const navigate = useNavigate();
-
+  const [user, loading, error] = useAuthState(auth);
 
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm();
 
   const [State, SetState] = useImmer({
@@ -35,25 +38,24 @@ export default function BuyForm() {
   useEffect(() => {
     const run = async () => {
       try {
-        const ContractInfo = await  ContractFactory.getContractInfo(Contract);
-        console.log({ContractInfo});
+        const ContractInfo = await ContractFactory.getContractInfo(Contract);
+        console.log({ ContractInfo });
 
-        const baseURI = ContractInfo.baseURI
-        const name = ContractInfo.name
-        const ownerAddress = ContractInfo.ownerAddress
-        const price = parseInt(ContractInfo.price._hex,16)
-        const symbol = ContractInfo.symbol
-        const tOwnership = formatEther(ContractInfo.tOwnership._hex)
-        const tsupply = parseInt(ContractInfo.tSupply._hex, 16)
+        const baseURI = ContractInfo.baseURI.toString();
+        const name = ContractInfo.name.toString();
+        const ownerAddress = ContractInfo.ownerAddress.toString();
+        const price = ContractInfo.price.toString();
+        const symbol = ContractInfo.symbol.toString();
+        const tOwnership = ContractInfo.tOwnership.toString();
+        const tsupply = ContractInfo.tSupply.toString();
 
-
-        SetState(draft => {
+        SetState((draft) => {
           draft.baseURI = baseURI;
           draft.name = name;
           draft.ownerAddress = ownerAddress;
           draft.price = price;
           draft.symbol = symbol;
-          draft.tOwnership = tOwnership
+          draft.tOwnership = tOwnership;
           draft.tsupply = tsupply;
         });
       } catch (e) {
@@ -70,7 +72,7 @@ export default function BuyForm() {
         try {
           const userBalance = await ContractUSDT.balanceOf(account);
 
-          SetState(draft => {
+          SetState((draft) => {
             draft.userBalance = formatEther(userBalance.toString());
           });
         } catch (e) {
@@ -93,19 +95,15 @@ export default function BuyForm() {
     }
   };
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     const value = totalMint * State.price;
     console.log("Submit", totalMint, value);
     try {
-      const tx = await ContractFactory.buyOwnership(
-        totalMint,
-        value,
-        Contract
-      );
+      const tx = await ContractFactory.buyOwnership(totalMint, value, Contract);
 
-      await tx.wait()
+      await tx.wait();
 
-      navigate(`/collected`);
+      navigate(`/created`);
     } catch (e) {
       console.error(e);
     }
@@ -144,7 +142,7 @@ export default function BuyForm() {
                         value={account}
                         {...register("Last name", {
                           required: true,
-                          maxLength: 100
+                          maxLength: 100,
                         })}
                         className="w-full py-2.5 px-3 border mb-4 rounded-md"
                       />
@@ -198,24 +196,54 @@ export default function BuyForm() {
                         {...register("totalMint", {
                           required: true,
                           max: 10,
-                          min: 1
+                          min: 1,
                         })}
                         className="w-full py-2.5 px-3 border mb-4 rounded-md "
                       />
                     </div>
-
-                    <div className="col-span-6 sm:col-span-3">
-                      <span
-                        onClick={handleApprove}
-                        className="cursor-pointer text-center w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >Approve</span>
-                    </div>
-                    <div className="col-span-6 sm:col-span-3">
-                      <button
-                        className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        type="submit"                        
-                      >Confirm</button>
-                    </div>
+                    {!user ? (
+                      <div className="col-span-6 sm:col-span-6">
+                        <span
+                          onClick={signInWithGoogle}
+                          className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6 mr-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                            />
+                          </svg>
+                          Sign in to Gmail To run This Function
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="col-span-6 sm:col-span-3">
+                          <span
+                            onClick={handleApprove}
+                            className="cursor-pointer text-center w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          >
+                            Approve
+                          </span>
+                        </div>
+                        <div className="col-span-6 sm:col-span-3">
+                          <button
+                            className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            type="submit"
+                          >
+                            Confirm
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

@@ -48,6 +48,7 @@ const signInWithGoogle = async () => {
         name: user.displayName,
         authProvider: "google",
         email: user.email,
+        photoURL: user.photoURL,
       });
     }
   } catch (err) {
@@ -69,7 +70,7 @@ const signInWithGoogle = async () => {
 
 const logout = async () => {
   console.log('clicked');
-  await signOut(auth);
+  return signOut(auth);
 };
 
 export {
