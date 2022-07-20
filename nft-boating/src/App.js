@@ -31,6 +31,7 @@ export default function App() {
         <Route path="/create-new" element={<CreateNew />} />
 
         {/* Dashboard Routes */}
+        <Route path="/Contract/:Contract/nft/:id" element={<NFT />} />
         <Route path="/offers-received" element={<OffersReceived />} />
         <Route path="/booked-date" element={<BookedDate />} />
         <Route path="/offers-made" element={<OffersMade />} />

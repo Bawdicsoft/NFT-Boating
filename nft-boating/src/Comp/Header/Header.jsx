@@ -34,7 +34,6 @@ const userNavigation = [
   { name: "OffersMade", href: "/offers-made" },
   { name: "Collected", href: "/collected" },
   { name: "Created", href: "/created" },
-  { name: "NFT", href: "/nft" },
 ];
 
 function classNames(...classes) {
@@ -46,7 +45,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false)
-  
+
   const { activate, active, account, deactivate } = useWeb3React();
 
   const logoutFunc = async () => {
@@ -142,6 +141,13 @@ export default function Header() {
                             <span className="sr-only">View notifications </span>
                             <BellIcon className="h-6 w-6" aria-hidden="true" />
                           </button>
+                            <span
+                      className="cursor-pointer bg-gray-800 flex-shrink-0 ml-2 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                      onClick={() => setOpen(true)}
+                    >
+                      <span className="sr-only">View notifications</span>
+                      <CashIcon className="h-6 w-6" aria-hidden="true" />
+                    </span>
                           <Menu as="div" className="ml-3 relative">
                             <div>
                               <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -196,13 +202,7 @@ export default function Header() {
                           </Menu>
                           {/* <CashIcon className="h-6 w-6" aria-hidden="true" /> */}
 
-                          <span
-                      className="cursor-pointer bg-gray-800 flex-shrink-0 ml-2 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                      onClick={() => setOpen(true)}
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <CashIcon className="h-6 w-6" aria-hidden="true" />
-                    </span>
+                        
 
 
                             </>

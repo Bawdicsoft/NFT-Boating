@@ -20,8 +20,9 @@ export default function Collected() {
     userNFT: 0
   });
 
+  console.log(state);
+
   useEffect(() => {
-    console.log(">");
     if (active) {
       const run = async () => {
         let addresses;
@@ -32,25 +33,40 @@ export default function Collected() {
         } catch (e) {
           console.log(e);
         }
-        console.log('addresses',addresses);
 
         if (addresses.length) {
-          // for (let i = 0; i < addresses.length; i++) {
-          //   const symbol = await ContractFactory.symbol();
-          //   const date = {
-          //     id: i,
-          //     name: "name",
-          //     symbol: symbol,
-          //     address: addresses[i],
-          //     imageSrc:
-          //       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-          //     imageAlt: "Front of men's Basic Tee in black."
-          //   };
-          //   SetState(draft => {
-          //     draft.userNFT = addresses.length;
-          //     draft.data.push(date);
-          //   });
-          // }
+          for (let i = 0; i < addresses.length; i++) {
+            const getUserIDs = await ContractFactory.getUserIDs(addresses[i] ,account);
+            
+
+            const contractData = await ContractFactory.getContractInfo(
+              addresses[i]
+            );
+            console.log(contractData);
+
+            getUserIDs.map((nftid) => {
+              let data = {
+                nftNumber: nftid.toString(),
+                name: contractData.name.toString(),
+                symbol: contractData.symbol.toString(),
+                tSupply: contractData.tSupply.toString(),
+                tOwnership: contractData.tOwnership.toString(),
+                price: contractData.price.toString(),
+                ownerAddress: contractData.ownerAddress.toString(),
+                baseURI: contractData.baseURI.toString(),
+                contractAddress: addresses[i].toString(),
+                imageSrc:
+                  "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+                imageAlt: "Front of men's Basic Tee in black."
+              };
+              SetState(draft => {
+                draft.userNFT = getUserIDs.length;
+                draft.data.push(data);
+              });
+
+            })
+
+          }
         } else {
           SetState(draft => {
             draft.userNFT = 0;
@@ -92,8 +108,8 @@ export default function Collected() {
             <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
               {state.data.map(Contract => (
                 <Link
-                  to={`/contract/${Contract.address}`}
-                  key={Contract.id}
+                  to={`/contract/${Contract.contractAddress}/nft/${Contract.nftNumber}`}
+                  key={Contract.nftNumber + Math.random()}
                   className="group relative"
                 >
                   <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
@@ -111,6 +127,7 @@ export default function Collected() {
                             aria-hidden="true"
                             className="absolute inset-0"
                           />
+                          {Contract.nftNumber}
                           {Contract.name}
                         </a>
                       </h3>

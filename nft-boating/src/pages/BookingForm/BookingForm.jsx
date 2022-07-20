@@ -10,10 +10,11 @@ import Food from "./Food";
 import { useContextAPI } from "./../../ContextAPI";
 import { useWeb3React } from "@web3-react/core";
 import { useParams } from "react-router-dom";
+import OfferSidePanel from "./OfferSidePanel";
 
 export default function BookingForm() {
   const { Contract, id } = useParams();
-  const { NFTYacht, provider, ContractUSDT } = useContextAPI();
+  const { NFTYacht, provider, ContractUSDT , ContractFactory} = useContextAPI();
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
   const { account, active } = useWeb3React();
 
@@ -39,20 +40,22 @@ export default function BookingForm() {
     month: daysAdded.slice(5, 7),
     day: daysAdded.slice(8, 10)
   };
-
+  
   const [dateError, setDateError] = useState();
+  const [offerSideNav, setOfferSideNav] = useState(false)
   const [getBookDateID, setGetBookDateID] = useState();
 
   const handleDisabledSelect = async disabledDay => {
     for (let i = 0; i < disabledDays.length; i++) {
       if (disabledDays[i].day === disabledDay.day) {
-        await ContractNFTYacht.getBookDateID(
+        await ContractFactory.getBookDateID(
           disabledDay.year,
           disabledDay.month,
           disabledDay.day
         ).then(res => {
           setGetBookDateID(res.toString());
           setDateError(disabledDay);
+          setOfferSideNav(true)
         });
       }
     }
@@ -61,8 +64,8 @@ export default function BookingForm() {
   async function afterOpenModal() {
     setDisabledDays([]);
 
-    let newYear = await ContractNFTYacht.newYear();
-    let allBookedDates = await ContractNFTYacht.getAllBookedDates(
+    let newYear = await ContractFactory.newYear();
+    let allBookedDates = await ContractFactory.getAllBookedDates(
       newYear.toString()
     );
 
@@ -93,11 +96,20 @@ export default function BookingForm() {
     handleSubmit,
     formState: { errors }
   } = useForm();
+
   const onSubmit = async data => {
-    await ContractNFTYacht.bookDate(
+    console.log({
+      year: selectedDay.year,
+      month: selectedDay.month,
+      day: selectedDay.day,
+      Contract,
+      id
+    });
+    await ContractFactory.bookDate(
       selectedDay.year,
       selectedDay.month,
       selectedDay.day,
+      Contract,
       id
     )
       .then(res => {
@@ -109,8 +121,10 @@ export default function BookingForm() {
   };
   console.log(errors);
 
+
   return (
     <>
+    {dateError && <OfferSidePanel open={offerSideNav} setOpen={setOfferSideNav} errordate={dateError}/>}
       <Food setOpen={setOpen} open={open} setFood={setFood} />
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="mt-10 sm:mt-0">
@@ -143,6 +157,7 @@ export default function BookingForm() {
                           maximumDate={maximumDate}
                           onChange={setSelectedDay}
                           inputPlaceholder="Select a day"
+                          className=""
                           disabledDays={disabledDays} // here we pass them
                           onDisabledDayError={handleDisabledSelect} // handle error
                           shouldHighlightWeekends
