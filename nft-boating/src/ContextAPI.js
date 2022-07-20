@@ -18,7 +18,7 @@ export const ContextProvider = ({ children }) => {
   const [user, loading, error] = useAuthState(auth);
 
 
-  const FactoryAddress = "0xBb919196fF46153D4B551156cf8ED5e1F7020FE8";
+  const FactoryAddress = "0xa8dB91a4D20299d4a1EfB021065919363B0784b3";
   const USDTAddress = "0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B";
 
   const provider = new ethers.providers.Web3Provider(
