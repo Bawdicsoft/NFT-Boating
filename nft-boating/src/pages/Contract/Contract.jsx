@@ -27,6 +27,10 @@ import { ethers } from "ethers";
 import { useContextAPI } from "./../../ContextAPI";
 import { useImmer } from "use-immer";
 import { Link, useNavigate } from "react-router-dom";
+import image1 from "../../Assests/images/image1.jpg"
+import image2 from "../../Assests/images/image2.jpg"
+import image3 from "../../Assests/images/image3.jpg"
+import image4 from "../../Assests/images/wedding.jpg"
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -38,19 +42,19 @@ const product = {
   ],
   images: [
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
+      src: image1,
       alt: "Two each of gray, white, and black shirts laying flat."
     },
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
+      src: image2,
       alt: "Model wearing plain black basic tee."
     },
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
+      src: image3,
       alt: "Model wearing plain gray basic tee."
     },
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
+      src: image4,
       alt: "Model wearing plain white basic tee."
     }
   ],
@@ -96,13 +100,21 @@ export default function Contract() {
   useEffect(() => {
     const run = async () => {
       try {
-        const name = await ContractNFTYacht.name();
+        var name = await ContractNFTYacht.name();
+
+        // converting first letter to uppercase
+        function capitalizeFirstLetter(str) {
+          const capitalized = str.replace(/^./, str[0].toUpperCase());
+          return capitalized;
+        }
+        var name = capitalizeFirstLetter(name)
+
         const symbol = await ContractNFTYacht.symbol();
         SetState(draft => {
           draft.name = name;
           draft.symbol = symbol;
         });
-      } catch (e) {}
+      } catch (e) { }
     };
     run();
   }, [Contract]);
@@ -195,12 +207,16 @@ export default function Contract() {
           {/* Options */}
           <div className="mt-4 lg:mt-0 lg:row-span-3">
             <h2 className="sr-only">Buy MemberShip Form</h2>
+            <h1 className="mb-1 font-bold">Title: Buy Your Nft</h1>
+            <p className="font-normal mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, maiores? </p>
             <Link
               to={`/Contract/${Contract}/buy-nft`}
               className="mb-5 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Buy NFT
             </Link>
+            <h1 className="mb-1 font-bold">Title: Your OwnerShips</h1>
+            <p className="font-normal mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, maiores? </p>
             <Link
               to={`/Contract/${Contract}/nft/1`}
               className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

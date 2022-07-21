@@ -18,7 +18,9 @@ export default function OffersReceived() {
     <div className="OffersReceived min-h-full">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">OffersReceived</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Offers Received</h1>
+          <p className="max-w-2xl">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numqquam, omnis delecctus ipsa adippisicing?</p>
         </div>
       </header>
       <main>

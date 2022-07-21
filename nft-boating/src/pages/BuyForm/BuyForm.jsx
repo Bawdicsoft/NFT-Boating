@@ -85,13 +85,18 @@ export default function BuyForm() {
 
   const totalMint = watch("totalMint");
 
+  const [state, setSate] = useState(true);
+
   const handleApprove = async () => {
-    const value = totalMint * State.price;
-    console.log("Approve", FactoryAddress, value);
-    try {
-      await ContractUSDT.approve(FactoryAddress, value);
-    } catch (e) {
-      console.error(e);
+    if (state) {
+      const value = totalMint * State.price;
+      console.log("Approve", FactoryAddress, value);
+      try {
+        await ContractUSDT.approve(FactoryAddress, value);
+        setSate(false);
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -112,6 +117,11 @@ export default function BuyForm() {
 
   return (
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mb-20 text-center">
+        <h1 className="mb-1 font-bold text-5xl "> Your OwnerShips</h1>
+        <div className="max-w-3xl mx-auto text-center">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numquam, omnis delectus?</div>
+      </div>
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
           <div className="md:col-span-1">
@@ -120,7 +130,7 @@ export default function BuyForm() {
                 Mint Your NFT
               </h3>
               <p className="mt-1 text-sm text-gray-600">
-                Use a permanent address where you can receive mail.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
               </p>
             </div>
           </div>
@@ -229,14 +239,14 @@ export default function BuyForm() {
                         <div className="col-span-6 sm:col-span-3">
                           <span
                             onClick={handleApprove}
-                            className="cursor-pointer text-center w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (state ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer" : "bg-gray-600 opacity-50 cursor-not-allowed")}
                           >
                             Approve
                           </span>
                         </div>
                         <div className="col-span-6 sm:col-span-3">
                           <button
-                            className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (state ? "bg-gray-600 opacity-50 cursor-not-allowed" : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")}
                             type="submit"
                           >
                             Confirm

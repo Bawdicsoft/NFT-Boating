@@ -25,21 +25,21 @@ export default function NFT() {
 
   // console.log({ContractNFTYacht});
 
-  
+
   useEffect(() => {
     const fetch = async () => {
       console.log("hello");
       const ownerOf = await ContractNFTYacht.ownerOf(id);
       const getUserData = await ContractFactory.getUserData(Contract, id);
       const getBookedDate = await ContractFactory.getBookedDate(Contract, id);
-  
+
       const name = await ContractNFTYacht.name();
       const symbol = await ContractNFTYacht.symbol();
-      
+
       var t = new Date(1970, 0, 1); // Epoch
       t.setSeconds(getBookedDate[1].toString()).toLocaleString();
-      
-      
+
+
       SetState((draft) => {
         draft.name = name;
         draft.symbol = symbol;
@@ -158,14 +158,14 @@ export default function NFT() {
                             Cancel
                           </button>
                         )}
-                        {!State.ownerOfToken && (
+                        {/* {!State.ownerOfToken && (
                           <button
                             onClick={offerFunc}
                             className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                           >
                             Make Offer
-                          </button>
-                        )}
+                          </button> */}
+                        {/* )} */}
                       </>
                     ) : (
                       "Not Connected To Wallet"

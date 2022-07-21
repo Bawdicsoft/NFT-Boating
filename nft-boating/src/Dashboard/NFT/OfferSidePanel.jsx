@@ -6,11 +6,14 @@ import { useForm } from "react-hook-form";
 import DatePicker, {
   utils,
 } from "@amir04lm26/react-modern-calendar-date-picker";
+import { useContextAPI } from "./../../ContextAPI";
+import { formatEther } from "ethers/lib/utils";
 
 export default function OfferSidePanel({ open, setOpen }) {
   const [selectedDay, setSelectedDay] = useState(null);
   const [disabledDays, setDisabledDays] = useState([]);
-
+  const { NFTYacht, provider, ContractUSDT, ContractFactory, FactoryAddress } =
+    useContextAPI();
   const date = new Date().toISOString().split("T")[0];
   const minimumDate = {
     year: date.slice(0, 4),
@@ -52,7 +55,17 @@ export default function OfferSidePanel({ open, setOpen }) {
     setOpen(false);
   };
 
-  const handleApprove = (e) => {};
+  const totalMint = watch("totalMint");
+
+  const handleApprove = async () => {
+    // const value = totalMint * State.price;
+    console.log("Approve", FactoryAddress, formatEther(300));
+    try {
+      await ContractUSDT.approve(FactoryAddress, formatEther(300));
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -124,7 +137,7 @@ export default function OfferSidePanel({ open, setOpen }) {
                                   type="text"
                                   placeholder="amount"
                                   className="w-full py-2.5 px-3 border mb-2 rounded-md"
-                                  
+
                                 />
                               </div>
                               <div className="col-span-6 sm:col-span-6">
@@ -135,17 +148,17 @@ export default function OfferSidePanel({ open, setOpen }) {
                                   Select Your Nft
                                 </label>
                                 <select
-                               className="w-full py-2.5 px-3 border mb-2 rounded-md"
-                                {...register("Select Your Nft", {
-                                  required: true,
-                                })}
-                              >
-                                <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="This">This</option>
-                                <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="That">That</option>
-                                <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="Other">Other</option>
-                              </select>
+                                  className="w-full py-2.5 px-3 border mb-2 rounded-md"
+                                  {...register("Select Your Nft", {
+                                    required: true,
+                                  })}
+                                >
+                                  <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="This">This</option>
+                                  <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="That">That</option>
+                                  <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="Other">Other</option>
+                                </select>
                               </div>
-                     
+
                               <div className="col-span-6 sm:col-span-6">
                                 <label
                                   htmlFor="last-name"

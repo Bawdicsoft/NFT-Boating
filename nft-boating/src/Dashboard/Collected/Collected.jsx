@@ -36,8 +36,8 @@ export default function Collected() {
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
-            const getUserIDs = await ContractFactory.getUserIDs(addresses[i] ,account);
-            
+            const getUserIDs = await ContractFactory.getUserIDs(addresses[i], account);
+
 
             const contractData = await ContractFactory.getContractInfo(
               addresses[i]
@@ -83,7 +83,9 @@ export default function Collected() {
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-bold text-gray-900">OwnerShips</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Owner Ships</h1>
+              <p className="max-w-2xl">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numqquam, omnis delecctus ipsa adippisicing?</p>
             </div>
             <div className="mt-5 flex lg:mt-0 lg:ml-4">
               <span className="sm:ml-3">

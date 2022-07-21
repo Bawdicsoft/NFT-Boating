@@ -151,9 +151,11 @@ export default function Home() {
   return (
     <div className="bg-white">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">
-          Home
-        </h2>
+        <div className=" mb-20 text-center">
+          <h1 className="mb-1 font-bold text-5xl "> Home </h1>
+          <div className="max-w-3xl mx-auto text-center">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numquam, omnis delectus?</div>
+        </div>
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {State.data.map(Contract => (

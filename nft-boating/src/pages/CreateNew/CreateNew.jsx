@@ -59,11 +59,11 @@ export default function CreateNew() {
 
   return (
     <div className="CreateNew min-h-full">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Register Your Boat
-          </h1>
+      <header className="bg-white">
+        <div className="mt-20 mb-20 text-center">
+          <h1 className="mb-1 font-bold text-5xl "> Create New </h1>
+          <div className="max-w-3xl mx-auto text-center">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numquam, omnis delectus?</div>
         </div>
       </header>
       <main>

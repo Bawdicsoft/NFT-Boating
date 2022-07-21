@@ -1,4 +1,32 @@
+import { useEffect, useState } from "react";
+import { useImmer } from "use-immer";
+import { useParams, Link } from "react-router-dom";
+import { useContextAPI } from "../../ContextAPI";
+import { useWeb3React } from "@web3-react/core";
+
 export default function OffersMade() {
+  const { Contract, id } = useParams();
+  const { NFTYacht, provider, ContractFactory } = useContextAPI();
+  const { account, active } = useWeb3React();
+
+  // getMapUserAllContractAddress(address _user)
+  // getUserAllOffers(address _Contract, address _user)
+  useEffect(() => {
+    async function getAllContractAddress() {
+      console.log("runnin");
+
+      const getAllContractAddress = await ContractFactory.getMapUserAllContractAddress(account);
+      console.log("logggggggggg", getAllContractAddress);
+      for (let i = 0; i < getAllContractAddress.length; i++) {
+        const getUserAllOffers = await ContractFactory.getUserAllOffers(getAllContractAddress[i], account);
+        console.log("offers", getUserAllOffers);
+
+
+      }
+    }
+    getAllContractAddress()
+  }, [account]);
+
   const obj = [
     {
       walletAddress: "0x43..232",
@@ -18,6 +46,8 @@ export default function OffersMade() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Offers Made</h1>
+          <p className="max-w-2xl">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numqquam, omnis delecctus ipsa adippisicing?</p>
         </div>
       </header>
       <main>
