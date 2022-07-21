@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 /* This example requires Tailwind CSS v2.0+ */
 import { PencilIcon } from "@heroicons/react/solid";
+import image1 from "../../Assests/images/yachat.jpg";
 
 export default function Created() {
   const { account, active } = useWeb3React();
@@ -46,7 +47,7 @@ export default function Created() {
               baseURI: contractData.baseURI.toString(),
               contractAddress: addresses[i].toString(),
               imageSrc:
-                "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+                image1,
               imageAlt: "Front of men's Basic Tee in black."
             };
 
@@ -79,7 +80,7 @@ export default function Created() {
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
               <h1 className="text-3xl font-bold text-gray-900">
-                Your Contracts {state.userNFT}
+                Your Contracts
               </h1>
               <p className="max-w-2xl">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numqquam, omnis delecctus ipsa adippisicing?</p>
@@ -105,10 +106,14 @@ export default function Created() {
       <main>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto py-10 sm:py-10 lg:py-10 lg:max-w-none">
-            <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
+            <div className="mt-6 lg:space-y-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-6 sm:gap-x-6">
               {state.data.map(Contract => (
                 <div key={Contract.id} className="group relative">
                   <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
+                    <h1 className="absolute text-black-700 bg-white top-4 rounded-r-lg p-2 text-l">
+
+                      Contract Id ({state.userNFT})
+                    </h1>
                     <img
                       src={Contract.imageSrc}
                       alt={Contract.imageAlt}
@@ -117,11 +122,11 @@ export default function Created() {
                   </div>
                   <div className="mt-4 flex justify-between">
                     <div>
-                      <h3 className="text-sm text-gray-700">
+                      <h3 className="text-2xl text-gray-700 ">
                         <Link to={`/contract/${Contract.contractAddress}`}>
                           <span
                             aria-hidden="true"
-                            className="absolute inset-0"
+                            className="absolute inset-0 "
                           />
                           {Contract.name} ({Contract.symbol})
                         </Link>
