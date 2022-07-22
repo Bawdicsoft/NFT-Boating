@@ -1,83 +1,62 @@
-import React from 'react';
-import Footer from '../../Comp/Footer/Footer.jsx'
+import { AnnotationIcon, GlobeAltIcon, LightningBoltIcon, ScaleIcon } from '@heroicons/react/outline'
 
-const About = () => {
+const features = [
+    {
+        name: 'Competitive exchange rates',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+        icon: GlobeAltIcon,
+    },
+    {
+        name: 'No hidden fees',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+        icon: ScaleIcon,
+    },
+    {
+        name: 'Transfers are instant',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+        icon: LightningBoltIcon,
+    },
+    {
+        name: 'Mobile notifications',
+        description:
+            'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
+        icon: AnnotationIcon,
+    },
+]
+
+export default function About() {
     return (
-        <>
-            <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-                <div className="mb-20 text-center">
-                    <h1 className="mb-1 font-bold text-5xl "> About Us</h1>
-                    <div className="max-w-3xl mx-auto text-center">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numquam, omnis delectus?</div>
+        <div className="py-12 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="lg:text-center">
+                    <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                        About Us
+                    </p>
+                    <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                        Lorem ipsum dolor sit amet consect adipisicing elit. Possimus magnam voluptatum cupiditate veritatis in
+                        accusamus quisquam.
+                    </p>
                 </div>
-                <div className="mt-10 sm:mt-0">
-                    <div className="md:grid md:grid-cols-2 md:gap-6">
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                    About Us
-                                </h3>
-                                <p className="mt-1 text-sm text-gray-600">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
-                                </p>
+
+                <div className="mt-10">
+                    <dl className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+                        {features.map((feature) => (
+                            <div key={feature.name} className="relative">
+                                <dt>
+                                    <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                        <feature.icon className="h-6 w-6" aria-hidden="true" />
+                                    </div>
+                                    <p className="ml-16 text-lg leading-6 font-medium text-gray-900">{feature.name}</p>
+                                </dt>
+                                <dd className="mt-2 ml-16 text-base text-gray-500">{feature.description}</dd>
                             </div>
-                        </div>
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                    About Us
-                                </h3>
-                                <p className="mt-1 text-sm text-gray-600">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                    About Us
-                                </h3>
-                                <p className="mt-1 text-sm text-gray-600">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                    About Us
-                                </h3>
-                                <p className="mt-1 text-sm text-gray-600">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                    About Us
-                                </h3>
-                                <p className="mt-1 text-sm text-gray-600">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                    About Us
-                                </h3>
-                                <p className="mt-1 text-sm text-gray-600">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                        ))}
+                    </dl>
                 </div>
             </div>
-            <Footer />
-        </>
-    );
+        </div>
+    )
 }
-
-export default About;
