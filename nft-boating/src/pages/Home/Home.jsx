@@ -155,16 +155,15 @@ export default function Home() {
         <div className=" mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Home </h1>
           <div className="max-w-3xl mx-auto text-center">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numquam, omnis delectus?</div>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
+            ipsa commodi accusamus cupiditate blanditiis nihil voluptas
+            architecto numquam, omnis delectus?
+          </div>
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {State.data.map(Contract => (
-            <Link
-              to={`/contract/${Contract.address}`}
-              key={Contract.id}
-              className="group relative"
-            >
+            <div key={Contract.id} className="group relative">
               <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
                 <img
                   src={Contract.imageSrc}
@@ -175,14 +174,14 @@ export default function Home() {
               <div className="mt-4 flex justify-between">
                 <div>
                   <h3 className="text-sm text-gray-700">
-                    <a href="#">
+                    <Link to={`/contract/${Contract.address}`}>
                       <span aria-hidden="true" className="absolute inset-0" />
                       {Contract.name}
-                    </a>
+                    </Link>
                   </h3>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

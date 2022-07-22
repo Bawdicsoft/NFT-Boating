@@ -14,7 +14,7 @@ import OfferSidePanel from "./OfferSidePanel";
 
 export default function BookingForm() {
   const { Contract, id } = useParams();
-  const { NFTYacht, provider, ContractUSDT , ContractFactory} = useContextAPI();
+  const { NFTYacht, provider, ContractUSDT, ContractFactory } = useContextAPI();
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
   const { account, active } = useWeb3React();
 
@@ -40,9 +40,9 @@ export default function BookingForm() {
     month: daysAdded.slice(5, 7),
     day: daysAdded.slice(8, 10)
   };
-  
+
   const [dateError, setDateError] = useState();
-  const [offerSideNav, setOfferSideNav] = useState(false)
+  const [offerSideNav, setOfferSideNav] = useState(false);
   const [getBookDateID, setGetBookDateID] = useState();
 
   const handleDisabledSelect = async disabledDay => {
@@ -55,7 +55,7 @@ export default function BookingForm() {
         ).then(res => {
           setGetBookDateID(res.toString());
           setDateError(disabledDay);
-          setOfferSideNav(true)
+          setOfferSideNav(true);
         });
       }
     }
@@ -121,10 +121,17 @@ export default function BookingForm() {
   };
   console.log(errors);
 
-
   return (
     <>
-    {dateError && <OfferSidePanel open={offerSideNav} setOpen={setOfferSideNav} errordate={dateError}/>}
+      {dateError && (
+        <OfferSidePanel
+          id={id}
+          Contract={Contract}
+          open={offerSideNav}
+          setOpen={setOfferSideNav}
+          errordate={dateError}
+        />
+      )}
       <Food setOpen={setOpen} open={open} setFood={setFood} />
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="mt-10 sm:mt-0">

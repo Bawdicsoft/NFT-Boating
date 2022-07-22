@@ -44,7 +44,7 @@ contract Factory is Ownable {
 
     constructor() Ownable(msg.sender) {
 
-        USDT = IERC20(0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B);
+        USDT = IERC20(0x65C89088C691841D55263E74C7F5cD73Ae60186C);
     
     }
 
@@ -80,25 +80,11 @@ contract Factory is Ownable {
         (_blockTimestamp, _DateAndTime, _newYear) = booking.getTime(_Contract, _id);
     }
 
-    function getOffer(address _Contract, uint _id) public view returns (
-
-        address _user, uint _price, uint _time, uint _userID, uint _offeredDate
-
-        ) {
-
-        _user    = offers[_Contract][_id].User;
-        _price   = offers[_Contract][_id].Price;
-        _time    = offers[_Contract][_id].Time;
-        _userID  = offers[_Contract][_id].userID;
-        _offeredDate  = offers[_Contract][_id].offeredDate;
-
-    }
+    
 
     
 
-    function getUserAllOffers(address _Contract, address _user) public view returns(uint[] memory) {
-        return userAllOffers[_Contract][_user];
-    }
+    
 
 
 
@@ -294,6 +280,8 @@ contract Factory is Ownable {
         uint _month;
         uint _day;
     }
+
+    mapping(address => mapping(uint => uint)) indexOf;
     mapping ( uint => _bookDates[] ) public allBookedDates;
     mapping ( uint => mapping ( uint => mapping ( uint => uint ) ) ) public bookDateID;
 
@@ -336,17 +324,22 @@ contract Factory is Ownable {
 
     }
 
+    
 
+    /*******************************************************
+    *   offer logic (offer, cancelOffer, acceptOffer)
+    *******************************************************/
 
     struct _offer {
-        address User;
+        uint id;
+        uint userID;
         uint Price;
         uint Time;
-        uint userID;
         uint offeredDate;
+        address User;
+        address Contract;
     }
 
-    mapping(address => mapping(uint => uint)) indexOf;
 
     mapping(address => mapping(uint => _offer)) public offers;
     mapping(address => mapping(address => uint[])) public userAllOffers;
@@ -375,12 +368,38 @@ contract Factory is Ownable {
 
         USDT.transferFrom( _msgSender, address(this), _USDT);
 
-        offers[_Contract][_id] = _offer (_msgSender, _USDT, (_DateAndTime.sub(acceptOfferBefore)), _userID, _DateAndTime);
+        offers[_Contract][_id] = _offer (_id, _userID, _USDT, (_DateAndTime.sub(acceptOfferBefore)),  _DateAndTime, _msgSender, _Contract);
         indexOf[_Contract][_id] = userAllOffers[_Contract][_msgSender].length;
         userAllOffers[_Contract][_msgSender].push(_id);
         offerdID[_Contract][_id] = true;
 
         emit offered(_id, _msgSender);
+
+    }
+
+    function getUserAllOffers(address _Contract, address _user) public view returns(uint[] memory) {
+        return userAllOffers[_Contract][_user];
+    }
+
+    function getOffer(address _Contract, uint _id) public view returns (
+
+        uint id__,
+        uint userID__,
+        uint Price__,
+        uint Time__,
+        uint offeredDate__,
+        address User__,
+        address Contract__
+        
+        ) {
+
+        id__  = offers[_Contract][_id].id;
+        userID__  = offers[_Contract][_id].userID;
+        Price__   = offers[_Contract][_id].Price;
+        Time__    = offers[_Contract][_id].Time;
+        offeredDate__  = offers[_Contract][_id].offeredDate;
+        User__    = offers[_Contract][_id].User;
+        Contract__    = offers[_Contract][_id].Contract;
 
     }
 
