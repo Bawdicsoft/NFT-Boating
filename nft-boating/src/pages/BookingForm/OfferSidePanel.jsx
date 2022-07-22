@@ -118,7 +118,7 @@ export default function OfferSidePanel({
     }
   }, [active]);
 
-  const offerFunc = async () => {};
+  const offerFunc = async () => { };
 
   const {
     register,
@@ -145,10 +145,14 @@ export default function OfferSidePanel({
     }
   };
 
+  const [button, setButton] = useState(true);
+
+
   const handleApprove = async e => {
     console.log("handleApprove run", FactoryAddress, parseEther(amount));
     try {
       await ContractUSDT.approve(FactoryAddress, parseEther(amount));
+      setButton(false);
     } catch (e) {
       console.error(e);
     }
@@ -208,8 +212,8 @@ export default function OfferSidePanel({
                         {errordate.day}-{errordate.month}-{errordate.year}
                       </Dialog.Title>
                       <p className="text-red-900">
-                        This Date is Already Booked , You can Still Book This
-                        Date
+                        * This date is already booked , You can still book this
+                        Date.
                       </p>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
@@ -264,14 +268,14 @@ export default function OfferSidePanel({
                               <div className="col-span-6 sm:col-span-3">
                                 <span
                                   onClick={handleApprove}
-                                  className="cursor-pointer text-center w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                  className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (button ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer" : "bg-gray-600 opacity-50 cursor-not-allowed")}
                                 >
                                   Approve
                                 </span>
                               </div>
                               <div className="col-span-6 sm:col-span-3">
                                 <button
-                                  className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                  className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (button ? "bg-gray-600 opacity-50 cursor-not-allowed" : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")}
                                   type="submit"
                                 >
                                   Confirm

@@ -30,10 +30,10 @@ const navigation = [
   // { name: "Booking Form", href: "/Booking-form", current: false },
 ];
 const userNavigation = [
-  { name: "OffersReceived", href: "/offers-received" },
-  { name: "BookedDate", href: "/booked-date" },
-  { name: "OffersMade", href: "/offers-made" },
-  { name: "Collected", href: "/collected" },
+  { name: "Offers Received", href: "/offers-received" },
+  { name: "Booked Date", href: "/booked-date" },
+  { name: "Offers Made", href: "/offers-made" },
+  { name: "nft Collection", href: "/collected" },
   { name: "Created", href: "/created" },
 ];
 
