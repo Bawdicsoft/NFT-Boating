@@ -1,125 +1,126 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
-import { ethers } from "ethers";
+import { useState, useEffect } from "react"
+import { useForm } from "react-hook-form"
+import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css"
+import { ethers } from "ethers"
 
 import DatePicker, {
-  utils
-} from "@amir04lm26/react-modern-calendar-date-picker";
-import Food from "./Food";
-import { useContextAPI } from "./../../ContextAPI";
-import { useWeb3React } from "@web3-react/core";
-import { useParams } from "react-router-dom";
-import OfferSidePanel from "./OfferSidePanel";
+  utils,
+} from "@amir04lm26/react-modern-calendar-date-picker"
+import Food from "./Food"
+import { useContextAPI } from "./../../ContextAPI"
+import { useWeb3React } from "@web3-react/core"
+import { useParams } from "react-router-dom"
+import OfferSidePanel from "./OfferSidePanel"
 
 export default function BookingForm() {
-  const { Contract, id } = useParams();
-  const { NFTYacht, provider, ContractUSDT, ContractFactory } = useContextAPI();
-  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
-  const { account, active } = useWeb3React();
+  const { Contract, id } = useParams()
+  const { NFTYacht, provider, ContractUSDT, ContractFactory } = useContextAPI()
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
+  const { account, active } = useWeb3React()
 
   // handle Side Panel
-  const [open, setOpen] = useState(false);
-  const [food, setFood] = useState({ name: "" });
+  const [open, setOpen] = useState(false)
+  const [food, setFood] = useState({ name: "" })
 
   // Date Picker
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [disabledDays, setDisabledDays] = useState([]);
+  const [selectedDay, setSelectedDay] = useState(null)
+  const [disabledDays, setDisabledDays] = useState([])
 
-  const date = new Date().toISOString().split("T")[0];
+  const date = new Date().toISOString().split("T")[0]
   const minimumDate = {
     year: date.slice(0, 4),
     month: date.slice(5, 7),
-    day: date.slice(8, 10)
-  };
+    day: date.slice(8, 10),
+  }
 
-  const availDate = new Date(new Date().setDate(new Date().getDate() + 20));
-  const daysAdded = availDate.toISOString().split("T")[0];
+  const availDate = new Date(new Date().setDate(new Date().getDate() + 20))
+  const daysAdded = availDate.toISOString().split("T")[0]
   const maximumDate = {
     year: daysAdded.slice(0, 4),
     month: daysAdded.slice(5, 7),
-    day: daysAdded.slice(8, 10)
-  };
+    day: daysAdded.slice(8, 10),
+  }
 
-  const [dateError, setDateError] = useState();
-  const [offerSideNav, setOfferSideNav] = useState(false);
-  const [getBookDateID, setGetBookDateID] = useState();
+  const [dateError, setDateError] = useState()
+  const [offerSideNav, setOfferSideNav] = useState(false)
+  const [getBookDateID, setGetBookDateID] = useState()
 
-  const handleDisabledSelect = async disabledDay => {
+  const handleDisabledSelect = async (disabledDay) => {
     for (let i = 0; i < disabledDays.length; i++) {
       if (disabledDays[i].day === disabledDay.day) {
         await ContractFactory.getBookDateID(
           disabledDay.year,
           disabledDay.month,
           disabledDay.day
-        ).then(res => {
-          setGetBookDateID(res.toString());
-          setDateError(disabledDay);
-          setOfferSideNav(true);
-        });
+        ).then((res) => {
+          setGetBookDateID(res.toString())
+          setDateError(disabledDay)
+          setOfferSideNav(true)
+        })
       }
     }
-  };
+  }
 
   async function afterOpenModal() {
-    setDisabledDays([]);
+    setDisabledDays([])
 
-    let newYear = await ContractFactory.newYear();
+    let newYear = await ContractFactory.newYear()
     let allBookedDates = await ContractFactory.getAllBookedDates(
       newYear.toString()
-    );
+    )
 
     if (Number(newYear.toString())) {
       for (let i = 0; i < allBookedDates.length; i++) {
-        setDisabledDays(prev =>
+        setDisabledDays((prev) =>
           prev.concat({
             year: Number(allBookedDates[i]._year.toString()),
             month: Number(allBookedDates[i]._month.toString()),
-            day: Number(allBookedDates[i]._day.toString())
+            day: Number(allBookedDates[i]._day.toString()),
           })
-        );
+        )
       }
     }
   }
 
   useEffect(() => {
     if (!active) {
-      return;
+      return
     } else {
-      afterOpenModal();
+      afterOpenModal()
     }
-  }, [account]);
+  }, [account])
 
   // submit data
   const {
     register,
     handleSubmit,
-    formState: { errors }
-  } = useForm();
+    formState: { errors },
+  } = useForm()
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     console.log({
       year: selectedDay.year,
       month: selectedDay.month,
       day: selectedDay.day,
       Contract,
-      id
-    });
-    await ContractFactory.bookDate(
-      selectedDay.year,
-      selectedDay.month,
-      selectedDay.day,
-      Contract,
-      id
-    )
-      .then(res => {
-        console.log(res);
-      })
-      .catch(e => {
-        console.log(e.reason);
-      });
-  };
-  console.log(errors);
+      id,
+    })
+
+    try {
+      const tx = await ContractFactory.bookDate(
+        selectedDay.year,
+        selectedDay.month,
+        selectedDay.day,
+        Contract,
+        id
+      )
+      await tx.wait()
+      console.log(tx)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  console.log(errors)
 
   return (
     <>
@@ -201,7 +202,7 @@ export default function BookingForm() {
                           {...register("Mobile number", {
                             required: true,
                             minLength: 6,
-                            maxLength: 12
+                            maxLength: 12,
                           })}
                           className="w-full py-2.5 px-3 border mb-4 rounded-md"
                         />
@@ -217,7 +218,7 @@ export default function BookingForm() {
                           {...register("How many person will you be with?", {
                             required: true,
                             max: 12,
-                            min: 3
+                            min: 3,
                           })}
                           className="w-full py-2.5 px-3 border mb-4 rounded-md"
                         />
@@ -253,5 +254,5 @@ export default function BookingForm() {
         </div>
       </div>
     </>
-  );
+  )
 }

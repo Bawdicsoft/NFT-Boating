@@ -1,40 +1,38 @@
-import { useForm } from "react-hook-form";
-import { useContextAPI } from "./../../ContextAPI";
-import { useWeb3React } from "@web3-react/core";
-import { useImmer } from "use-immer";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, signInWithGoogle } from "../../DB/firebase-config";
+import { useForm } from "react-hook-form"
+import { useContextAPI } from "./../../ContextAPI"
+import { useWeb3React } from "@web3-react/core"
+import { useImmer } from "use-immer"
+import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth, signInWithGoogle } from "../../DB/firebase-config"
 
 export default function CreateNew() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(auth)
 
-  const { account, active } = useWeb3React();
-  const { ContractFactory } = useContextAPI();
-  const navigate = useNavigate();
+  const { account, active } = useWeb3React()
+  const { ContractFactory } = useContextAPI()
+  const navigate = useNavigate()
 
   const [State, SetState] = useImmer({
     SetBtnDisable: false,
-  });
-
-  const [accountWalletAddress, setAccountWalletAddress] = useState(account);
+  })
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm()
 
-  const image = watch("images");
+  const image = watch("images")
 
   const onSubmit = async (data) => {
-    console.log({ data });
+    console.log({ data })
 
     SetState((draft) => {
-      draft.SetBtnDisable = true;
-    });
+      draft.SetBtnDisable = true
+    })
 
     try {
       await ContractFactory.deploy(
@@ -42,20 +40,21 @@ export default function CreateNew() {
         data.symbol_,
         data.totalSupply_,
         data.price_,
-        data.ownerAddress_,
+        account,
         data.baseURI_
-      );
+      )
     } catch (e) {
+      console.log(">>>>>>>>>>>>>>", e)
       SetState((draft) => {
-        draft.SetBtnDisable = false;
-      });
+        draft.SetBtnDisable = false
+      })
     }
 
     ContractFactory.on("deploy_", (_Contract) => {
-      navigate(`/contract/${_Contract}`);
-    });
-  };
-  console.log(errors);
+      navigate(`/contract/${_Contract}`)
+    })
+  }
+  console.log(errors)
 
   return (
     <div className="CreateNew min-h-full">
@@ -63,7 +62,10 @@ export default function CreateNew() {
         <div className="mt-20 mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Create New </h1>
           <div className="max-w-3xl mx-auto text-center">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numquam, omnis delectus?</div>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
+            ipsa commodi accusamus cupiditate blanditiis nihil voluptas
+            architecto numquam, omnis delectus?
+          </div>
         </div>
       </header>
       <main>
@@ -180,9 +182,12 @@ export default function CreateNew() {
                             htmlFor="last-name"
                             className="block text-sm font-medium text-gray-700 mb-2"
                           >
-                            Owner Address {account}
+                            Owner Address
                           </label>
-                          <input
+                          <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                            {account}
+                          </p>
+                          {/* <input
                             type="text"
                             // value={accountWalletAddress}
                             // onChange={}
@@ -196,7 +201,7 @@ export default function CreateNew() {
                               maxLength: 100,
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
-                          />
+                          /> */}
                         </div>
 
                         <div className="col-span-6 sm:col-span-6 mb-3">
@@ -330,5 +335,5 @@ export default function CreateNew() {
         </div>
       </main>
     </div>
-  );
+  )
 }

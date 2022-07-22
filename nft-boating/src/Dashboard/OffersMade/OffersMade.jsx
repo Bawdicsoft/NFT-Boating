@@ -1,87 +1,86 @@
-import { useEffect, useState } from "react";
-import { useImmer } from "use-immer";
-import { useParams, Link } from "react-router-dom";
-import { useContextAPI } from "../../ContextAPI";
-import { useWeb3React } from "@web3-react/core";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { useEffect, useState } from "react"
+import { useImmer } from "use-immer"
+import { useParams, Link } from "react-router-dom"
+import { useContextAPI } from "../../ContextAPI"
+import { useWeb3React } from "@web3-react/core"
+import { formatEther, parseEther } from "ethers/lib/utils"
 
 export default function OffersMade() {
-  const { Contract, id } = useParams();
-  const { NFTYacht, provider, ContractFactory } = useContextAPI();
-  const { account, active } = useWeb3React();
-
-  // getMapUserAllContractAddress(address _user)
-  // getUserAllOffers(address _Contract, address _user)
+  const { NFTYacht, provider, ContractFactory } = useContextAPI()
+  const { account, active } = useWeb3React()
 
   const [state, setState] = useImmer({
     offerMade: [
       {
         Contract: "",
-        IDs: []
-      }
+        IDs: [],
+      },
     ],
     offer: [],
-    isLoding: true
-  });
+    isLoding: true,
+  })
 
   useEffect(() => {
-    async function getAllContractAddress() {
-      const getAllContractAddress =
-        await ContractFactory.getMapUserAllContractAddress(account);
+    if (active) {
+      async function getAllContractAddress() {
+        const getAllContractAddress =
+          await ContractFactory.getMapUserAllContractAddress(account)
 
-      for (let i = 0; i < getAllContractAddress.length; i++) {
-        const getUserAllOffers = await ContractFactory.getUserAllOffers(
-          getAllContractAddress[i],
-          account
-        );
-
-        for (let j = 0; j < getUserAllOffers.length; j++) {
-          const Offer = await ContractFactory.getOffer(
+        for (let i = 0; i < getAllContractAddress.length; i++) {
+          const getUserAllOffers = await ContractFactory.getUserAllOffers(
             getAllContractAddress[i],
-            getUserAllOffers[j]
-          );
-          console.log(Offer);
+            account
+          )
 
-          var t = new Date(1970, 0, 1); // Epoch
-          t.setSeconds(Offer._time.toString()).toLocaleString();
+          for (let j = 0; j < getUserAllOffers.length; j++) {
+            const Offer = await ContractFactory.getOffer(
+              getAllContractAddress[i],
+              getUserAllOffers[j]
+            )
+            console.log(Offer)
+
+            var t = new Date(1970, 0, 1) // Epoch
+            t.setSeconds(Offer.Time__.toString()).toLocaleString()
+
+            const data = {
+              id: Offer.id__.toString(),
+              userID: Offer.userID__.toString(),
+              price: formatEther(Offer.Price__.toString()),
+              time: t.toString(),
+              offeredDate: Offer.offeredDate__.toString(),
+              user: Offer.User__.toString(),
+              contract: Offer.Contract__.toString(),
+            }
+
+            console.log(data)
+
+            setState((e) => {
+              e.offer.push(data)
+            })
+          }
 
           const data = {
-            offerDate: Offer._offeredDate.toString(),
-            amount: formatEther(Offer._price.toString()),
-            date: t.toString(),
-            id: Offer._userID.toString(),
-            address: Offer._user.toString(),
-            contract: getAllContractAddress[i]
-          };
+            Contract: getAllContractAddress[i].toString(),
+            IDs: getUserAllOffers.toString(),
+          }
 
-          console.log(data);
-
-          setState(e => {
-            e.offer.push(data);
-          });
+          setState((e) => {
+            e.offerMade.push(data)
+          })
         }
-
-        const data = {
-          Contract: getAllContractAddress[i].toString(),
-          IDs: getUserAllOffers.toString()
-        };
-
-        setState(e => {
-          e.offerMade.push(data);
-        });
       }
+      getAllContractAddress()
     }
-    getAllContractAddress();
-  }, [account]);
+  }, [account])
 
   const handleCancel = async (id, contract) => {
-    console.log(contract, id);
-    await ContractFactory.cancelBooking(contract, id)
-      .then(r => {
-        console.log(r);
+    console.log(contract, id)
+    await ContractFactory.cancelOffer(contract, id)
+      .then((r) => {
+        console.log(r)
       })
-      .catch(e => console.log(e.reason));
-  };
+      .catch((e) => console.log(e.reason))
+  }
 
   return (
     <div className="OffersMade min-h-full">
@@ -120,20 +119,19 @@ export default function OffersMade() {
                       </tr>
                     </thead>
                     <tbody>
-                      {state.offer.map(item => {
+                      {state.offer.map((item) => {
                         return (
-                          <tr key={item.date}>
+                          <tr key={item.offeredDate}>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-600 whitespace-no-wrap">
-                                {`${item.address.slice(
-                                  0,
-                                  5
-                                )}...${item.address.slice(-4)}`}
+                                {`${item.user.slice(0, 5)}...${item.user.slice(
+                                  -4
+                                )}`}
                               </p>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                ${item.amount}
+                                ${item.price}
                               </p>
                               <p className="text-gray-600 whitespace-no-wrap">
                                 USD
@@ -141,7 +139,7 @@ export default function OffersMade() {
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                {item.date}
+                                {item.offeredDate}
                               </p>
                               <p className="text-gray-600 whitespace-no-wrap">
                                 Due in 3 days
@@ -167,7 +165,7 @@ export default function OffersMade() {
                               </button>
                             </td>
                           </tr>
-                        );
+                        )
                       })}
                     </tbody>
                   </table>
@@ -178,5 +176,5 @@ export default function OffersMade() {
         </div>
       </main>
     </div>
-  );
+  )
 }

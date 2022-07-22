@@ -53,8 +53,6 @@ contract Factory is Ownable {
     event offered(uint token, address user);
     event offerAccepted(uint token, address user);
 
-
-
     function getUserIDs(address _contract, address user) public view returns (uint256[] memory) {
         return User.getTokens(_contract, user);
     }

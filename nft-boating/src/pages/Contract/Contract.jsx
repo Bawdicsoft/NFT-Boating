@@ -21,12 +21,12 @@
   }
   ```
 */
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { ethers } from "ethers";
-import { useContextAPI } from "./../../ContextAPI";
-import { useImmer } from "use-immer";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { ethers } from "ethers"
+import { useContextAPI } from "./../../ContextAPI"
+import { useImmer } from "use-immer"
+import { Link, useNavigate } from "react-router-dom"
 import image1 from "../../Assests/images/image1.jpg"
 import image2 from "../../Assests/images/image2.jpg"
 import image3 from "../../Assests/images/image3.jpg"
@@ -38,30 +38,30 @@ const product = {
   href: "#",
   breadcrumbs: [
     { id: 1, name: "Men", href: "#" },
-    { id: 2, name: "Clothing", href: "#" }
+    { id: 2, name: "Clothing", href: "#" },
   ],
   images: [
     {
       src: image1,
-      alt: "Two each of gray, white, and black shirts laying flat."
+      alt: "Two each of gray, white, and black shirts laying flat.",
     },
     {
       src: image2,
-      alt: "Model wearing plain black basic tee."
+      alt: "Model wearing plain black basic tee.",
     },
     {
       src: image3,
-      alt: "Model wearing plain gray basic tee."
+      alt: "Model wearing plain gray basic tee.",
     },
     {
       src: image4,
-      alt: "Model wearing plain white basic tee."
-    }
+      alt: "Model wearing plain white basic tee.",
+    },
   ],
   colors: [
     { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
     { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
-    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" }
+    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
   ],
   sizes: [
     { name: "XXS", inStock: false },
@@ -71,7 +71,7 @@ const product = {
     { name: "L", inStock: true },
     { name: "XL", inStock: true },
     { name: "2XL", inStock: true },
-    { name: "3XL", inStock: true }
+    { name: "3XL", inStock: true },
   ],
   description:
     'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
@@ -79,45 +79,45 @@ const product = {
     "Hand cut and sewn locally",
     "Dyed with our proprietary colors",
     "Pre-washed & pre-shrunk",
-    "Ultra-soft 100% cotton"
+    "Ultra-soft 100% cotton",
   ],
   details:
-    'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.'
-};
+    'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
+}
 
 export default function Contract() {
-  const { Contract } = useParams();
-  const { NFTYacht, provider } = useContextAPI();
-  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
+  const { Contract } = useParams()
+  const { NFTYacht, provider } = useContextAPI()
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
 
   const [State, SetState] = useImmer({
     Contract: {
       name: "name",
-      symbol: "symbol"
-    }
-  });
+      symbol: "symbol",
+    },
+  })
 
   useEffect(() => {
     const run = async () => {
       try {
-        var name = await ContractNFTYacht.name();
+        var name = await ContractNFTYacht.name()
 
         // converting first letter to uppercase
         function capitalizeFirstLetter(str) {
-          const capitalized = str.replace(/^./, str[0].toUpperCase());
-          return capitalized;
+          const capitalized = str.replace(/^./, str[0].toUpperCase())
+          return capitalized
         }
         var name = capitalizeFirstLetter(name)
 
-        const symbol = await ContractNFTYacht.symbol();
-        SetState(draft => {
-          draft.name = name;
-          draft.symbol = symbol;
-        });
-      } catch (e) { }
-    };
-    run();
-  }, [Contract]);
+        const symbol = await ContractNFTYacht.symbol()
+        SetState((draft) => {
+          draft.name = name
+          draft.symbol = symbol
+        })
+      } catch (e) {}
+    }
+    run()
+  }, [Contract])
 
   return (
     <div className="bg-white">
@@ -208,21 +208,24 @@ export default function Contract() {
           <div className="mt-4 lg:mt-0 lg:row-span-3">
             <h2 className="sr-only">Buy MemberShip Form</h2>
             <h1 className="mb-1 font-bold">Title: Buy Your Nft</h1>
-            <p className="font-normal mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, maiores? </p>
+            <p className="font-normal mb-3">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Architecto, maiores?{" "}
+            </p>
             <Link
               to={`/Contract/${Contract}/buy-nft`}
               className="mb-5 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Buy NFT
             </Link>
-            <h1 className="mb-1 font-bold">Title: Your OwnerShips</h1>
+            {/* <h1 className="mb-1 font-bold">Title: Your OwnerShips</h1>
             <p className="font-normal mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, maiores? </p>
             <Link
               to={`/Contract/${Contract}/nft/1`}
               className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Your OwnerShips
-            </Link>
+            </Link> */}
           </div>
 
           <div className="py-10 lg:pt-6 lg:pb-16 lg:col-start-1 lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
@@ -240,7 +243,7 @@ export default function Contract() {
 
               <div className="mt-4">
                 <ul role="list" className="pl-4 list-disc text-sm space-y-2">
-                  {product.highlights.map(highlight => (
+                  {product.highlights.map((highlight) => (
                     <li key={highlight} className="text-gray-400">
                       <span className="text-gray-600">{highlight}</span>
                     </li>
@@ -260,5 +263,5 @@ export default function Contract() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,29 +1,29 @@
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useImmer } from "use-immer";
-import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
-import { useContextAPI } from "./../../ContextAPI";
-import { useWeb3React } from "@web3-react/core";
-import { formatEther, parseEther } from "ethers/lib/utils";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, signInWithGoogle } from "../../DB/firebase-config";
+import { ethers } from "ethers"
+import { useEffect, useState } from "react"
+import { useImmer } from "use-immer"
+import { useForm } from "react-hook-form"
+import { useNavigate, useParams } from "react-router-dom"
+import { useContextAPI } from "./../../ContextAPI"
+import { useWeb3React } from "@web3-react/core"
+import { formatEther, parseEther } from "ethers/lib/utils"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth, signInWithGoogle } from "../../DB/firebase-config"
 
 export default function BuyForm() {
-  const { Contract } = useParams();
+  const { Contract } = useParams()
   const { NFTYacht, provider, ContractUSDT, ContractFactory, FactoryAddress } =
-    useContextAPI();
-  const { account, active } = useWeb3React();
-  const navigate = useNavigate();
-  const [user, loading, error] = useAuthState(auth);
+    useContextAPI()
+  const { account, active } = useWeb3React()
+  const navigate = useNavigate()
+  const [user, loading, error] = useAuthState(auth)
 
-  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm()
 
   const [State, SetState] = useImmer({
     baseURI: "",
@@ -33,94 +33,97 @@ export default function BuyForm() {
     symbol: "",
     tOwnership: "0.0",
     tsupply: "0.0",
-  });
+  })
 
   useEffect(() => {
     const run = async () => {
       try {
-        const ContractInfo = await ContractFactory.getContractInfo(Contract);
-        console.log({ ContractInfo });
+        const ContractInfo = await ContractFactory.getContractInfo(Contract)
+        console.log({ ContractInfo })
 
-        const baseURI = ContractInfo.baseURI.toString();
-        const name = ContractInfo.name.toString();
-        const ownerAddress = ContractInfo.ownerAddress.toString();
-        const price = ContractInfo.price.toString();
-        const symbol = ContractInfo.symbol.toString();
-        const tOwnership = ContractInfo.tOwnership.toString();
-        const tsupply = ContractInfo.tSupply.toString();
+        const baseURI = ContractInfo.baseURI.toString()
+        const name = ContractInfo.name.toString()
+        const ownerAddress = ContractInfo.ownerAddress.toString()
+        const price = ContractInfo.price.toString()
+        const symbol = ContractInfo.symbol.toString()
+        const tOwnership = ContractInfo.tOwnership.toString()
+        const tsupply = ContractInfo.tSupply.toString()
 
         SetState((draft) => {
-          draft.baseURI = baseURI;
-          draft.name = name;
-          draft.ownerAddress = ownerAddress;
-          draft.price = price;
-          draft.symbol = symbol;
-          draft.tOwnership = tOwnership;
-          draft.tsupply = tsupply;
-        });
+          draft.baseURI = baseURI
+          draft.name = name
+          draft.ownerAddress = ownerAddress
+          draft.price = price
+          draft.symbol = symbol
+          draft.tOwnership = tOwnership
+          draft.tsupply = tsupply
+        })
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
-    };
-    run();
-  }, [Contract]);
+    }
+    run()
+  }, [Contract])
 
   useEffect(() => {
     if (active) {
       const run = async () => {
-        console.log(account);
+        console.log(account)
         try {
-          const userBalance = await ContractUSDT.balanceOf(account);
+          const userBalance = await ContractUSDT.balanceOf(account)
 
           SetState((draft) => {
-            draft.userBalance = formatEther(userBalance.toString());
-          });
+            draft.userBalance = formatEther(userBalance.toString())
+          })
         } catch (e) {
-          console.log(e);
+          console.log(e)
         }
-      };
-      run();
+      }
+      run()
     }
-  }, [active]);
+  }, [active])
 
-  const totalMint = watch("totalMint");
+  const totalMint = watch("totalMint")
 
-  const [state, setSate] = useState(true);
+  const [state, setSate] = useState(true)
 
   const handleApprove = async () => {
     if (state) {
-      const value = totalMint * State.price;
-      console.log("Approve", FactoryAddress, value);
+      const value = totalMint * State.price
+      console.log("Approve", FactoryAddress, value)
       try {
-        await ContractUSDT.approve(FactoryAddress, value);
-        setSate(false);
+        await ContractUSDT.approve(FactoryAddress, value)
+        setSate(false)
       } catch (e) {
-        console.error(e);
+        console.error(e)
       }
     }
-  };
+  }
 
   const onSubmit = async (data) => {
-    const value = totalMint * State.price;
-    console.log("Submit", totalMint, value);
+    const value = totalMint * State.price
+    console.log("Submit", totalMint, value)
     try {
-      const tx = await ContractFactory.buyOwnership(totalMint, value, Contract);
+      const tx = await ContractFactory.buyOwnership(totalMint, value, Contract)
 
-      await tx.wait();
+      await tx.wait()
 
-      navigate(`/collected`);
+      navigate(`/collected`)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  };
-  console.error(errors);
+  }
+  console.log(errors)
 
   return (
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
       <div className="mb-20 text-center">
         <h1 className="mb-1 font-bold text-5xl "> Your OwnerShips</h1>
         <div className="max-w-3xl mx-auto text-center">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numquam, omnis delectus?</div>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa
+          commodi accusamus cupiditate blanditiis nihil voluptas architecto
+          numquam, omnis delectus?
+        </div>
       </div>
       <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -130,7 +133,10 @@ export default function BuyForm() {
                 Mint Your NFT
               </h3>
               <p className="mt-1 text-sm text-gray-600">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio enim delectus ad illum accusantium ipsa, fugiat eum obcaecati cupiditate nostrum iste.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui,
+                hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio
+                enim delectus ad illum accusantium ipsa, fugiat eum obcaecati
+                cupiditate nostrum iste.
               </p>
             </div>
           </div>
@@ -146,7 +152,10 @@ export default function BuyForm() {
                       >
                         Wallet Address :
                       </label>
-                      <input
+                      <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                        {account}
+                      </p>
+                      {/* <input
                         type="text"
                         placeholder="0x0000000000000000000000000000000000000000"
                         value={account}
@@ -155,7 +164,7 @@ export default function BuyForm() {
                           maxLength: 100,
                         })}
                         className="w-full py-2.5 px-3 border mb-4 rounded-md"
-                      />
+                      /> */}
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
@@ -239,14 +248,24 @@ export default function BuyForm() {
                         <div className="col-span-6 sm:col-span-3">
                           <span
                             onClick={handleApprove}
-                            className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (state ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer" : "bg-gray-600 opacity-50 cursor-not-allowed")}
+                            className={
+                              "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
+                              (state
+                                ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer"
+                                : "bg-gray-600 opacity-50 cursor-not-allowed")
+                            }
                           >
                             Approve
                           </span>
                         </div>
                         <div className="col-span-6 sm:col-span-3">
                           <button
-                            className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (state ? "bg-gray-600 opacity-50 cursor-not-allowed" : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")}
+                            className={
+                              "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
+                              (state
+                                ? "bg-gray-600 opacity-50 cursor-not-allowed"
+                                : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")
+                            }
                             type="submit"
                           >
                             Confirm
@@ -262,5 +281,5 @@ export default function BuyForm() {
         </div>
       </div>
     </div>
-  );
+  )
 }

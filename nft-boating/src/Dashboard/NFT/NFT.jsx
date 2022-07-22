@@ -1,77 +1,96 @@
-import { useEffect, useState } from "react";
-import { useImmer } from "use-immer";
-import { useParams, Link } from "react-router-dom";
-import { useContextAPI } from "../../ContextAPI";
-import { ethers } from "ethers";
-import { useWeb3React } from "@web3-react/core";
+import { useEffect, useState } from "react"
+import { useImmer } from "use-immer"
+import { useParams, Link } from "react-router-dom"
+import { useContextAPI } from "../../ContextAPI"
+import { ethers } from "ethers"
+import { formatEther, parseEther } from "ethers/lib/utils"
+import { useWeb3React } from "@web3-react/core"
 
 export default function NFT() {
-  const { Contract, id } = useParams();
-  const { NFTYacht, provider, ContractFactory } = useContextAPI();
-  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
-  const { account, active } = useWeb3React();
+  const { Contract, id } = useParams()
+  const { NFTYacht, provider, ContractFactory } = useContextAPI()
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
+  const { account, active } = useWeb3React()
 
-  const [State, SetState] = useImmer({
-    Contract: {
+  const [state, setState] = useImmer({
+    contract: {
       name: "Name",
       symbol: "symbol",
-      ownerOfToken: false,
+      isOwner: false,
       isBooked: false,
-      bookedDate: ""
-    }
-  });
+      bookedDate: "",
+    },
+    offer: [],
+  })
 
-  // console.log({ContractNFTYacht});
+  console.log({ state })
 
   useEffect(() => {
-    const fetch = async () => {
-      console.log("hello");
-      const ownerOf = await ContractNFTYacht.ownerOf(id);
-      const getUserData = await ContractFactory.getUserData(Contract, id);
-      const getBookedDate = await ContractFactory.getBookedDate(Contract, id);
+    if (active) {
+      const fetch = async () => {
+        const ownerOf = await ContractNFTYacht.ownerOf(id)
+        const getUserData = await ContractFactory.getUserData(Contract, id)
+        const getBookedDate = await ContractFactory.getBookedDate(Contract, id)
 
-      const name = await ContractNFTYacht.name();
-      const symbol = await ContractNFTYacht.symbol();
+        const name = await ContractNFTYacht.name()
+        const symbol = await ContractNFTYacht.symbol()
 
-      var t = new Date(1970, 0, 1); // Epoch
-      t.setSeconds(getBookedDate[1].toString()).toLocaleString();
+        var t = new Date(1970, 0, 1) // Epoch
+        t.setSeconds(getBookedDate[1].toString()).toLocaleString()
 
-      SetState(draft => {
-        draft.name = name;
-        draft.symbol = symbol;
-        draft.ownerOfToken = ownerOf == account;
-        draft.isBooked = getUserData;
-        draft.bookedDate = t.toString();
-      });
-    };
-    fetch();
-  }, [account]);
+        setState((draft) => {
+          draft.contract.name = name
+          draft.contract.symbol = symbol
+          draft.contract.isOwner = ownerOf == account
+          draft.contract.isBooked = getUserData
+          draft.contract.bookedDate = t.toString()
+        })
 
-  const cancelBooking = async () => {
+        const Offer = await ContractFactory.getOffer(Contract, id)
+
+        var t = new Date(1970, 0, 1) // Epoch
+        t.setSeconds(Offer.Time__.toString()).toLocaleString()
+
+        if (Number(Offer.id__.toString())) {
+          const data = {
+            id: Offer.id__.toString(),
+            userID: Offer.userID__.toString(),
+            price: formatEther(Offer.Price__.toString()),
+            time: t.toString(),
+            offeredDate: Offer.offeredDate__.toString(),
+            user: Offer.User__,
+            contract: Offer.Contract__,
+          }
+
+          console.log(data)
+
+          setState((draft) => {
+            draft.offer.push(data)
+          })
+        }
+      }
+      fetch()
+    }
+  }, [account])
+
+  const cancelBooking = async (Contract, id) => {
     try {
-      await ContractFactory.cancelBooking(Contract, id);
-      SetState(draft => {
-        draft.isBooked = false;
-      });
+      await ContractFactory.cancelBooking(Contract, id)
+      setState((draft) => {
+        draft.isBooked = false
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
-  const obj = [
-    {
-      walletAddress: "0x43..232",
-      amount: "3212",
-      date: "Sept 28, 2019",
-      status: ""
-    },
-    {
-      walletAddress: "0x55..pF4",
-      amount: "312",
-      date: "Sept 28, 2022",
-      status: ""
-    }
-  ];
+  const handelAcceptOffer = async (contract, id) => {
+    await ContractFactory.acceptOffer(contract, id)
+      .then((r) => {
+        console.log(r)
+      })
+      .catch((e) => e.reason)
+  }
 
   return (
     <>
@@ -95,13 +114,13 @@ export default function NFT() {
                   </div>
                 </div>
                 <div className="mt-5 md:mt-0 md:col-span-3">
-                  {State.isBooked && (
+                  {state.contract.isBooked && (
                     <span className="mt-6 cursor-pointer bg-red-50 text-red-600  p-3 py-2 rounded-md shadow">
-                      {State.bookedDate}
+                      {state.contract.bookedDate}
                     </span>
                   )}
                   <h1 className="text-3xl mt-4 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                    {`${State.name}(${State.symbol})`}
+                    {`${state.contract.name}(${state.contract.symbol})`}
                   </h1>
                   <p className="mt-4 text-gray-500">
                     The walnut wood card tray is precision milled to perfectly
@@ -113,7 +132,7 @@ export default function NFT() {
                   <div className="md:grid md:grid-cols-4 md:gap-3">
                     {account ? (
                       <>
-                        {State.ownerOfToken && !State.isBooked && (
+                        {state.contract.isOwner && !state.contract.isBooked && (
                           <>
                             <Link
                               to={`/Contract/${Contract}/Booking-form/1`}
@@ -123,7 +142,7 @@ export default function NFT() {
                             </Link>
                           </>
                         )}
-                        {State.ownerOfToken && State.isBooked && (
+                        {state.contract.isOwner && state.contract.isBooked && (
                           <button
                             onClick={cancelBooking}
                             className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -155,51 +174,52 @@ export default function NFT() {
                                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                   Amount
                                 </th>
-                                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                   Date
-                                </th>
+                                </th> */}
                                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                  Status
+                                  {/* Status */}
                                 </th>
                                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th>
                               </tr>
                             </thead>
                             <tbody>
-                              {obj.map(item => {
+                              {state.offer.map((item) => {
                                 return (
-                                  <tr>
+                                  <tr key={item.offeredDate}>
                                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                       <p className="text-gray-600 whitespace-no-wrap">
-                                        {item.walletAddress}
+                                        {`${item.user.slice(
+                                          0,
+                                          5
+                                        )}...${item.user.slice(-4)}`}
                                       </p>
                                     </td>
                                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                       <p className="text-gray-900 whitespace-no-wrap">
-                                        ${item.amount}
-                                      </p>
-                                      <p className="text-gray-600 whitespace-no-wrap">
-                                        USD
+                                        USD: {item.price}
                                       </p>
                                     </td>
-                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                       <p className="text-gray-900 whitespace-no-wrap">
-                                        {item.date}
+                                        {item.offeredDate}
                                       </p>
-                                      <p className="text-gray-600 whitespace-no-wrap">
-                                        Due in 3 days
-                                      </p>
-                                    </td>
+                                    </td> */}
                                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                      <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                        <span
-                                          aria-hidden
-                                          className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                                        ></span>
-                                        <span className="relative">Paid</span>
-                                      </span>
+                                      <button
+                                        onClick={() =>
+                                          handelAcceptOffer(
+                                            item.contract,
+                                            item.id
+                                          )
+                                        }
+                                        className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                      >
+                                        Accept
+                                      </button>
                                     </td>
                                   </tr>
-                                );
+                                )
                               })}
                             </tbody>
                           </table>
@@ -214,5 +234,5 @@ export default function NFT() {
         </main>
       </div>
     </>
-  );
+  )
 }

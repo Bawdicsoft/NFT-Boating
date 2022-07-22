@@ -1,3 +1,10 @@
+import { useEffect, useState } from "react"
+import { useImmer } from "use-immer"
+import { useParams, Link } from "react-router-dom"
+import { useContextAPI } from "../../ContextAPI"
+import { useWeb3React } from "@web3-react/core"
+import { formatEther, parseEther } from "ethers/lib/utils"
+
 export default function OffersReceived() {
   const obj = [
     {
@@ -12,7 +19,83 @@ export default function OffersReceived() {
       date: "Sept 28, 2022",
       status: "",
     },
-  ];
+  ]
+
+  const { ContractFactory } = useContextAPI()
+  const { account } = useWeb3React()
+
+  const [state, setState] = useImmer({
+    offerMade: [
+      {
+        Contract: "",
+        IDs: [],
+      },
+    ],
+    offer: [],
+    isLoding: true,
+  })
+
+  useEffect(() => {
+    async function getAllContractAddress() {
+      const getAllContractAddress =
+        await ContractFactory.getMapUserAllContractAddress(account)
+
+      for (let i = 0; i < getAllContractAddress.length; i++) {
+        const getUserAllOffers = await ContractFactory.getUserAllOffers(
+          getAllContractAddress[i],
+          account
+        )
+
+        for (let j = 0; j < getUserAllOffers.length; j++) {
+          const Offer = await ContractFactory.getOffer(
+            getAllContractAddress[i],
+            getUserAllOffers[j]
+          )
+          console.log(Offer)
+
+          var t = new Date(1970, 0, 1) // Epoch
+          t.setSeconds(Offer.Time__.toString()).toLocaleString()
+
+          const data = {
+            id: Offer.id__.toString(),
+            userID: Offer.userID__.toString(),
+            price: formatEther(Offer.Price__.toString()),
+            time: t.toString(),
+            offeredDate: Offer.offeredDate__.toString(),
+            user: Offer.User__.toString(),
+            contract: Offer.Contract__.toString(),
+          }
+
+          console.log(data)
+
+          setState((e) => {
+            e.offer.push(data)
+          })
+        }
+
+        const data = {
+          Contract: getAllContractAddress[i].toString(),
+          IDs: getUserAllOffers.toString(),
+        }
+
+        setState((e) => {
+          e.offerMade.push(data)
+        })
+      }
+    }
+    getAllContractAddress()
+  }, [account])
+
+  const handelAccept = async (OfferTokenID) => {
+    console.log({ OfferTokenID })
+    // await ContractYacht.acceptOffer(OfferTokenID)
+    //   .then((res) => {
+    //     console.log({ res });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.reason || err.massage);
+    //   });
+  }
 
   return (
     <div className="OffersReceived min-h-full">
@@ -20,7 +103,10 @@ export default function OffersReceived() {
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Offers Received</h1>
           <p className="max-w-2xl">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numqquam, omnis delecctus ipsa adippisicing?</p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
+            ipsa commodi accusamus cupiditate blanditiis nihil voluptas
+            architecto numqquam, omnis delecctus ipsa adippisicing?
+          </p>
         </div>
       </header>
       <main>
@@ -82,12 +168,15 @@ export default function OffersReceived() {
                               </span>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <button className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <button
+                                onClick={() => handelAccept}
+                                className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
                                 Accept
                               </button>
                             </td>
                           </tr>
-                        );
+                        )
                       })}
                     </tbody>
                   </table>
@@ -98,5 +187,5 @@ export default function OffersReceived() {
         </div>
       </main>
     </div>
-  );
+  )
 }
