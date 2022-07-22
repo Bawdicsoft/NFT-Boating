@@ -17,6 +17,7 @@ import Collected from "./Dashboard/Collected/Collected";
 import Created from "./Dashboard/Created/Created";
 import CreateNew from "./pages/CreateNew/CreateNew";
 import NFT from "./Dashboard/NFT/NFT";
+import About from "./pages/About/About";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/Contract/:Contract/buy-nft" element={<BuyForm />} />
         <Route path="/Contract/:Contract/Booking-form/:id" element={<BookingForm />} />
         <Route path="/create-new" element={<CreateNew />} />
+        <Route path="/about" element={<About />} />
 
         {/* Dashboard Routes */}
         <Route path="/Contract/:Contract/nft/:id" element={<NFT />} />

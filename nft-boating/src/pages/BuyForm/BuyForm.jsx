@@ -8,6 +8,7 @@ import { useWeb3React } from "@web3-react/core";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, signInWithGoogle } from "../../DB/firebase-config";
+import Footer from "../../Comp/Footer/Footer";
 
 export default function BuyForm() {
   const { Contract } = useParams();
@@ -115,7 +116,7 @@ export default function BuyForm() {
   };
   console.error(errors);
 
-  return (
+  return (<>
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
       <div className="mb-20 text-center">
         <h1 className="mb-1 font-bold text-5xl "> Your OwnerShips</h1>
@@ -262,5 +263,6 @@ export default function BuyForm() {
         </div>
       </div>
     </div>
-  );
+    <Footer />
+  </>);
 }

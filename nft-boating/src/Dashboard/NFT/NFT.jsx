@@ -5,6 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import { useContextAPI } from "../../ContextAPI";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
+import Footer from "../../Comp/Footer/Footer";
 
 export default function NFT() {
   const { Contract, id } = useParams();
@@ -261,6 +262,7 @@ export default function NFT() {
             {/* </div> */}
           </div>
         </main>
+        <Footer />
       </div>
     </>
   );

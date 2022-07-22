@@ -1,3 +1,5 @@
+import Footer from "../../Comp/Footer/Footer";
+
 export default function OffersReceived() {
   const obj = [
     {
@@ -97,6 +99,7 @@ export default function OffersReceived() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

@@ -20,6 +20,7 @@ import { useContextAPI } from "./../../ContextAPI";
 import { ethers } from "ethers";
 import { data } from "autoprefixer";
 import { Link, useNavigate } from "react-router-dom";
+import Footer from "../../Comp/Footer/Footer";
 
 const products = [
   {
@@ -185,6 +186,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

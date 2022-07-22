@@ -3,6 +3,7 @@ import { useImmer } from "use-immer";
 import { useParams, Link } from "react-router-dom";
 import { useContextAPI } from "../../ContextAPI";
 import { useWeb3React } from "@web3-react/core";
+import Footer from "../../Comp/Footer/Footer";
 
 export default function OffersMade() {
   const { Contract, id } = useParams();
@@ -124,6 +125,7 @@ export default function OffersMade() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

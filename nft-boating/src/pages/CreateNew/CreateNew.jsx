@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, signInWithGoogle } from "../../DB/firebase-config";
+import Footer from "../../Comp/Footer/Footer";
 
 export default function CreateNew() {
   const [user, loading, error] = useAuthState(auth);
@@ -329,6 +330,7 @@ export default function CreateNew() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
