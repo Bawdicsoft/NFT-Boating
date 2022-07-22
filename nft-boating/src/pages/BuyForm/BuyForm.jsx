@@ -108,7 +108,7 @@ export default function BuyForm() {
 
       await tx.wait();
 
-      navigate(`/created`);
+      navigate(`/collected`);
     } catch (e) {
       console.error(e);
     }

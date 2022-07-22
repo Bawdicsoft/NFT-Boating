@@ -17,9 +17,8 @@ export const ContextProvider = ({ children }) => {
   const { activate, account } = useWeb3React();
   const [user, loading, error] = useAuthState(auth);
 
-
-  const FactoryAddress = "0xa8dB91a4D20299d4a1EfB021065919363B0784b3";
-  const USDTAddress = "0x6711DF95D1Dcd92f7e0E84E199dE7c51088d037B";
+  const FactoryAddress = "0x4A309BB74778E2aE1259B5e91588a268E1083DEb";
+  const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C";
 
   const provider = new ethers.providers.Web3Provider(
     window.ethereum
@@ -39,10 +38,9 @@ export const ContextProvider = ({ children }) => {
     conToMetamask();
   }, []);
 
-
   const [UserData, setUserData] = useState();
 
-  console.log({UserData});
+  console.log({ UserData });
 
   useEffect(() => {
     if (loading) {
@@ -55,11 +53,11 @@ export const ContextProvider = ({ children }) => {
 
   const fetchUserName = async () => {
     try {
-      console.log({user});
+      console.log({ user });
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
       const doc = await getDocs(q);
       // console.log(doc.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      const data = doc.docs.map(doc => ({ ...doc.data(), id: doc.id }));
       setUserData(data);
       console.log("userID", data[0].id);
     } catch (err) {
@@ -67,8 +65,13 @@ export const ContextProvider = ({ children }) => {
     }
   };
 
-
-  const values = { ContractUSDT, ContractFactory, NFTYacht, provider , FactoryAddress };
+  const values = {
+    ContractUSDT,
+    ContractFactory,
+    NFTYacht,
+    provider,
+    FactoryAddress
+  };
 
   return <ContextAPI.Provider value={values}>{children}</ContextAPI.Provider>;
 };

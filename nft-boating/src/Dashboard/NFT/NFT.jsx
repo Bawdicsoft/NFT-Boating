@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
-import OfferSidePanel from "./OfferSidePanel";
 import { useParams, Link } from "react-router-dom";
 import { useContextAPI } from "../../ContextAPI";
 import { ethers } from "ethers";
@@ -12,19 +11,17 @@ export default function NFT() {
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
   const { account, active } = useWeb3React();
 
-
   const [State, SetState] = useImmer({
     Contract: {
       name: "Name",
       symbol: "symbol",
       ownerOfToken: false,
       isBooked: false,
-      bookedDate: "",
-    },
+      bookedDate: ""
+    }
   });
 
   // console.log({ContractNFTYacht});
-
 
   useEffect(() => {
     const fetch = async () => {
@@ -39,8 +36,7 @@ export default function NFT() {
       var t = new Date(1970, 0, 1); // Epoch
       t.setSeconds(getBookedDate[1].toString()).toLocaleString();
 
-
-      SetState((draft) => {
+      SetState(draft => {
         draft.name = name;
         draft.symbol = symbol;
         draft.ownerOfToken = ownerOf == account;
@@ -51,12 +47,10 @@ export default function NFT() {
     fetch();
   }, [account]);
 
-  const [open, setOpen] = useState(false);
-
   const cancelBooking = async () => {
     try {
       await ContractFactory.cancelBooking(Contract, id);
-      SetState((draft) => {
+      SetState(draft => {
         draft.isBooked = false;
       });
     } catch (error) {
@@ -64,38 +58,23 @@ export default function NFT() {
     }
   };
 
-  // const booknowFunc = async () => {
-  //   try {
-  //     await ContractFactory.cancelBooking(Contract ,id);
-  //     setIsBooked(true)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  const offerFunc = () => {
-    setOpen(true);
-  };
-
   const obj = [
     {
       walletAddress: "0x43..232",
       amount: "3212",
       date: "Sept 28, 2019",
-      status: "",
+      status: ""
     },
     {
       walletAddress: "0x55..pF4",
       amount: "312",
       date: "Sept 28, 2022",
-      status: "",
-    },
+      status: ""
+    }
   ];
 
   return (
     <>
-      <OfferSidePanel open={open} setOpen={setOpen} />
-
       <div className="NFT min-h-full">
         <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -104,7 +83,6 @@ export default function NFT() {
         </header>
         <main>
           <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            {/* <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8"> */}
             <div className="mt-10 sm:mt-0">
               <div className="md:grid md:grid-cols-5 md:gap-10">
                 <div className="md:col-span-2">
@@ -122,11 +100,6 @@ export default function NFT() {
                       {State.bookedDate}
                     </span>
                   )}
-                  {/* <span className="mt-6 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
-                  asdasd
-                          </span> */}
-
-                  {/* <div>19 July 2022</div> */}
                   <h1 className="text-3xl mt-4 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                     {`${State.name}(${State.symbol})`}
                   </h1>
@@ -158,14 +131,6 @@ export default function NFT() {
                             Cancel
                           </button>
                         )}
-                        {/* {!State.ownerOfToken && (
-                          <button
-                            onClick={offerFunc}
-                            className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          >
-                            Make Offer
-                          </button> */}
-                        {/* )} */}
                       </>
                     ) : (
                       "Not Connected To Wallet"
@@ -200,7 +165,7 @@ export default function NFT() {
                               </tr>
                             </thead>
                             <tbody>
-                              {obj.map((item) => {
+                              {obj.map(item => {
                                 return (
                                   <tr>
                                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -233,19 +198,6 @@ export default function NFT() {
                                         <span className="relative">Paid</span>
                                       </span>
                                     </td>
-                                    {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
-                                <button
-                                  type="button"
-                                  className="inline-block text-gray-500 hover:text-gray-700"
-                                >
-                                  <svg
-                                    className="inline-block h-6 w-6 fill-current"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path d="M12 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm-2 6a2 2 0 104 0 2 2 0 00-4 0z" />
-                                  </svg>
-                                </button>
-                              </td> */}
                                   </tr>
                                 );
                               })}
@@ -258,7 +210,6 @@ export default function NFT() {
                 </div>
               </div>
             </div>
-            {/* </div> */}
           </div>
         </main>
       </div>

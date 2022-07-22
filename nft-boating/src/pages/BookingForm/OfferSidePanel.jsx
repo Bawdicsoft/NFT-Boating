@@ -4,24 +4,30 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { useForm } from "react-hook-form";
 import DatePicker, {
-  utils,
+  utils
 } from "@amir04lm26/react-modern-calendar-date-picker";
 import { useWeb3React } from "@web3-react/core";
 import { useContextAPI } from "../../ContextAPI";
 import { useImmer } from "use-immer";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
-export default function OfferSidePanel({ open, setOpen , errordate}) {
+export default function OfferSidePanel({
+  open,
+  setOpen,
+  errordate,
+  id,
+  Contract
+}) {
+  console.log({ errordate });
 
-  console.log({errordate});
-  
-  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedDay, setSelectedDay] = useState("");
   const [disabledDays, setDisabledDays] = useState([]);
 
   const date = new Date().toISOString().split("T")[0];
   const minimumDate = {
     year: date.slice(0, 4),
     month: date.slice(5, 7),
-    day: date.slice(8, 10),
+    day: date.slice(8, 10)
   };
 
   const availDate = new Date(new Date().setDate(new Date().getDate() + 20));
@@ -29,10 +35,10 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
   const maximumDate = {
     year: daysAdded.slice(0, 4),
     month: daysAdded.slice(5, 7),
-    day: daysAdded.slice(8, 10),
+    day: daysAdded.slice(8, 10)
   };
 
-  const handleDisabledSelect = async (disabledDay) => {
+  const handleDisabledSelect = async disabledDay => {
     for (let i = 0; i < disabledDays.length; i++) {
       if (disabledDays[i].day === disabledDay.day) {
         // await ContractNFTYacht.getBookDateID(
@@ -48,8 +54,7 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
   };
 
   const { account, active } = useWeb3React();
-  const { ContractFactory, NFTYacht, provider } = useContextAPI();
-
+  const { ContractFactory, FactoryAddress, ContractUSDT } = useContextAPI();
 
   const [state, SetState] = useImmer({
     data: [],
@@ -72,15 +77,17 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
-            const getUserIDs = await ContractFactory.getUserIDs(addresses[i] ,account);
-            
+            const getUserIDs = await ContractFactory.getUserIDs(
+              addresses[i],
+              account
+            );
 
             const contractData = await ContractFactory.getContractInfo(
               addresses[i]
             );
             console.log(contractData);
 
-            getUserIDs.map((nftid) => {
+            getUserIDs.map(nftid => {
               let data = {
                 nftNumber: nftid.toString(),
                 name: contractData.name.toString(),
@@ -99,9 +106,7 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
                 draft.userNFT = getUserIDs.length;
                 draft.data.push(data);
               });
-
-            })
-
+            });
           }
         } else {
           SetState(draft => {
@@ -113,22 +118,41 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
     }
   }, [active]);
 
-  const offerFunc = async () => {
-
-  }
+  const offerFunc = async () => {};
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors }
   } = useForm();
 
-  const Submit = () => {
-    setOpen(false);
+  const amount = watch("amount");
+
+  const Submit = async data => {
+    try {
+      // offer(address _Contract, uint _id, uint _userID, uint256 _USDT )
+      const tx = await ContractFactory.offer(
+        Contract,
+        id,
+        data.userID,
+        parseEther(data.amount)
+      );
+      await tx.wait();
+      setOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleApprove = (e) => {};
+  const handleApprove = async e => {
+    console.log("handleApprove run", FactoryAddress, parseEther(amount));
+    try {
+      await ContractUSDT.approve(FactoryAddress, parseEther(amount));
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -183,7 +207,10 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
                       <Dialog.Title className="text-lg font-medium text-gray-900">
                         {errordate.day}-{errordate.month}-{errordate.year}
                       </Dialog.Title>
-                      <p className="text-red-900">This Date is Already Booked , You can Still Book This Date</p>
+                      <p className="text-red-900">
+                        This Date is Already Booked , You can Still Book This
+                        Date
+                      </p>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       <form onSubmit={handleSubmit(Submit)}>
@@ -201,7 +228,9 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
                                   type="text"
                                   placeholder="amount"
                                   className="w-full py-2.5 px-3 border mb-2 rounded-md"
-                                  
+                                  {...register("amount", {
+                                    required: true
+                                  })}
                                 />
                               </div>
                               <div className="col-span-6 sm:col-span-6">
@@ -212,40 +241,25 @@ export default function OfferSidePanel({ open, setOpen , errordate}) {
                                   Select Your Nft
                                 </label>
                                 <select
-                               className="w-full py-2.5 px-3 border mb-2 rounded-md"
-                                {...register("Select Your Nft", {
-                                  required: true,
-                                })}
-                              >
-                                {state.data.map(item => {
-                                  return <>
-                                <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value={item.nftNumber}>{item.nftNumber}</option>
-                                  </>
-                                })}
-                                {/* <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="That">That</option>
-                                <option className="w-full py-2.5 px-3 border mb-2 rounded-md" value="Other">Other</option> */}
-                              </select>
-                              </div>
-                     
-                              {/* <div className="col-span-6 sm:col-span-6">
-                                <label
-                                  htmlFor="last-name"
-                                  className="block text-sm font-medium text-gray-700 mb-1"
+                                  className="w-full py-2.5 px-3 border mb-2 rounded-md"
+                                  {...register("userID", {
+                                    required: true
+                                  })}
                                 >
-                                  Date
-                                </label>
-                                <DatePicker
-                                  calendarPopperPosition="bottom"
-                                  value={selectedDay}
-                                  minimumDate={minimumDate}
-                                  maximumDate={maximumDate}
-                                  onChange={setSelectedDay}
-                                  inputPlaceholder="Select a day"
-                                  disabledDays={disabledDays} // here we pass them
-                                  onDisabledDayError={handleDisabledSelect} // handle error
-                                  shouldHighlightWeekends
-                                />
-                              </div> */}
+                                  {state.data.map(item => {
+                                    return (
+                                      <>
+                                        <option
+                                          className="w-full py-2.5 px-3 border mb-2 rounded-md"
+                                          value={item.nftNumber}
+                                        >
+                                          {item.nftNumber}
+                                        </option>
+                                      </>
+                                    );
+                                  })}
+                                </select>
+                              </div>
 
                               <div className="col-span-6 sm:col-span-3">
                                 <span

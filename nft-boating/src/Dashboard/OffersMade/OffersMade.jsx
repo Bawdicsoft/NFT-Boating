@@ -3,6 +3,7 @@ import { useImmer } from "use-immer";
 import { useParams, Link } from "react-router-dom";
 import { useContextAPI } from "../../ContextAPI";
 import { useWeb3React } from "@web3-react/core";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
 export default function OffersMade() {
   const { Contract, id } = useParams();
@@ -11,43 +12,87 @@ export default function OffersMade() {
 
   // getMapUserAllContractAddress(address _user)
   // getUserAllOffers(address _Contract, address _user)
+
+  const [state, setState] = useImmer({
+    offerMade: [
+      {
+        Contract: "",
+        IDs: []
+      }
+    ],
+    offer: [],
+    isLoding: true
+  });
+
   useEffect(() => {
     async function getAllContractAddress() {
-      console.log("runnin");
+      const getAllContractAddress =
+        await ContractFactory.getMapUserAllContractAddress(account);
 
-      const getAllContractAddress = await ContractFactory.getMapUserAllContractAddress(account);
-      console.log("logggggggggg", getAllContractAddress);
       for (let i = 0; i < getAllContractAddress.length; i++) {
-        const getUserAllOffers = await ContractFactory.getUserAllOffers(getAllContractAddress[i], account);
-        console.log("offers", getUserAllOffers);
+        const getUserAllOffers = await ContractFactory.getUserAllOffers(
+          getAllContractAddress[i],
+          account
+        );
 
+        for (let j = 0; j < getUserAllOffers.length; j++) {
+          const Offer = await ContractFactory.getOffer(
+            getAllContractAddress[i],
+            getUserAllOffers[j]
+          );
+          console.log(Offer);
 
+          var t = new Date(1970, 0, 1); // Epoch
+          t.setSeconds(Offer._time.toString()).toLocaleString();
+
+          const data = {
+            offerDate: Offer._offeredDate.toString(),
+            amount: formatEther(Offer._price.toString()),
+            date: t.toString(),
+            id: Offer._userID.toString(),
+            address: Offer._user.toString(),
+            contract: getAllContractAddress[i]
+          };
+
+          console.log(data);
+
+          setState(e => {
+            e.offer.push(data);
+          });
+        }
+
+        const data = {
+          Contract: getAllContractAddress[i].toString(),
+          IDs: getUserAllOffers.toString()
+        };
+
+        setState(e => {
+          e.offerMade.push(data);
+        });
       }
     }
-    getAllContractAddress()
+    getAllContractAddress();
   }, [account]);
 
-  const obj = [
-    {
-      walletAddress: "0x43..232",
-      amount: "3212",
-      date: "Sept 28, 2019",
-      status: "",
-    },
-    {
-      walletAddress: "0x55..pF4",
-      amount: "312",
-      date: "Sept 28, 2022",
-      status: "",
-    },
-  ];
+  const handleCancel = async (id, contract) => {
+    console.log(contract, id);
+    await ContractFactory.cancelBooking(contract, id)
+      .then(r => {
+        console.log(r);
+      })
+      .catch(e => console.log(e.reason));
+  };
+
   return (
     <div className="OffersMade min-h-full">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Offers Made</h1>
           <p className="max-w-2xl">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numqquam, omnis delecctus ipsa adippisicing?</p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
+            ipsa commodi accusamus cupiditate blanditiis nihil voluptas
+            architecto numqquam, omnis delecctus ipsa adippisicing?
+          </p>
         </div>
       </header>
       <main>
@@ -75,12 +120,15 @@ export default function OffersMade() {
                       </tr>
                     </thead>
                     <tbody>
-                      {obj.map((item) => {
+                      {state.offer.map(item => {
                         return (
-                          <tr>
+                          <tr key={item.date}>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-600 whitespace-no-wrap">
-                                {item.walletAddress}
+                                {`${item.address.slice(
+                                  0,
+                                  5
+                                )}...${item.address.slice(-4)}`}
                               </p>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -109,7 +157,12 @@ export default function OffersMade() {
                               </span>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <button className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <button
+                                onClick={() =>
+                                  handleCancel(item.id, item.contract)
+                                }
+                                className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
                                 Cancel
                               </button>
                             </td>
