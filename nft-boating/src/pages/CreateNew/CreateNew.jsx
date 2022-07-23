@@ -41,7 +41,7 @@ export default function CreateNew() {
         data.totalSupply_,
         data.price_,
         account,
-        data.baseURI_
+        `ipfs://${data.baseURI_}/`
       )
     } catch (e) {
       console.log(">>>>>>>>>>>>>>", e)
@@ -153,6 +153,7 @@ export default function CreateNew() {
                             placeholder="Total Supply"
                             {...register("totalSupply_", {
                               required: true,
+                              maxLength: 365,
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
@@ -171,7 +172,6 @@ export default function CreateNew() {
                             {...register("price_", {
                               required: true,
                               minLength: 1,
-                              maxLength: 100,
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />

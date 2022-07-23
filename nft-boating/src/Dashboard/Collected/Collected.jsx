@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom"
 import { PencilIcon } from "@heroicons/react/solid"
 import { useWeb3React } from "@web3-react/core"
 import { useContextAPI } from "./../../ContextAPI"
-import nftImage from "../../Assets/images/yachat.jpg"
 
 export default function Collected() {
   const navigate = useNavigate()
@@ -58,7 +57,7 @@ export default function Collected() {
                 ownerAddress: contractData.ownerAddress.toString(),
                 baseURI: contractData.baseURI.toString(),
                 contractAddress: addresses[i].toString(),
-                imageSrc: nftImage,
+                imageSrc: `https://cloudflare-ipfs.com/ipfs/Qmacuvgf1m4j35prXdbUJhmkycpYDk2Km9rZEhMv2Causz/${nftid.toString()}.png`,
                 imageAlt: "Front of men's Basic Tee in black.",
               }
               SetState((draft) => {
@@ -86,11 +85,6 @@ export default function Collected() {
               <h1 className="text-3xl font-bold text-gray-900">
                 Collected ( NFT )
               </h1>
-              {/* <p className="max-w-2xl">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
-                ipsa commodi accusamus cupiditate blanditiis nihil voluptas
-                architecto numqquam, omnis delecctus ipsa adippisicing?
-              </p> */}
             </div>
             <div className="mt-5 flex lg:mt-0 lg:ml-4">
               <span className="sm:ml-3">
@@ -127,7 +121,7 @@ export default function Collected() {
                   </div>
                   <div className="mt-4 flex justify-between">
                     <div>
-                      <h3 className="text-sm text-gray-700">
+                      <h3 className="text-lg font-semibold text-gray-900">
                         <Link
                           to={`/contract/${Contract.contractAddress}/nft/${Contract.nftNumber}`}
                         >
@@ -135,8 +129,7 @@ export default function Collected() {
                             aria-hidden="true"
                             className="absolute inset-0"
                           />
-                          {Contract.nftNumber}
-                          {Contract.name}
+                          ( {Contract.name} ) #{Contract.nftNumber}
                         </Link>
                       </h3>
                     </div>

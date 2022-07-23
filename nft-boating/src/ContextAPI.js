@@ -17,7 +17,7 @@ export const ContextProvider = ({ children }) => {
   const { activate, account } = useWeb3React()
   const [user, loading, error] = useAuthState(auth)
 
-  const FactoryAddress = "0x72689C9118022623f325723B4E105E14564A96Bf"
+  const FactoryAddress = "0xE7D1E9e2B5F53c85514c9531C0338b975fb781aD"
   const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
 
   const provider = new ethers.providers.Web3Provider(

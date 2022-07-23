@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 import "./interfaces/MYIERC721.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./interfaces/IERC20.sol";
 
 import "./Contracts/Ownable.sol";
 
@@ -163,8 +163,10 @@ contract Factory is Ownable {
             )} (name_, symbol_, address(this), baseURI_));
 
         allContractAddress.push(_Contract);
+
+        uint decimals = USDT.decimals();
         contractDitals[_Contract] = _contractDitals(
-            name_, symbol_, totalSupply_, 0, price_, ownerAddress_, baseURI_
+            name_, symbol_, totalSupply_, 0, (price_ * 10 ** decimals), ownerAddress_, baseURI_
         );
 
         userAllContractAddress[ownerAddress_].push(_Contract);
@@ -362,7 +364,7 @@ contract Factory is Ownable {
 
         require ( booking.isInserted(_Contract, _id), "!Booked");
 
-        require ( offerPrice == _USDT, "!OfferPrice");
+        require ( offerPrice <= _USDT, "!OfferPrice");
 
         (,uint _DateAndTime,) = booking.getTime(_Contract, _id);
 

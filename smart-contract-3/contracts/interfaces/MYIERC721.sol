@@ -141,8 +141,6 @@ interface MYIERC721 is IERC165 {
      */
     function isApprovedForAll(address owner, address operator) external view returns (bool);
 
-
-
     function updateBaseURI(string memory symbol_) external;
 
     function updateBaseExtension(string memory baseExtension_) external;

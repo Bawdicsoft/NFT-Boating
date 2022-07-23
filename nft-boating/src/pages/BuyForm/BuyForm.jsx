@@ -44,7 +44,7 @@ export default function BuyForm() {
         const baseURI = ContractInfo.baseURI.toString()
         const name = ContractInfo.name.toString()
         const ownerAddress = ContractInfo.ownerAddress.toString()
-        const price = ContractInfo.price.toString()
+        const price = formatEther(ContractInfo.price.toString())
         const symbol = ContractInfo.symbol.toString()
         const tOwnership = ContractInfo.tOwnership.toString()
         const tsupply = ContractInfo.tSupply.toString()
@@ -92,7 +92,10 @@ export default function BuyForm() {
       const value = totalMint * State.price
       console.log("Approve", FactoryAddress, value)
       try {
-        const tx = await ContractUSDT.approve(FactoryAddress, value)
+        const tx = await ContractUSDT.approve(
+          FactoryAddress,
+          parseEther(value.toString())
+        )
         await tx.wait()
         setSate(false)
       } catch (e) {
@@ -105,7 +108,11 @@ export default function BuyForm() {
     const value = totalMint * State.price
     console.log("Submit", totalMint, value)
     try {
-      const tx = await ContractFactory.buyOwnership(totalMint, value, Contract)
+      const tx = await ContractFactory.buyOwnership(
+        totalMint,
+        parseEther(value.toString()),
+        Contract
+      )
 
       await tx.wait()
 

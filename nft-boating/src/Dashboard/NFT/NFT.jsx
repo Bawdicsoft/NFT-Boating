@@ -108,7 +108,7 @@ export default function NFT() {
                 <div className="md:col-span-2">
                   <div className="px-4 sm:px-0">
                     <img
-                      src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-01.jpg"
+                      src={`https://cloudflare-ipfs.com/ipfs/Qmacuvgf1m4j35prXdbUJhmkycpYDk2Km9rZEhMv2Causz/${id}.png`}
                       alt="Walnut card tray with white powder coated steel divider and 3 punchout holes."
                       className="bg-gray-100 rounded-lg"
                     />

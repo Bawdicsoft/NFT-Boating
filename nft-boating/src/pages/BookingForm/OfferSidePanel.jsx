@@ -8,6 +8,8 @@ import DatePicker, {
 } from "@amir04lm26/react-modern-calendar-date-picker"
 import { useWeb3React } from "@web3-react/core"
 import { useContextAPI } from "../../ContextAPI"
+import { useNavigate } from "react-router-dom"
+
 import { useImmer } from "use-immer"
 import { formatEther, parseEther } from "ethers/lib/utils"
 
@@ -18,7 +20,7 @@ export default function OfferSidePanel({
   id,
   Contract,
 }) {
-  console.log({ errordate })
+  const navigate = useNavigate()
 
   const [selectedDay, setSelectedDay] = useState("")
   const [disabledDays, setDisabledDays] = useState([])
@@ -105,6 +107,7 @@ export default function OfferSidePanel({
       )
       await tx.wait()
       setOpen(false)
+      navigate(`/collected`)
     } catch (e) {
       console.error(e)
     }
