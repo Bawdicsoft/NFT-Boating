@@ -1,3 +1,5 @@
+import Footer from "../../Comp/Footer/Footer";
+
 export default function BookedDate() {
   const obj = [
     {
@@ -89,6 +91,7 @@ export default function BookedDate() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

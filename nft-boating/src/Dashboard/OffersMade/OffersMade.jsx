@@ -21,7 +21,9 @@ export default function OffersMade() {
   })
 
   useEffect(() => {
+    console.log(">")
     if (active) {
+      console.log(">>")
       async function getAllContractAddress() {
         const getAllContractAddress =
           await ContractFactory.getMapUserAllContractAddress(account)
@@ -42,6 +44,8 @@ export default function OffersMade() {
             var t = new Date(1970, 0, 1) // Epoch
             t.setSeconds(Offer.Time__.toString()).toLocaleString()
 
+            console.log("t.toString()", t.toString())
+
             const data = {
               id: Offer.id__.toString(),
               userID: Offer.userID__.toString(),
@@ -52,7 +56,7 @@ export default function OffersMade() {
               contract: Offer.Contract__.toString(),
             }
 
-            console.log(data)
+            console.log(">>>>>>>", data)
 
             setState((e) => {
               e.offer.push(data)
@@ -131,19 +135,19 @@ export default function OffersMade() {
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                ${item.price}
+                                USDT: {item.price}
                               </p>
-                              <p className="text-gray-600 whitespace-no-wrap">
+                              {/* <p className="text-gray-600 whitespace-no-wrap">
                                 USD
-                              </p>
+                              </p> */}
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                {item.offeredDate}
+                                {item.time}
                               </p>
-                              <p className="text-gray-600 whitespace-no-wrap">
+                              {/* <p className="text-gray-600 whitespace-no-wrap">
                                 Due in 3 days
-                              </p>
+                              </p> */}
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">

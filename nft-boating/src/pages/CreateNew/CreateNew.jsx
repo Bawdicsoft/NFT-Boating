@@ -241,8 +241,6 @@ export default function CreateNew() {
                           </p>
                         </div>
 
-                        {console.log(image)}
-
                         <div className="col-span-6 sm:col-span-6 mb-3">
                           <label className="block text-sm font-medium text-gray-700">
                             Boat Images
@@ -291,6 +289,20 @@ export default function CreateNew() {
                               </p>
                             </div>
                           </div>
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-6">
+                          <label
+                            htmlFor="email-address"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Detals (optional)
+                          </label>
+                          <textarea
+                            placeholder="Detals (optional)"
+                            {...register("Detals (optional)", {})}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md h-60"
+                          />
                         </div>
 
                         <div className="col-span-6 sm:col-span-6">

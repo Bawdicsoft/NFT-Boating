@@ -74,13 +74,14 @@ export default function NFT() {
   }, [account])
 
   const cancelBooking = async (Contract, id) => {
+    console.log(">>>>>>>>>>>", Contract, id)
     try {
       await ContractFactory.cancelBooking(Contract, id)
       setState((draft) => {
         draft.isBooked = false
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -135,7 +136,7 @@ export default function NFT() {
                         {state.contract.isOwner && !state.contract.isBooked && (
                           <>
                             <Link
-                              to={`/Contract/${Contract}/Booking-form/1`}
+                              to={`/Contract/${Contract}/Booking-form/${id}`}
                               className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                               Book Now
@@ -144,7 +145,7 @@ export default function NFT() {
                         )}
                         {state.contract.isOwner && state.contract.isBooked && (
                           <button
-                            onClick={cancelBooking}
+                            onClick={() => cancelBooking(Contract, id)}
                             className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                           >
                             Cancel

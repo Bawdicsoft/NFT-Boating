@@ -21,16 +21,17 @@
   }
   ```
 */
+
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { ethers } from "ethers"
 import { useContextAPI } from "./../../ContextAPI"
 import { useImmer } from "use-immer"
 import { Link, useNavigate } from "react-router-dom"
-import image1 from "../../Assests/images/image1.jpg"
-import image2 from "../../Assests/images/image2.jpg"
-import image3 from "../../Assests/images/image3.jpg"
-import image4 from "../../Assests/images/wedding.jpg"
+import image1 from "../../Assets/images/image1.jpg"
+import image2 from "../../Assets/images/image2.jpg"
+import image3 from "../../Assets/images/image3.jpg"
+import image4 from "../../Assets/images/wedding.jpg"
 
 const product = {
   name: "Basic Tee 6-Pack",

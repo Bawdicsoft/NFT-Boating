@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { PencilIcon } from "@heroicons/react/solid";
 import { useWeb3React } from "@web3-react/core";
 import { useContextAPI } from "./../../ContextAPI";
+import Footer from "../../Comp/Footer/Footer";
+import nftImage from "../../Assets/images/yachat.jpg";
 
 export default function Collected() {
   const navigate = useNavigate();
@@ -55,8 +57,7 @@ export default function Collected() {
                 ownerAddress: contractData.ownerAddress.toString(),
                 baseURI: contractData.baseURI.toString(),
                 contractAddress: addresses[i].toString(),
-                imageSrc:
-                  "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
+                imageSrc: nftImage,
                 imageAlt: "Front of men's Basic Tee in black."
               };
               SetState(draft => {
@@ -141,6 +142,7 @@ export default function Collected() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

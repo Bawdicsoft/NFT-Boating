@@ -7,7 +7,8 @@ import { useEffect } from "react";
 
 /* This example requires Tailwind CSS v2.0+ */
 import { PencilIcon } from "@heroicons/react/solid";
-import image1 from "../../Assests/images/yachat.jpg";
+import image1 from "../../Assets/images/yachat.jpg";
+import Footer from "../../Comp/Footer/Footer";
 
 export default function Created() {
   const { account, active } = useWeb3React();
@@ -139,6 +140,7 @@ export default function Created() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

@@ -14,6 +14,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useWeb3React } from "@web3-react/core";
 import { Injected } from "../Wallets/Connectors";
 import WalletSide from "./WalletSide";
+import logo from '../../Assets/logo.png'
 
 // const user = {
 //   name: "Tom Cook",
@@ -23,16 +24,16 @@ import WalletSide from "./WalletSide";
 // };
 const navigation = [
   { name: "Home", href: "/", current: true },
-  // { name: "Contract", href: "/contract", current: false },
+  { name: "Create New", href: "/create-new" },
+  { name: "About", href: "/about", current: false },
   // { name: "Buy NFT", href: "/buy-nft", current: false },
   // { name: "Booking Form", href: "/Booking-form", current: false },
-  { name: "Create New", href: "/create-new" },
 ];
 const userNavigation = [
-  { name: "OffersReceived", href: "/offers-received" },
-  { name: "BookedDate", href: "/booked-date" },
-  { name: "OffersMade", href: "/offers-made" },
-  { name: "Collected", href: "/collected" },
+  { name: "Offers Received", href: "/offers-received" },
+  { name: "Booked Date", href: "/booked-date" },
+  { name: "Offers Made", href: "/offers-made" },
+  { name: "nft Collection", href: "/collected" },
   { name: "Created", href: "/created" },
 ];
 
@@ -72,7 +73,7 @@ export default function Header() {
   return (
     <>
 
-<WalletSide open={open} setOpen={setOpen}/>
+      <WalletSide open={open} setOpen={setOpen} />
 
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-gray-800">
@@ -83,8 +84,8 @@ export default function Header() {
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                        className="h-32 w-32"
+                        src={logo}
                         alt="Workflow"
                       />
                     </div>
@@ -141,13 +142,13 @@ export default function Header() {
                             <span className="sr-only">View notifications </span>
                             <BellIcon className="h-6 w-6" aria-hidden="true" />
                           </button>
-                            <span
-                      className="cursor-pointer bg-gray-800 flex-shrink-0 ml-2 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                      onClick={() => setOpen(true)}
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <CashIcon className="h-6 w-6" aria-hidden="true" />
-                    </span>
+                          <span
+                            className="cursor-pointer bg-gray-800 flex-shrink-0 ml-2 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                            onClick={() => setOpen(true)}
+                          >
+                            <span className="sr-only">View notifications</span>
+                            <CashIcon className="h-6 w-6" aria-hidden="true" />
+                          </span>
                           <Menu as="div" className="ml-3 relative">
                             <div>
                               <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -202,16 +203,16 @@ export default function Header() {
                           </Menu>
                           {/* <CashIcon className="h-6 w-6" aria-hidden="true" /> */}
 
-                        
 
 
-                            </>
-                          //   <svg onClick={() => setOpen(true)} xmlns="http://www.w3.org/2000/svg" className="rounded-full cursor-pointer h-6 w-6 ml-4 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          //   <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
 
-                          //   <WalletSide open={open} setOpen={setOpen}/>
-                          // </svg>
-                       
+                        </>
+                        //   <svg onClick={() => setOpen(true)} xmlns="http://www.w3.org/2000/svg" className="rounded-full cursor-pointer h-6 w-6 ml-4 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        //   <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+
+                        //   <WalletSide open={open} setOpen={setOpen}/>
+                        // </svg>
+
                       )}
                     </div>
                   </div>

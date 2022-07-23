@@ -92,7 +92,8 @@ export default function BuyForm() {
       const value = totalMint * State.price
       console.log("Approve", FactoryAddress, value)
       try {
-        await ContractUSDT.approve(FactoryAddress, value)
+        const tx = await ContractUSDT.approve(FactoryAddress, value)
+        await tx.wait()
         setSate(false)
       } catch (e) {
         console.error(e)
