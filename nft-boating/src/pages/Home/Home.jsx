@@ -14,13 +14,12 @@
   }
   ```
 */
-import { useImmer } from "use-immer";
-import { useEffect } from "react";
-import { useContextAPI } from "./../../ContextAPI";
-import { ethers } from "ethers";
-import { data } from "autoprefixer";
-import { Link, useNavigate } from "react-router-dom";
-import Footer from "../../Comp/Footer/Footer";
+import { useImmer } from "use-immer"
+import { useEffect } from "react"
+import { useContextAPI } from "./../../ContextAPI"
+import { ethers } from "ethers"
+import { data } from "autoprefixer"
+import { Link, useNavigate } from "react-router-dom"
 
 const products = [
   {
@@ -31,7 +30,7 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
+    color: "Black",
   },
   {
     id: 1,
@@ -41,7 +40,7 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
+    color: "Black",
   },
   {
     id: 1,
@@ -51,7 +50,7 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
+    color: "Black",
   },
   {
     id: 1,
@@ -61,7 +60,7 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
+    color: "Black",
   },
   {
     id: 1,
@@ -71,7 +70,7 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
+    color: "Black",
   },
   {
     id: 1,
@@ -81,7 +80,7 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
+    color: "Black",
   },
   {
     id: 1,
@@ -91,7 +90,7 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
+    color: "Black",
   },
   {
     id: 1,
@@ -101,24 +100,24 @@ const products = [
       "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
     imageAlt: "Front of men's Basic Tee in black.",
     price: "$35",
-    color: "Black"
-  }
-];
+    color: "Black",
+  },
+]
 
 export default function Home() {
-  const { ContractFactory, NFTYacht, provider } = useContextAPI();
+  const { ContractFactory, NFTYacht, provider } = useContextAPI()
 
   const [State, SetState] = useImmer({
-    data: []
-  });
+    data: [],
+  })
 
   useEffect(() => {
     const run = async () => {
-      let addresses;
+      let addresses
       try {
-        addresses = await ContractFactory.getAllContractAddress();
+        addresses = await ContractFactory.getAllContractAddress()
       } catch (e) {
-        console.error(e);
+        console.error(e)
       }
 
       for (let i = 0; i < addresses.length; i++) {
@@ -126,10 +125,10 @@ export default function Home() {
           addresses[i],
           NFTYacht,
           provider
-        );
+        )
 
-        const name = await ContractUSDT.name();
-        const symbol = await ContractUSDT.symbol();
+        const name = await ContractUSDT.name()
+        const symbol = await ContractUSDT.symbol()
 
         const date = {
           id: i,
@@ -138,16 +137,16 @@ export default function Home() {
           address: addresses[i],
           imageSrc:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9S6_bhnGv0Gh--081Azem3rSTXXd-_sc9jA&usqp=CAU",
-          imageAlt: "Front of men's Basic Tee in black."
-        };
+          imageAlt: "Front of men's Basic Tee in black.",
+        }
 
-        SetState(draft => {
-          draft.data.push(date);
-        });
+        SetState((draft) => {
+          draft.data.push(date)
+        })
       }
-    };
-    run();
-  }, []);
+    }
+    run()
+  }, [])
 
   return (
     <div className="bg-white">
@@ -162,7 +161,7 @@ export default function Home() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {State.data.map(Contract => (
+          {State.data.map((Contract) => (
             <div key={Contract.id} className="group relative">
               <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
                 <img
@@ -185,7 +184,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <Footer />
     </div>
-  );
+  )
 }

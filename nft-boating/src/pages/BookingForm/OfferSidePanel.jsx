@@ -1,44 +1,44 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useEffect, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
-import { useForm } from "react-hook-form";
+import { Fragment, useEffect, useState } from "react"
+import { Dialog, Transition } from "@headlessui/react"
+import { XIcon } from "@heroicons/react/outline"
+import { useForm } from "react-hook-form"
 import DatePicker, {
-  utils
-} from "@amir04lm26/react-modern-calendar-date-picker";
-import { useWeb3React } from "@web3-react/core";
-import { useContextAPI } from "../../ContextAPI";
-import { useImmer } from "use-immer";
-import { formatEther, parseEther } from "ethers/lib/utils";
+  utils,
+} from "@amir04lm26/react-modern-calendar-date-picker"
+import { useWeb3React } from "@web3-react/core"
+import { useContextAPI } from "../../ContextAPI"
+import { useImmer } from "use-immer"
+import { formatEther, parseEther } from "ethers/lib/utils"
 
 export default function OfferSidePanel({
   open,
   setOpen,
   errordate,
   id,
-  Contract
+  Contract,
 }) {
-  console.log({ errordate });
+  console.log({ errordate })
 
-  const [selectedDay, setSelectedDay] = useState("");
-  const [disabledDays, setDisabledDays] = useState([]);
+  const [selectedDay, setSelectedDay] = useState("")
+  const [disabledDays, setDisabledDays] = useState([])
 
-  const date = new Date().toISOString().split("T")[0];
+  const date = new Date().toISOString().split("T")[0]
   const minimumDate = {
     year: date.slice(0, 4),
     month: date.slice(5, 7),
-    day: date.slice(8, 10)
-  };
+    day: date.slice(8, 10),
+  }
 
-  const availDate = new Date(new Date().setDate(new Date().getDate() + 20));
-  const daysAdded = availDate.toISOString().split("T")[0];
+  const availDate = new Date(new Date().setDate(new Date().getDate() + 20))
+  const daysAdded = availDate.toISOString().split("T")[0]
   const maximumDate = {
     year: daysAdded.slice(0, 4),
     month: daysAdded.slice(5, 7),
-    day: daysAdded.slice(8, 10)
-  };
+    day: daysAdded.slice(8, 10),
+  }
 
-  const handleDisabledSelect = async disabledDay => {
+  const handleDisabledSelect = async (disabledDay) => {
     for (let i = 0; i < disabledDays.length; i++) {
       if (disabledDays[i].day === disabledDay.day) {
         // await ContractNFTYacht.getBookDateID(
@@ -51,112 +51,77 @@ export default function OfferSidePanel({
         // });
       }
     }
-  };
+  }
 
-  const { account, active } = useWeb3React();
-  const { ContractFactory, FactoryAddress, ContractUSDT } = useContextAPI();
+  const { account, active } = useWeb3React()
+  const { ContractFactory, FactoryAddress, ContractUSDT } = useContextAPI()
 
-  const [state, SetState] = useImmer({
-    data: [],
-    userNFT: 0
-  });
+  const [state, setState] = useImmer({
+    bookedID: null,
+  })
 
-  console.log(state);
+  console.log(state)
 
   useEffect(() => {
     if (active) {
       const run = async () => {
-        let addresses;
+        let BookDateID
         try {
-          addresses = await ContractFactory.getMapUserAllContractAddress(
-            account
-          );
+          BookDateID = await ContractFactory.getBookDateID(
+            Contract,
+            errordate.year,
+            errordate.month,
+            errordate.day
+          )
         } catch (e) {
-          console.log(e);
+          console.log(e)
         }
 
-        if (addresses.length) {
-          for (let i = 0; i < addresses.length; i++) {
-            const getUserIDs = await ContractFactory.getUserIDs(
-              addresses[i],
-              account
-            );
-
-            const contractData = await ContractFactory.getContractInfo(
-              addresses[i]
-            );
-            console.log(contractData);
-
-            getUserIDs.map(nftid => {
-              let data = {
-                nftNumber: nftid.toString(),
-                name: contractData.name.toString(),
-                symbol: contractData.symbol.toString(),
-                tSupply: contractData.tSupply.toString(),
-                tOwnership: contractData.tOwnership.toString(),
-                price: contractData.price.toString(),
-                ownerAddress: contractData.ownerAddress.toString(),
-                baseURI: contractData.baseURI.toString(),
-                contractAddress: addresses[i].toString(),
-                imageSrc:
-                  "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-                imageAlt: "Front of men's Basic Tee in black."
-              };
-              SetState(draft => {
-                draft.userNFT = getUserIDs.length;
-                draft.data.push(data);
-              });
-            });
-          }
-        } else {
-          SetState(draft => {
-            draft.userNFT = 0;
-          });
-        }
-      };
-      run();
+        setState((e) => {
+          e.bookedID = BookDateID.toString()
+        })
+      }
+      run()
     }
-  }, [active]);
-
-  const offerFunc = async () => { };
+  }, [active])
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
-  } = useForm();
+    formState: { errors },
+  } = useForm()
 
-  const amount = watch("amount");
+  const amount = watch("amount")
 
-  const Submit = async data => {
+  const Submit = async (data) => {
     try {
-      // offer(address _Contract, uint _id, uint _userID, uint256 _USDT )
+      console.log(Contract, state.bookedID, id, parseEther(data.amount))
       const tx = await ContractFactory.offer(
         Contract,
+        state.bookedID,
         id,
-        data.userID,
         parseEther(data.amount)
-      );
-      await tx.wait();
-      setOpen(false);
+      )
+      await tx.wait()
+      setOpen(false)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  };
+  }
 
-  const [button, setButton] = useState(true);
+  const [button, setButton] = useState(true)
 
-
-  const handleApprove = async e => {
-    console.log("handleApprove run", FactoryAddress, parseEther(amount));
+  const handleApprove = async (e) => {
+    console.log("handleApprove run", FactoryAddress, parseEther(amount))
     try {
-      await ContractUSDT.approve(FactoryAddress, parseEther(amount));
-      setButton(false);
+      const tx = await ContractUSDT.approve(FactoryAddress, parseEther(amount))
+      await tx.wait()
+      setButton(false)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  };
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -233,11 +198,11 @@ export default function OfferSidePanel({
                                   placeholder="amount"
                                   className="w-full py-2.5 px-3 border mb-2 rounded-md"
                                   {...register("amount", {
-                                    required: true
+                                    required: true,
                                   })}
                                 />
                               </div>
-                              <div className="col-span-6 sm:col-span-6">
+                              {/* <div className="col-span-6 sm:col-span-6">
                                 <label
                                   htmlFor="last-name"
                                   className="block text-sm font-medium text-gray-700 mb-1"
@@ -247,10 +212,10 @@ export default function OfferSidePanel({
                                 <select
                                   className="w-full py-2.5 px-3 border mb-2 rounded-md"
                                   {...register("userID", {
-                                    required: true
+                                    required: true,
                                   })}
                                 >
-                                  {state.data.map(item => {
+                                  {state.data.map((item) => {
                                     return (
                                       <>
                                         <option
@@ -260,22 +225,32 @@ export default function OfferSidePanel({
                                           {item.nftNumber}
                                         </option>
                                       </>
-                                    );
+                                    )
                                   })}
                                 </select>
-                              </div>
+                              </div> */}
 
                               <div className="col-span-6 sm:col-span-3">
                                 <span
                                   onClick={handleApprove}
-                                  className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (button ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer" : "bg-gray-600 opacity-50 cursor-not-allowed")}
+                                  className={
+                                    "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
+                                    (button
+                                      ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer"
+                                      : "bg-gray-600 opacity-50 cursor-not-allowed")
+                                  }
                                 >
                                   Approve
                                 </span>
                               </div>
                               <div className="col-span-6 sm:col-span-3">
                                 <button
-                                  className={"text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (button ? "bg-gray-600 opacity-50 cursor-not-allowed" : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")}
+                                  className={
+                                    "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
+                                    (button
+                                      ? "bg-gray-600 opacity-50 cursor-not-allowed"
+                                      : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")
+                                  }
                                   type="submit"
                                 >
                                   Confirm
@@ -294,5 +269,5 @@ export default function OfferSidePanel({
         </div>
       </Dialog>
     </Transition.Root>
-  );
+  )
 }

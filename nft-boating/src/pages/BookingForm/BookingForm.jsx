@@ -9,10 +9,12 @@ import DatePicker, {
 import Food from "./Food"
 import { useContextAPI } from "./../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
-import { useParams } from "react-router-dom"
 import OfferSidePanel from "./OfferSidePanel"
+import { useNavigate, useParams } from "react-router-dom"
 
 export default function BookingForm() {
+  const navigate = useNavigate()
+
   const { Contract, id } = useParams()
   const { NFTYacht, provider, ContractUSDT, ContractFactory } = useContextAPI()
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
@@ -49,6 +51,7 @@ export default function BookingForm() {
     for (let i = 0; i < disabledDays.length; i++) {
       if (disabledDays[i].day === disabledDay.day) {
         await ContractFactory.getBookDateID(
+          Contract,
           disabledDay.year,
           disabledDay.month,
           disabledDay.day
@@ -66,6 +69,7 @@ export default function BookingForm() {
 
     let newYear = await ContractFactory.newYear()
     let allBookedDates = await ContractFactory.getAllBookedDates(
+      Contract,
       newYear.toString()
     )
 
@@ -115,7 +119,9 @@ export default function BookingForm() {
         id
       )
       await tx.wait()
+
       console.log(tx)
+      navigate(`/Contract/${Contract}/nft/${id}`)
     } catch (e) {
       console.error(e)
     }

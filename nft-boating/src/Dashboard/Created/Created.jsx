@@ -1,41 +1,40 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useImmer } from "use-immer";
-import { useContextAPI } from "./../../ContextAPI";
-import { ethers } from "ethers";
-import { useWeb3React } from "@web3-react/core";
-import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom"
+import { useImmer } from "use-immer"
+import { useContextAPI } from "./../../ContextAPI"
+import { ethers } from "ethers"
+import { useWeb3React } from "@web3-react/core"
+import { useEffect } from "react"
 
 /* This example requires Tailwind CSS v2.0+ */
-import { PencilIcon } from "@heroicons/react/solid";
-import image1 from "../../Assets/images/yachat.jpg";
-import Footer from "../../Comp/Footer/Footer";
+import { PencilIcon } from "@heroicons/react/solid"
+import image1 from "../../Assets/images/yachat.jpg"
 
 export default function Created() {
-  const { account, active } = useWeb3React();
-  const { ContractFactory, NFTYacht, provider } = useContextAPI();
+  const { account, active } = useWeb3React()
+  const { ContractFactory, NFTYacht, provider } = useContextAPI()
 
   const [state, SetState] = useImmer({
     data: [],
-    userNFT: 0
-  });
+    userNFT: 0,
+  })
 
   useEffect(() => {
     if (active) {
       const run = async () => {
-        let addresses;
+        let addresses
         try {
-          addresses = await ContractFactory.getUserAllContractAddress(account);
+          addresses = await ContractFactory.getUserAllContractAddress(account)
         } catch (e) {
-          console.log(e);
+          console.log(e)
         }
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
             const contractData = await ContractFactory.getContractInfo(
               addresses[i]
-            );
+            )
 
-            console.log(contractData);
+            console.log(contractData)
 
             const data = {
               id: i,
@@ -47,32 +46,31 @@ export default function Created() {
               ownerAddress: contractData.ownerAddress.toString(),
               baseURI: contractData.baseURI.toString(),
               contractAddress: addresses[i].toString(),
-              imageSrc:
-                image1,
-              imageAlt: "Front of men's Basic Tee in black."
-            };
+              imageSrc: image1,
+              imageAlt: "Front of men's Basic Tee in black.",
+            }
 
-            console.log(data);
+            console.log(data)
 
-            SetState(draft => {
-              draft.userNFT = addresses.length;
-              draft.data.push(data);
-            });
+            SetState((draft) => {
+              draft.userNFT = addresses.length
+              draft.data.push(data)
+            })
           }
         } else {
-          SetState(draft => {
-            draft.userNFT = 0;
-          });
+          SetState((draft) => {
+            draft.userNFT = 0
+          })
         }
-      };
-      run();
+      }
+      run()
     }
-  }, [active]);
+  }, [active])
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const createNew = () => {
-    navigate(`/create-new`);
-  };
+    navigate(`/create-new`)
+  }
 
   return (
     <div className="Created min-h-full">
@@ -84,7 +82,10 @@ export default function Created() {
                 Your Contracts
               </h1>
               <p className="max-w-2xl">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa commodi accusamus cupiditate blanditiis nihil voluptas architecto numqquam, omnis delecctus ipsa adippisicing?</p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
+                ipsa commodi accusamus cupiditate blanditiis nihil voluptas
+                architecto numqquam, omnis delecctus ipsa adippisicing?
+              </p>
             </div>
             <div className="mt-5 flex lg:mt-0 lg:ml-4">
               <span className="sm:ml-3">
@@ -108,11 +109,10 @@ export default function Created() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto py-10 sm:py-10 lg:py-10 lg:max-w-none">
             <div className="mt-6 lg:space-y-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-6 sm:gap-x-6">
-              {state.data.map(Contract => (
+              {state.data.map((Contract) => (
                 <div key={Contract.id} className="group relative">
                   <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
                     <h1 className="absolute text-black-700 bg-white top-4 rounded-r-lg p-2 text-l">
-
                       Contract Id ({state.userNFT})
                     </h1>
                     <img
@@ -140,7 +140,6 @@ export default function Created() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
-  );
+  )
 }

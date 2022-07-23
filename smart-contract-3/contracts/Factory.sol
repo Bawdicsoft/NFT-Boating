@@ -223,10 +223,29 @@ contract Factory is Ownable {
 
 
     /******************************************************
-    *               Book Date (loigc)
+    *   BookDate loigc (bookDate, cancelBooking)
     *******************************************************/
 
-    function bookDate (
+    
+
+
+    uint public newYear;
+    struct _bookDates {
+        uint _year;
+        uint _month;
+        uint _day;
+    }
+
+    mapping(address => mapping(uint => uint)) indexOfBookedDates;
+    mapping(address => mapping(uint => uint)) indexOf;
+    mapping(address =>mapping(uint => _bookDates[])) public allBookedDates;
+    mapping(address => mapping(uint => mapping ( uint => mapping ( uint => uint )))) public bookDateID;
+
+    uint cancelBefore = 86400;
+    event _cancelBooking(address _Contract, uint id, uint year, uint month, uint day);
+
+
+    function   bookDate(
 
         uint year, uint month, uint day, address _Contract, uint _id
 
@@ -259,9 +278,9 @@ contract Factory is Ownable {
         uint __newYear = DateTimeLibrary.timestampFromDate(year.add(1), 12, 31);
 
         if (newYear != __newYear) newYear = __newYear;
-        indexOfBookedDates[_id] = allBookedDates[newYear].length;
-        allBookedDates[newYear].push(_bookDates(year, month, day));
-        bookDateID[year][month][day] = _id;
+        indexOfBookedDates[_Contract][_id] = allBookedDates[_Contract][newYear].length;
+        allBookedDates[_Contract][newYear].push(_bookDates(year, month, day));
+        bookDateID[_Contract][year][month][day] = _id;
 
         booking.set(_Contract, _id, _msgSender(), _blockTimestamp, _newDAte, __newYear);
 
@@ -269,31 +288,16 @@ contract Factory is Ownable {
 
     }
 
-    mapping ( uint => uint ) indexOfBookedDates;
 
-
-    uint public newYear;
-    struct _bookDates {
-        uint _year;
-        uint _month;
-        uint _day;
+    function getAllBookedDates(address _Contract, uint _newYear) public view returns(_bookDates[] memory) {
+        return allBookedDates[_Contract][_newYear];
     }
 
-    mapping(address => mapping(uint => uint)) indexOf;
-    mapping ( uint => _bookDates[] ) public allBookedDates;
-    mapping ( uint => mapping ( uint => mapping ( uint => uint ) ) ) public bookDateID;
-
-    function getAllBookedDates(uint _newYear) public view returns(_bookDates[] memory) {
-        return allBookedDates[_newYear];
+    function getBookDateID(address _Contract, uint year, uint month, uint day) public view returns(uint) {
+        return bookDateID[_Contract][year][month][day];
     }
 
-    function getBookDateID(uint year, uint month, uint day) public view returns(uint) {
-        return bookDateID[year][month][day];
-    }
-
-    uint cancelBefore = 86400;
-    event _cancelBooking(uint id, uint year, uint month, uint day);
-
+    
     function cancelBooking(address _Contract, uint _id) public {
 
         require (booking.isInserted(_Contract, _id), "!Booked");
@@ -305,20 +309,20 @@ contract Factory is Ownable {
         (uint _year, uint _month, uint _day) = DateTimeLibrary.timestampToDate(_DateAndTime);
 
         booking.remove(_Contract, _id);
-        delete bookDateID[_year][_month][_day];
+        delete bookDateID[_Contract][_year][_month][_day];
 
-        uint index = indexOfBookedDates[_id];
-        uint lastIndex = allBookedDates[newYear].length - 1;
-        uint year = allBookedDates[newYear][lastIndex]._year;
-        uint month = allBookedDates[newYear][lastIndex]._month;
-        uint day = allBookedDates[newYear][lastIndex]._day;
+        uint index = indexOfBookedDates[_Contract][_id];
+        uint lastIndex = allBookedDates[_Contract][newYear].length - 1;
+        uint year = allBookedDates[_Contract][newYear][lastIndex]._year;
+        uint month = allBookedDates[_Contract][newYear][lastIndex]._month;
+        uint day = allBookedDates[_Contract][newYear][lastIndex]._day;
 
         delete indexOf[_Contract][_id];
 
-        allBookedDates[newYear][index] = _bookDates( year, month, day );
-        allBookedDates[newYear].pop();
+        allBookedDates[_Contract][newYear][index] = _bookDates( year, month, day );
+        allBookedDates[_Contract][newYear].pop();
 
-        emit _cancelBooking(_id, _year, _month, _day);
+        emit _cancelBooking(_Contract, _id, _year, _month, _day);
 
     }
 
@@ -445,7 +449,7 @@ contract Factory is Ownable {
             offers[_Contract][_id].User, block.timestamp, _dateAndTime, _newYear);
 
         (uint year, uint month, uint day) = DateTimeLibrary.timestampToDate(_dateAndTime);
-        bookDateID[year][month][day] = offers[_Contract][_id].userID;
+        bookDateID[_Contract][year][month][day] = offers[_Contract][_id].userID;
 
         acceptedOffers[_Contract][_id] = true;
         USDT.transfer(_msgSender(), offers[_Contract][_id].Price);

@@ -1,20 +1,20 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react"
+import { Disclosure, Menu, Transition } from "@headlessui/react"
 import {
   BellIcon,
   MenuIcon,
   CashIcon,
   PencilIcon,
   XIcon,
-} from "@heroicons/react/outline";
-import { Link, useNavigate } from "react-router-dom";
-import { auth, logout, signInWithGoogle } from "../../DB/firebase-config";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useWeb3React } from "@web3-react/core";
-import { Injected } from "../Wallets/Connectors";
-import WalletSide from "./WalletSide";
-import logo from '../../Assets/logo.png'
+} from "@heroicons/react/outline"
+import { Link, useNavigate } from "react-router-dom"
+import { auth, logout, signInWithGoogle } from "../../DB/firebase-config"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { useWeb3React } from "@web3-react/core"
+import { Injected } from "../Wallets/Connectors"
+import WalletSide from "./WalletSide"
+import logo from "../../Assets/logo.png"
 
 // const user = {
 //   name: "Tom Cook",
@@ -28,51 +28,50 @@ const navigation = [
   { name: "About", href: "/about", current: false },
   // { name: "Buy NFT", href: "/buy-nft", current: false },
   // { name: "Booking Form", href: "/Booking-form", current: false },
-];
+]
 const userNavigation = [
-  { name: "Offers Received", href: "/offers-received" },
+  // { name: "Offers Received", href: "/offers-received" },
+  { name: "NFT Collection", href: "/collected" },
   { name: "Booked Date", href: "/booked-date" },
   { name: "Offers Made", href: "/offers-made" },
-  { name: "nft Collection", href: "/collected" },
   { name: "Created", href: "/created" },
-];
+]
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(" ")
 }
 
 export default function Header() {
-  const [user, loading, error] = useAuthState(auth);
-  const navigate = useNavigate();
+  const [user, loading, error] = useAuthState(auth)
+  const navigate = useNavigate()
 
   const [open, setOpen] = useState(false)
 
-  const { activate, active, account, deactivate } = useWeb3React();
+  const { activate, active, account, deactivate } = useWeb3React()
 
   const logoutFunc = async () => {
-    await logout();
-    navigate(`/`);
-  };
+    await logout()
+    navigate(`/`)
+  }
 
   const conToMetaMask = async () => {
     try {
-      await activate(Injected);
+      await activate(Injected)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const disconToMetaMask = async () => {
     try {
-      await deactivate();
+      await deactivate()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   return (
     <>
-
       <WalletSide open={open} setOpen={setOpen} />
 
       <div className="min-h-full">
@@ -83,11 +82,7 @@ export default function Header() {
                 <div className="flex items-center justify-between h-16">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-32 w-32"
-                        src={logo}
-                        alt="Workflow"
-                      />
+                      <img className="h-32 w-32" src={logo} alt="Workflow" />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -202,17 +197,12 @@ export default function Header() {
                             </Transition>
                           </Menu>
                           {/* <CashIcon className="h-6 w-6" aria-hidden="true" /> */}
-
-
-
-
                         </>
                         //   <svg onClick={() => setOpen(true)} xmlns="http://www.w3.org/2000/svg" className="rounded-full cursor-pointer h-6 w-6 ml-4 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         //   <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
 
                         //   <WalletSide open={open} setOpen={setOpen}/>
                         // </svg>
-
                       )}
                     </div>
                   </div>
@@ -296,5 +286,5 @@ export default function Header() {
         </Disclosure>
       </div>
     </>
-  );
+  )
 }

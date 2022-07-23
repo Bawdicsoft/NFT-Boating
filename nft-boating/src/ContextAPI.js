@@ -1,77 +1,73 @@
-import { useContext, useEffect, createContext, useState } from "react";
-import { ethers } from "ethers";
-import { Factory, NFTYacht, USDT } from "./ABIs/ABIs";
-import { Injected } from "./Comp/Wallets/Connectors";
-import { useWeb3React } from "@web3-react/core";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, signInWithGoogle } from "./DB/firebase-config";
-import { query, collection, getDocs, where } from "firebase/firestore";
+import { useContext, useEffect, createContext, useState } from "react"
+import { ethers } from "ethers"
+import { Factory, NFTYacht, USDT } from "./ABIs/ABIs"
+import { Injected } from "./Comp/Wallets/Connectors"
+import { useWeb3React } from "@web3-react/core"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth, db, signInWithGoogle } from "./DB/firebase-config"
+import { query, collection, getDocs, where } from "firebase/firestore"
 
-export const ContextAPI = createContext();
+export const ContextAPI = createContext()
 
 export const useContextAPI = () => {
-  return useContext(ContextAPI);
-};
+  return useContext(ContextAPI)
+}
 
 export const ContextProvider = ({ children }) => {
-  const { activate, account } = useWeb3React();
-  const [user, loading, error] = useAuthState(auth);
+  const { activate, account } = useWeb3React()
+  const [user, loading, error] = useAuthState(auth)
 
-  const FactoryAddress = "0xa6bfcfa39844a4fE552aa072E1950C7c507Ea61d";
-  const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C";
+  const FactoryAddress = "0x72689C9118022623f325723B4E105E14564A96Bf"
+  const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
 
   const provider = new ethers.providers.Web3Provider(
     window.ethereum
-  ).getSigner();
+  ).getSigner()
 
-  const ContractFactory = new ethers.Contract(
-    FactoryAddress,
-    Factory,
-    provider
-  );
-  const ContractUSDT = new ethers.Contract(USDTAddress, USDT, provider);
+  const ContractFactory = new ethers.Contract(FactoryAddress, Factory, provider)
+  const ContractUSDT = new ethers.Contract(USDTAddress, USDT, provider)
 
   useEffect(() => {
     const conToMetamask = async () => {
-      await activate(Injected);
-    };
-    conToMetamask();
-  }, []);
+      await activate(Injected)
+    }
+    conToMetamask()
+  }, [])
 
-  const [UserData, setUserData] = useState();
+  const [UserData, setUserData] = useState()
 
-  console.log({ UserData });
+  console.log({ UserData })
 
   useEffect(() => {
     if (loading) {
       // maybe trigger a loading screen
-      return;
+      return
     } else {
-      fetchUserName();
+      fetchUserName()
     }
-  }, [user, loading]);
+  }, [user, loading])
 
   const fetchUserName = async () => {
     try {
-      console.log({ user });
-      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-      const doc = await getDocs(q);
+      console.log({ user })
+      const q = query(collection(db, "users"), where("uid", "==", user?.uid))
+      const doc = await getDocs(q)
       // console.log(doc.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      const data = doc.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-      setUserData(data);
-      console.log("userID", data[0].id);
+      const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      setUserData(data)
+      console.log("userID", data[0].id)
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
   const values = {
     ContractUSDT,
     ContractFactory,
     NFTYacht,
     provider,
-    FactoryAddress
-  };
+    FactoryAddress,
+  }
 
-  return <ContextAPI.Provider value={values}>{children}</ContextAPI.Provider>;
-};
+  return <ContextAPI.Provider value={values}>{children}</ContextAPI.Provider>
+}

@@ -10,6 +10,17 @@ body {
   @import h-full;
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.main-root {
+  min-height: 80vh;
+}
+
 .DatePicker {
   position: relative;
   display: inline-block;
