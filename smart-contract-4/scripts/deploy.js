@@ -19,7 +19,9 @@ async function main() {
   // await nFTYacht.deployed();
 
   const Factory = await hre.ethers.getContractFactory("Factory");
-  const factory = await Factory.deploy();
+  const factory = await Factory.deploy(
+    "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
+  )
   await factory.deployed();
   // 0x4A309BB74778E2aE1259B5e91588a268E1083DEb
 
