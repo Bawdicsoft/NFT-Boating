@@ -17,7 +17,7 @@ export default function BuyForm() {
   const navigate = useNavigate()
   const [user, loading, error] = useAuthState(auth)
 
-  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
+  // const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
   const {
     register,
     handleSubmit,
