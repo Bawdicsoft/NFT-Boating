@@ -29,35 +29,11 @@ abstract contract Whitelist is Ownable {
   }
 
 
-  function addAddressesToWhitelist(address[] memory addrs) onlyOwner public {
-    for (uint256 i = 0; i < addrs.length; i++) {
-        if (!whitelist[addrs[i]]) {
-            addAddressToWhitelist(addrs[i]);
-            emit WhitelistedAddressAdded(addrs[i]);
-        } else {
-            emit AlreadyWhitelistedAddressAdded(addrs[i]);
-        }
-    }
-  }
-
-
   function removeAddressFromWhitelist(address addr) onlyOwner public {
     require(whitelist[addr], "whitelist?");
 
     whitelist[addr] = false;
     emit WhitelistedAddressRemoved(addr);
-  }
-
-
-  function removeAddressesFromWhitelist(address[] memory addrs) onlyOwner public {
-    for (uint256 i = 0; i < addrs.length; i++) {
-        if (whitelist[addrs[i]]) {
-            whitelist[addrs[i]] = false;
-            emit WhitelistedAddressRemoved(addrs[i]);
-        } else {
-            emit AlreadyWhitelistedAddressRemoved(addrs[i]);
-        }
-    }
   }
 
 }

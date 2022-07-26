@@ -9,11 +9,6 @@ library UserMapping {
         mapping(address => mapping(address => uint[])) tokens;
         mapping(address => mapping(address => uint)) indexOf;
         mapping(address => mapping(address => bool)) inserted;
-
-        // address[] user;
-        // mapping(address => uint[]) tokens;
-        // mapping(address => uint) indexOf;
-        // mapping(address => bool) inserted;
     }
 
     function getTokens(Map storage map, address _contract, address key) internal view returns (uint[] memory) {
@@ -36,7 +31,7 @@ library UserMapping {
         return map.user.length;
     }
 
-    function inInserted(Map storage map, address _contract, address key) internal view returns (bool) {
+    function isInserted(Map storage map, address _contract, address key) internal view returns (bool) {
         return map.inserted[_contract][key];
     }
 

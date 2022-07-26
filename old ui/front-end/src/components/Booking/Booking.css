@@ -1,0 +1,18 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;900&family=Lato:wght@400;900&family=PT+Sans+Narrow&family=Roboto+Condensed&family=Unna:wght@400;700&display=swap');
+
+
+/* font-family: 'Barlow', sans-serif;
+font-family: 'Roboto Condensed', sans-serif; 
+font-family: 'Lato', sans-serif;*/
+
+:root {
+    --color: white;
+    --background-color: rgba(4, 23, 46, 0.44);
+    --font-family:'Lato', sans-serif;
+}
+
+.heading{
+    font-family: var(--font-family)!important;
+    font-weight: bolder !important;
+}

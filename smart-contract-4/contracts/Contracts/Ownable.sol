@@ -11,7 +11,8 @@ abstract contract Ownable is Context {
 
     
     constructor(address ownerAddress_) {
-        _transferOwnership(ownerAddress_);
+        _owner = ownerAddress_;
+        emit OwnershipTransferred(address(0), ownerAddress_);
     }
 
     
@@ -21,23 +22,12 @@ abstract contract Ownable is Context {
 
     
     modifier onlyOwner() {
-        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        require(owner() == _msgSender(), "!owner");
         _;
     }
-
     
-    function renounceOwnership() public virtual onlyOwner {
-        _transferOwnership(address(0));
-    }
-
-    
-    function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
-        _transferOwnership(newOwner);
-    }
-
-    
-    function _transferOwnership(address newOwner) internal virtual {
+    function _transferOwnership(address newOwner) public virtual onlyOwner {
+        require(newOwner != address(0), "!zero address");
         address oldOwner = _owner;
         _owner = newOwner;
         emit OwnershipTransferred(oldOwner, newOwner);

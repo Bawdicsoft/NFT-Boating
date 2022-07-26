@@ -1,0 +1,71 @@
+/* #bg-clr{
+    background-color: #0e021a;
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;900&family=Lato:wght@400;900&family=PT+Sans+Narrow&family=Roboto+Condensed&family=Unna:wght@400;700&display=swap');
+
+
+/* font-family: 'Barlow', sans-serif;
+font-family: 'Roboto Condensed', sans-serif; 
+font-family: 'Lato', sans-serif;*/
+
+:root {
+    --color: white;
+    --background-color: rgba(4, 23, 46, 0.44);
+    --font-family:'Lato', sans-serif;
+}
+.price-details{
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 
+.contain2{
+    margin-left: 40px !important;
+}
+*/
+.contain1{
+    /* margin-right: 40px !important; */
+    max-width: 444px;
+    /* margin-top: -24px; */
+    /* color: white; */
+    background-color: transparent;
+    
+} 
+.containr1{
+    display: flex !important;
+    justify-content: space-between !important;
+    background-color: transparent!important;
+    /* margin-top: 20px; */
+}
+.heading{
+    margin-top: 30px !important;
+    text-align: center;
+}
+
+/* @media (min-width: 600px){
+
+.contain2{
+    display: flex;
+    margin-left: 0px !important;
+    justify-content: center;
+}
+.contain1{
+    margin-left: auto 0px !important;
+    justify-content: center;
+
+}
+} */
+
+#card{
+    width: 300px;
+    height: 400px;
+}
+
+#card-image{
+    filter: blur(8px);
+    -webkit-filter: blur(2px);
+    /* border: red solid 1px; */
+    height: 400px;
+
+} 

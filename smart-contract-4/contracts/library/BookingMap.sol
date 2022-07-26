@@ -12,18 +12,10 @@ library BookingMap {
         mapping(address => mapping(uint => uint)) newYear;
         mapping(address => mapping(uint => uint)) indexOf;
         mapping(address => mapping(uint => bool)) inserted;
-
-        // uint[] id;
-        // mapping(uint => address) owner;
-        // mapping(uint => uint) bookingTime;
-        // mapping(uint => uint) bookedTime;
-        // mapping(uint => uint) newYear;
-        // mapping(uint => uint) indexOf;
-        // mapping(uint => bool) inserted;
     }
 
-    function getKeys(Map storage map, address _Contract) internal view returns (uint[] memory) {
-        return map.id[_Contract];
+    function getKeys(Map storage map, address _Contract) internal view returns (uint[] memory, uint) {
+        return (map.id[_Contract], map.id[_Contract].length);
     }
 
     function getOwner(Map storage map, address _Contract, uint _id) internal view returns (address) {
@@ -32,10 +24,6 @@ library BookingMap {
 
     function getKeyAtIndex(Map storage map, address _Contract, uint _index) internal view returns (uint) {
         return map.id[_Contract][_index];
-    }
-
-    function getsize(Map storage map, address _Contract) internal view returns (uint) {
-        return map.id[_Contract].length;
     }
 
     function isInserted(Map storage map, address _Contract, uint _id) internal view returns (bool) {

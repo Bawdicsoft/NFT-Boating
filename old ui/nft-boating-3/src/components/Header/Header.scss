@@ -1,0 +1,53 @@
+.Header {
+  background-color: transparent;
+  z-index: 9;
+  padding: 15px 0;
+  border: none;
+
+  img {
+    width: 180px;
+  }
+
+  .Container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 9;
+
+  }
+
+  .Nav {
+    width: max-content;
+    display: flex;
+    align-items: center;
+
+    a {
+      margin-right: 10px;
+      text-decoration: unset;
+      color: black;
+      font-weight: 400;
+    }
+  }
+
+  // border-bottom: 1px solid #b5b5b5;
+
+  .naveLink {
+    display: block;
+
+    
+
+    @media screen and (max-width: 800px) {
+      display: none;
+    }
+  }
+
+.naveLink a{
+  // border: red solid 1px;
+  margin: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
+}
+
+
+}

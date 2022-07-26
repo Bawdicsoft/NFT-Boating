@@ -1,0 +1,22 @@
+.FoodMenu {
+    padding: 50px 0;
+  .Food-Cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+
+    @media screen and (max-width: 800px) {
+      grid-template-columns: 1fr;
+    }
+
+    .name-price {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    img {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+}

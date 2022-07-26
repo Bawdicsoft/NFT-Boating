@@ -1,0 +1,26 @@
+.Header {
+
+  padding: 15px 0;
+
+  .Container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .Nav {
+    width: max-content;
+    display: flex;
+    align-items: center;
+
+    a {
+      margin-right: 10px;
+      text-decoration: unset;
+      color: black;
+      font-weight: 400;
+    }
+  }
+
+  border-bottom: 1px solid #b5b5b5;
+  
+}

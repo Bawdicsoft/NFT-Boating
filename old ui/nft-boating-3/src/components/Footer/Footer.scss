@@ -1,0 +1,74 @@
+.Footer {
+
+  text-align: center;
+  color: black;
+  background-color: #dddddd;
+  padding: 50px 0 20px 0;
+
+  .useful-links {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr 1fr 1.5fr;
+
+    @media screen and (max-width: 800px) {
+      grid-template-columns: 1fr;
+    }
+
+    ul {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      gap: 6px;
+
+      li {
+        // border: red solid 1px;
+        margin: 5px;
+      }
+
+      li:first-child {
+        color: rgb(34, 34, 34);
+        font-weight: 800;
+        margin-bottom: 5px;
+
+      }
+    }
+
+    padding-bottom: 30px;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+  }
+
+  .Copy-right {
+    color: black;
+    font-size: 18px;
+
+    a {
+      color: black;
+      text-decoration: unset;
+    }
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .Footer-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media screen and (max-width: 480px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  }
+
+  .sm-icons {
+    padding-right: 15px;
+  }
+
+}
