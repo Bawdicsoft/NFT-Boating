@@ -1,10 +1,10 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app"
 import {
   GoogleAuthProvider,
   getAuth,
   signInWithPopup,
   signOut,
-} from "firebase/auth";
+} from "firebase/auth"
 import {
   getFirestore,
   query,
@@ -12,9 +12,8 @@ import {
   collection,
   where,
   addDoc,
-  updateDoc,
-} from "firebase/firestore";
-
+} from "firebase/firestore"
+import { getStorage } from "firebase/storage"
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -24,24 +23,24 @@ const firebaseConfig = {
   storageBucket: "nft-yacht.appspot.com",
   messagingSenderId: "755723829636",
   appId: "1:755723829636:web:7ed9d98fce9f146ba01dd1",
-  measurementId: "G-2QKMN1F2XR"
-};
+  measurementId: "G-2QKMN1F2XR",
+}
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const googleProvider = new GoogleAuthProvider();
+const app = initializeApp(firebaseConfig)
+const auth = getAuth(app)
+const db = getFirestore(app)
+const storage = getStorage(app)
+const googleProvider = new GoogleAuthProvider()
 
 const signInWithGoogle = async () => {
   try {
-    const res = await signInWithPopup(auth, googleProvider);
-    const user = res.user;
+    const res = await signInWithPopup(auth, googleProvider)
+    const user = res.user
 
-    console.log({ user });
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    const docs = await getDocs(q);
+    console.log({ user })
+    const q = query(collection(db, "users"), where("uid", "==", user.uid))
+    const docs = await getDocs(q)
     if (docs.docs.length === 0) {
       await addDoc(collection(db, "users"), {
         uid: user.uid,
@@ -49,33 +48,17 @@ const signInWithGoogle = async () => {
         authProvider: "google",
         email: user.email,
         photoURL: user.photoURL,
-      });
+      })
     }
   } catch (err) {
-    console.error(err);
-    alert(err.message);
+    console.error(err)
+    alert(err.message)
   }
-};
-
-
-// const addData = (dataObject) => {
-//   const databaseRef = collection(db, "users");
-//   return addDoc(databaseRef, dataObject);
-// };
-
-// const updateSellerRequests = (id, updateDataObject) => {
-//   const fieldToEdit = doc(db, "users", id);
-//   return updateDoc(fieldToEdit, updateDataObject);
-// };
+}
 
 const logout = async () => {
-  console.log('clicked');
-  return signOut(auth);
-};
+  console.log("clicked")
+  return signOut(auth)
+}
 
-export {
-  auth,
-  db,
-  signInWithGoogle,
-  logout,
-};
+export { auth, db, signInWithGoogle, logout, storage }

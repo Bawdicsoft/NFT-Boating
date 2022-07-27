@@ -1,26 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useImmer } from "use-immer"
-import { useParams, Link } from "react-router-dom"
 import { useContextAPI } from "../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
-import { formatEther, parseEther } from "ethers/lib/utils"
+import { formatEther } from "ethers/lib/utils"
 
 export default function OffersReceived() {
-  const obj = [
-    {
-      walletAddress: "0x43..232",
-      amount: "3212",
-      date: "Sept 28, 2019",
-      status: "",
-    },
-    {
-      walletAddress: "0x55..pF4",
-      amount: "312",
-      date: "Sept 28, 2022",
-      status: "",
-    },
-  ]
-
   const { ContractFactory } = useContextAPI()
   const { account } = useWeb3React()
 
@@ -84,6 +68,7 @@ export default function OffersReceived() {
       }
     }
     getAllContractAddress()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
   const handelAccept = async (OfferTokenID) => {
@@ -134,7 +119,7 @@ export default function OffersReceived() {
                       </tr>
                     </thead>
                     <tbody>
-                      {obj.map((item) => {
+                      {state.map((item) => {
                         return (
                           <tr>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

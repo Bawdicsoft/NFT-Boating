@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import { useContextAPI } from "./../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
-import { formatEther, parseEther } from "ethers/lib/utils"
+import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth, signInWithGoogle } from "../../DB/firebase-config"
 
 export default function BuyForm() {
   const { Contract } = useParams()
-  const { NFTYacht, provider, ContractUSDT, ContractFactory, FactoryAddress } =
+  const { ContractDeploy, ContractUSDT, ContractFactory, FactoryAddress } =
     useContextAPI()
   const { account, active } = useWeb3React()
   const navigate = useNavigate()
@@ -22,45 +22,54 @@ export default function BuyForm() {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm()
 
   const [State, SetState] = useImmer({
     isLoading: true,
-    baseURI: "xxx",
-    name: "xxx",
-    symbol: "x",
-    ownerAddress: "0x0000000000000000000000000000000000000000 ",
-    price: "0.0",
-    tOwnership: "0.0",
-    tsupply: "0.0",
+    id: 0,
+    name: "Name",
+    symbol: "X",
+    tSupply: 0.0,
+    tOwnership: 0.0,
+    price: 0.0,
+    owner: "0x0000000000000000000000000000000000000000",
+    baseURI: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+
     userBalance: "0.0",
     approveIsLoading: false,
-    confirmIsLoading: false
+    confirmIsLoading: false,
   })
 
   useEffect(() => {
     const run = async () => {
       try {
-        const ContractInfo = await ContractFactory.contractDitals(Contract)
+        const ContractInfo = await ContractDeploy.contractDitals(Contract)
+        console.log(">>>>>>>")
         console.log({ ContractInfo })
 
-        const baseURI = ContractInfo.baseURI.toString()
-        const name = ContractInfo.name.toString()
-        const ownerAddress = ContractInfo.ownerAddress.toString()
-        const price = formatEther(ContractInfo.price.toString())
-        const symbol = ContractInfo.symbol.toString()
-        const tOwnership = ContractInfo.tOwnership.toString()
-        const tsupply = ContractInfo.tSupply.toString()
+        // uint id, string memory name, string memory symbol, uint tSupply,
+        // uint tOwnership, uint price, address owner, string memory baseURI
 
-        SetState(draft => {
-          draft.baseURI = baseURI
+        const id = ContractInfo.id.toString()
+        const name = ContractInfo.name.toString()
+        const symbol = ContractInfo.symbol.toString()
+        const tSupply = ContractInfo.tSupply.toString()
+        const tOwnership = ContractInfo.tOwnership.toString()
+        const price = formatUnits(ContractInfo.price.toString(), 6)
+        const owner = ContractInfo.owner.toString()
+        const baseURI = ContractInfo.baseURI.toString()
+
+        SetState((draft) => {
+          draft.id = id
           draft.name = name
-          draft.ownerAddress = ownerAddress
-          draft.price = price
           draft.symbol = symbol
+          draft.tSupply = tSupply
           draft.tOwnership = tOwnership
-          draft.tsupply = tsupply
+          draft.price = price
+          draft.owner = owner
+          draft.baseURI = baseURI
+
           draft.isLoading = false
         })
       } catch (e) {
@@ -77,8 +86,8 @@ export default function BuyForm() {
         try {
           const userBalance = await ContractUSDT.balanceOf(account)
 
-          SetState(draft => {
-            draft.userBalance = formatEther(userBalance.toString())
+          SetState((draft) => {
+            draft.userBalance = formatUnits(userBalance.toString(), 6)
           })
         } catch (e) {
           console.log(e)
@@ -94,28 +103,28 @@ export default function BuyForm() {
 
   const handleApprove = async () => {
     if (state) {
-      SetState(draft => {
+      SetState((draft) => {
         draft.approveIsLoading = true
       })
       const value = totalMint * State.price
       try {
         const tx = await ContractUSDT.approve(
           FactoryAddress,
-          parseEther(value.toString())
+          parseUnits(value.toString(), 6)
         )
         await tx.wait()
         setSate(false)
       } catch (e) {
         console.error(e)
       }
-      SetState(draft => {
+      SetState((draft) => {
         draft.approveIsLoading = false
       })
     }
   }
 
-  const onSubmit = async data => {
-    SetState(draft => {
+  const onSubmit = async (data) => {
+    SetState((draft) => {
       draft.confirmIsLoading = true
     })
 
@@ -125,7 +134,7 @@ export default function BuyForm() {
     try {
       const tx = await ContractFactory.buyOwnership(
         totalMint,
-        parseEther(value.toString()),
+        parseUnits(value.toString(), 6),
         Contract
       )
 
@@ -136,7 +145,7 @@ export default function BuyForm() {
       console.error(e)
     }
 
-    SetState(draft => {
+    SetState((draft) => {
       draft.confirmIsLoading = true
     })
   }
@@ -183,7 +192,9 @@ export default function BuyForm() {
                         Wallet Address :
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                        {State.ownerAddress}
+                        {account
+                          ? account
+                          : "0x0000000000000000000000000000000000000000"}
                       </p>
                     </div>
 
@@ -192,7 +203,7 @@ export default function BuyForm() {
                         Supply
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                        {State.tOwnership}/{State.tsupply}
+                        {State.tOwnership}/{State.tSupply}
                       </p>
                     </div>
 
@@ -235,7 +246,7 @@ export default function BuyForm() {
                         {...register("totalMint", {
                           required: true,
                           max: 10,
-                          min: 1
+                          min: 1,
                         })}
                         className="w-full py-2.5 px-3 border mb-4 rounded-md "
                       />
@@ -276,14 +287,14 @@ export default function BuyForm() {
                             }
                           >
                             {/* <svg
-                              class="animate-spin h-5 w-5 mr-3 text-white"
+                              className="animate-spin h-5 w-5 mr-3 text-white"
                               viewBox="0 0 24 24"
                             >
                               A
                             </svg> */}
                             {State.approveIsLoading && (
                               <p
-                                class="animate-spin h-5 w-5 mr-3 text-white"
+                                className="animate-spin h-5 w-5 mr-3 text-white"
                                 viewBox="0 0 24 24"
                               >
                                 A
@@ -304,7 +315,7 @@ export default function BuyForm() {
                           >
                             {State.confirmIsLoading && (
                               <p
-                                class="animate-spin h-5 w-5 mr-3 text-white"
+                                className="animate-spin h-5 w-5 mr-3 text-white"
                                 viewBox="0 0 24 24"
                               >
                                 A

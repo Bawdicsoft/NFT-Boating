@@ -9,6 +9,10 @@ import Home from "./pages/Home/Home"
 import BuyForm from "./pages/BuyForm/BuyForm"
 import BookingForm from "./pages/BookingForm/BookingForm"
 import Contract from "./pages/Contract/Contract"
+import CreateNew from "./pages/CreateNew/CreateNew"
+import Host from "./pages/Host/Host"
+import AddWhitelistAddress from "./pages/AddWhitelistAddress/AddWhitelistAddress"
+import About from "./pages/About/About"
 
 // Dashboard
 import OffersReceived from "./Dashboard/OffersReceived/OffersReceived"
@@ -16,10 +20,8 @@ import OffersMade from "./Dashboard/OffersMade/OffersMade"
 import BookedDate from "./Dashboard/BookedDate/BookedDate"
 import Collected from "./Dashboard/Collected/Collected"
 import Created from "./Dashboard/Created/Created"
-import CreateNew from "./pages/CreateNew/CreateNew"
 import NFT from "./Dashboard/NFT/NFT"
-import About from "./pages/About/About"
-import AddWhitelistAddress from "./pages/AddWhitelistAddress/AddWhitelistAddress"
+import Requst from "./Dashboard/Requst/Requst"
 
 export default function App() {
   return (
@@ -41,6 +43,8 @@ export default function App() {
           />
           <Route path="/create-new" element={<CreateNew />} />
           <Route path="/about" element={<About />} />
+          <Route path="/host" element={<Host />} />
+          <Route path="/requst" element={<Requst />} />
 
           {/* Dashboard Routes */}
           <Route path="/Contract/:Contract/nft/:id" element={<NFT />} />

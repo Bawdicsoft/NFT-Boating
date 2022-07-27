@@ -5,15 +5,15 @@ import { ethers } from "ethers"
 import { Link } from "react-router-dom"
 
 export default function Home() {
-  const { ContractFactory, NFTYacht, provider } = useContextAPI()
+  const { ContractDeploy, NFTYacht, provider } = useContextAPI()
   const [state, setState] = useImmer({
     data: [],
     contractCounter: null,
-    isLoding: true
+    isLoding: true,
   })
 
   const callEvent = () => {
-    ContractFactory.on("deploy_", () => {
+    ContractDeploy.on("deploy_", () => {
       console.log("callEvent > Event")
     })
   }
@@ -22,20 +22,16 @@ export default function Home() {
     const run = async () => {
       let addresses
       try {
-        addresses = await ContractFactory.allContractAddress()
+        addresses = await ContractDeploy.allContractAddress()
       } catch (e) {
         console.error(e)
       }
 
       for (let i = 0; i < addresses.length; i++) {
-        const ContractUSDT = new ethers.Contract(
-          addresses[i],
-          NFTYacht,
-          provider
-        )
+        const Contract = new ethers.Contract(addresses[i], NFTYacht, provider)
 
-        const name = await ContractUSDT.name()
-        const symbol = await ContractUSDT.symbol()
+        const name = await Contract.name()
+        const symbol = await Contract.symbol()
 
         const date = {
           id: i,
@@ -44,10 +40,10 @@ export default function Home() {
           address: addresses[i],
           imageSrc:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9S6_bhnGv0Gh--081Azem3rSTXXd-_sc9jA&usqp=CAU",
-          imageAlt: "Front of men's Basic Tee in black."
+          imageAlt: "Front of men's Basic Tee in black.",
         }
 
-        setState(draft => {
+        setState((draft) => {
           draft.data.push(date)
           draft.isLoding = false
         })
@@ -87,7 +83,7 @@ export default function Home() {
             </>
           ) : (
             <>
-              {state.data.map(Contract => (
+              {state.data.map((Contract) => (
                 <div key={Contract.id} className="group relative">
                   <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
                     <img

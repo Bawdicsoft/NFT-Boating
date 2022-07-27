@@ -6,38 +6,37 @@ import { useNavigate } from "react-router-dom"
 import { Injected } from "./../../Comp/Wallets/Connectors"
 
 export default function AddWhitelistAddress() {
-  const { account, active, activate } = useWeb3React()
+  const { active, activate } = useWeb3React()
 
-  const { ContractFactory } = useContextAPI()
+  const { ContractDeploy } = useContextAPI()
   const navigate = useNavigate()
 
   const [state, setState] = useImmer({
-    submitBtnDisable: false
+    submitBtnDisable: false,
   })
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm()
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     console.log({ data })
 
-    setState(draft => {
+    setState((draft) => {
       draft.submitBtnDisable = true
     })
 
     try {
-      await ContractFactory.addAddressToWhitelist(data.address)
+      await ContractDeploy.addAddressToWhitelist(data.address)
     } catch (e) {
-      console.log(">>>>>>>>>>>>>>", e)
-      setState(draft => {
+      setState((draft) => {
         draft.submitBtnDisable = false
       })
     }
 
-    ContractFactory.on("deploy_", _Contract => {
+    ContractDeploy.on("deploy_", (_Contract) => {
       navigate(`/contract/${_Contract}`)
     })
   }
@@ -77,7 +76,7 @@ export default function AddWhitelistAddress() {
                         type="text"
                         placeholder="Address"
                         {...register("address", {
-                          required: true
+                          required: true,
                         })}
                         className="w-full py-2.5 px-3 border mb-4 rounded-md"
                       />

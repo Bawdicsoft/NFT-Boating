@@ -1,4 +1,3 @@
-import { ethers } from "ethers"
 import { useEffect } from "react"
 import { useImmer } from "use-immer"
 import { Link, useNavigate } from "react-router-dom"
@@ -9,7 +8,7 @@ import { useContextAPI } from "./../../ContextAPI"
 export default function Collected() {
   const navigate = useNavigate()
   const { account, active } = useWeb3React()
-  const { ContractFactory, NFTYacht, provider } = useContextAPI()
+  const { ContractFactory, ContractDeploy } = useContextAPI()
 
   const buyNew = () => {
     navigate(`/`)
@@ -18,62 +17,77 @@ export default function Collected() {
   const [state, SetState] = useImmer({
     isLoading: true,
     data: [],
-    userNFT: 0
+    userNFT: 0,
   })
-
-  console.log(state)
 
   useEffect(() => {
     if (active) {
       const run = async () => {
         let addresses
         try {
-          addresses = await ContractFactory.userAllContractAddress(account)
+          addresses = await ContractFactory.UserAllContractAddress(account)
         } catch (e) {
           console.log(e)
         }
+        console.log(">>>>>>>>")
+        console.log(addresses)
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
-            const getUserIDs = await ContractFactory.getUserIDs(
-              addresses[i],
-              account
-            )
+            let UserIDs
+            let contractData
+            try {
+              UserIDs = await ContractFactory.UserIDs(addresses[i], account)
+              contractData = await ContractDeploy.contractDitals(addresses[i])
+            } catch (error) {
+              console.log(error)
+            }
+            console.log(">>>>>>>>>>>>")
+            console.log(">>>>>>>>>>>>", UserIDs, contractData)
 
-            const contractData = await ContractFactory.getContractInfo(
-              addresses[i]
-            )
-            console.log(contractData)
+            const id = contractData.id.toString()
+            const name = contractData.name.toString()
+            const symbol = contractData.symbol.toString()
+            const tSupply = contractData.tSupply.toString()
+            const tOwnership = contractData.tOwnership.toString()
+            const price = contractData.price.toString()
+            const owner = contractData.owner.toString()
+            const baseURI = contractData.baseURI.toString()
 
-            getUserIDs.map(nftid => {
+            UserIDs.forEach((nftid) => {
               let data = {
                 nftNumber: nftid.toString(),
-                name: contractData.name.toString(),
-                symbol: contractData.symbol.toString(),
-                tSupply: contractData.tSupply.toString(),
-                tOwnership: contractData.tOwnership.toString(),
-                price: contractData.price.toString(),
-                ownerAddress: contractData.ownerAddress.toString(),
-                baseURI: contractData.baseURI.toString(),
+
+                id: id,
+                name: name,
+                symbol: symbol,
+                tSupply: tSupply,
+                tOwnership: tOwnership,
+                price: price,
+                owner: owner,
+                baseURI: baseURI,
+
                 contractAddress: addresses[i].toString(),
                 imageSrc: `https://cloudflare-ipfs.com/ipfs/Qmacuvgf1m4j35prXdbUJhmkycpYDk2Km9rZEhMv2Causz/${nftid.toString()}.png`,
-                imageAlt: "Front of men's Basic Tee in black."
+                imageAlt: "Front of men's Basic Tee in black.",
               }
-              SetState(draft => {
-                draft.userNFT = getUserIDs.length
+              SetState((draft) => {
+                draft.userNFT = UserIDs.length
                 draft.data.push(data)
                 draft.isLoading = false
               })
             })
           }
         } else {
-          SetState(draft => {
+          SetState((draft) => {
             draft.userNFT = 0
+            draft.isLoading = false
           })
         }
       }
       run()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
   return (
@@ -106,37 +120,55 @@ export default function Collected() {
       <main>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto py-10 sm:py-10 lg:py-10 lg:max-w-none">
-            <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:gap-y-6">
-              {state.isLoading ? "loadin..." : "loaded"}
-              {state.data.map(Contract => (
-                <div
-                  key={Contract.nftNumber + Math.random()}
-                  className="group relative"
-                >
-                  <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
-                    <img
-                      src={Contract.imageSrc}
-                      alt={Contract.imageAlt}
-                      className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                    />
+            <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-4 lg:gap-x-6 lg:gap-y-6">
+              {state.isLoading ? (
+                <>
+                  <div className="px-4 py-6 sm:px-0">
+                    <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
                   </div>
-                  <div className="mt-4 flex justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        <Link
-                          to={`/contract/${Contract.contractAddress}/nft/${Contract.nftNumber}`}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0"
-                          />
-                          ( {Contract.name} ) #{Contract.nftNumber}
-                        </Link>
-                      </h3>
+                  <div className="px-4 py-6 sm:px-0">
+                    <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
+                  </div>
+                  <div className="px-4 py-6 sm:px-0">
+                    <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
+                  </div>
+                  <div className="px-4 py-6 sm:px-0">
+                    <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {state.data.map((Contract) => (
+                    <div
+                      key={Contract.nftNumber + Math.random()}
+                      className="group relative"
+                    >
+                      <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
+                        <img
+                          src={Contract.imageSrc}
+                          alt={Contract.imageAlt}
+                          className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                        />
+                      </div>
+                      <div className="mt-4 flex justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            <Link
+                              to={`/contract/${Contract.contractAddress}/nft/${Contract.nftNumber}`}
+                            >
+                              <span
+                                aria-hidden="true"
+                                className="absolute inset-0"
+                              />
+                              ( {Contract.name} ) #{Contract.nftNumber}
+                            </Link>
+                          </h3>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -15,14 +15,14 @@ export default function OfferSidePanel({
   setOpen,
   errordate,
   id,
-  Contract
+  Contract,
 }) {
   const navigate = useNavigate()
   const { active } = useWeb3React()
   const { ContractFactory, FactoryAddress, ContractUSDT } = useContextAPI()
 
   const [state, setState] = useImmer({
-    bookedID: null
+    bookedID: null,
   })
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function OfferSidePanel({
       const run = async () => {
         let BookDateID
         try {
-          BookDateID = await ContractFactory.getBookDateID(
+          BookDateID = await ContractFactory._bookDateID(
             Contract,
             errordate.year,
             errordate.month,
@@ -40,24 +40,25 @@ export default function OfferSidePanel({
           console.log(e)
         }
 
-        setState(e => {
+        setState((e) => {
           e.bookedID = BookDateID.toString()
         })
       }
       run()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm()
 
   const amount = watch("amount")
 
-  const Submit = async data => {
+  const Submit = async (data) => {
     try {
       console.log(Contract, state.bookedID, id, parseEther(data.amount))
       const tx = await ContractFactory.offer(
@@ -73,10 +74,11 @@ export default function OfferSidePanel({
       console.error(e)
     }
   }
+  console.log(errors)
 
   const [button, setButton] = useState(true)
 
-  const handleApprove = async e => {
+  const handleApprove = async (e) => {
     console.log("handleApprove run", FactoryAddress, parseEther(amount))
     try {
       const tx = await ContractUSDT.approve(FactoryAddress, parseEther(amount))
@@ -162,7 +164,7 @@ export default function OfferSidePanel({
                                   placeholder="amount"
                                   className="w-full py-2.5 px-3 border mb-2 rounded-md"
                                   {...register("amount", {
-                                    required: true
+                                    required: true,
                                   })}
                                 />
                               </div>

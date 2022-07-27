@@ -28,7 +28,7 @@ export default function BookingForm() {
   const minimumDate = {
     year: date.slice(0, 4),
     month: date.slice(5, 7),
-    day: date.slice(8, 10)
+    day: date.slice(8, 10),
   }
 
   const availDate = new Date(new Date().setDate(new Date().getDate() + 20))
@@ -36,23 +36,23 @@ export default function BookingForm() {
   const maximumDate = {
     year: daysAdded.slice(0, 4),
     month: daysAdded.slice(5, 7),
-    day: daysAdded.slice(8, 10)
+    day: daysAdded.slice(8, 10),
   }
 
   const [dateError, setDateError] = useState()
   const [offerSideNav, setOfferSideNav] = useState(false)
-  const [getBookDateID, setGetBookDateID] = useState()
+  // const [getBookDateID, setGetBookDateID] = useState()
 
-  const handleDisabledSelect = async disabledDay => {
+  const handleDisabledSelect = async (disabledDay) => {
     for (let i = 0; i < disabledDays.length; i++) {
       if (disabledDays[i].day === disabledDay.day) {
-        await ContractFactory.getBookDateID(
+        await ContractFactory._bookDateID(
           Contract,
           disabledDay.year,
           disabledDay.month,
           disabledDay.day
-        ).then(res => {
-          setGetBookDateID(res.toString())
+        ).then((res) => {
+          // setGetBookDateID(res.toString())
           setDateError(disabledDay)
           setOfferSideNav(true)
         })
@@ -63,19 +63,19 @@ export default function BookingForm() {
   async function afterOpenModal() {
     setDisabledDays([])
 
-    let newYear = await ContractFactory.newYear()
-    let allBookedDates = await ContractFactory.getAllBookedDates(
+    let newYear = await ContractFactory._newYear()
+    let allBookedDates = await ContractFactory.allBookedDates(
       Contract,
       newYear.toString()
     )
 
-    if (Number(newYear.toString())) {
+    if (Boolean(allBookedDates.length)) {
       for (let i = 0; i < allBookedDates.length; i++) {
-        setDisabledDays(prev =>
+        setDisabledDays((prev) =>
           prev.concat({
             year: Number(allBookedDates[i]._year.toString()),
             month: Number(allBookedDates[i]._month.toString()),
-            day: Number(allBookedDates[i]._day.toString())
+            day: Number(allBookedDates[i]._day.toString()),
           })
         )
       }
@@ -88,22 +88,23 @@ export default function BookingForm() {
     } else {
       afterOpenModal()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
   // submit data
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm()
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     console.log({
       year: selectedDay.year,
       month: selectedDay.month,
       day: selectedDay.day,
       Contract,
-      id
+      id,
     })
 
     try {
@@ -204,7 +205,7 @@ export default function BookingForm() {
                           {...register("Mobile number", {
                             required: true,
                             minLength: 6,
-                            maxLength: 12
+                            maxLength: 12,
                           })}
                           className="w-full py-2.5 px-3 border mb-4 rounded-md"
                         />
@@ -220,7 +221,7 @@ export default function BookingForm() {
                           {...register("How many person will you be with?", {
                             required: true,
                             max: 12,
-                            min: 3
+                            min: 3,
                           })}
                           className="w-full py-2.5 px-3 border mb-4 rounded-md"
                         />

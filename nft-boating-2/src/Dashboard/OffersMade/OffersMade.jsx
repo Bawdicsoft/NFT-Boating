@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useImmer } from "use-immer"
-import { useParams, Link } from "react-router-dom"
 import { useContextAPI } from "../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
-import { formatEther, parseEther } from "ethers/lib/utils"
+import { formatEther } from "ethers/lib/utils"
 
 export default function OffersMade() {
-  const { NFTYacht, provider, ContractFactory } = useContextAPI()
+  const { ContractFactory } = useContextAPI()
   const { account, active } = useWeb3React()
 
   const [state, setState] = useImmer({
@@ -21,46 +20,51 @@ export default function OffersMade() {
   })
 
   useEffect(() => {
-    console.log(">")
     if (active) {
-      console.log(">>")
       async function getAllContractAddress() {
         const getAllContractAddress =
-          await ContractFactory.getMapUserAllContractAddress(account)
+          await ContractFactory.UserAllContractAddress(account)
 
         for (let i = 0; i < getAllContractAddress.length; i++) {
-          const getUserAllOffers = await ContractFactory.getUserAllOffers(
+          const getUserAllOffers = await ContractFactory.userAllOffers(
             getAllContractAddress[i],
             account
           )
 
+          console.log(
+            "getUserAllOffers",
+            getAllContractAddress,
+            getUserAllOffers
+          )
+
           for (let j = 0; j < getUserAllOffers.length; j++) {
-            const Offer = await ContractFactory.getOffer(
+            const Offer = await ContractFactory._offers(
               getAllContractAddress[i],
               getUserAllOffers[j]
             )
+
             console.log(Offer)
 
-            var t = new Date(1970, 0, 1) // Epoch
-            t.setSeconds(Offer.Time__.toString()).toLocaleString()
+            if (Number(Offer.id.toString()) > 0) {
+              var t = new Date(1970, 0, 1) // Epoch
+              t.setSeconds(Offer.Time.toString()).toLocaleString()
 
-            console.log("t.toString()", t.toString())
+              console.log("t.toString()", t.toString())
 
-            const data = {
-              id: Offer.id__.toString(),
-              userID: Offer.userID__.toString(),
-              price: formatEther(Offer.Price__.toString()),
-              time: t.toString(),
-              offeredDate: Offer.offeredDate__.toString(),
-              user: Offer.User__.toString(),
-              contract: Offer.Contract__.toString(),
+              const data = {
+                id: Offer.id.toString(),
+                userID: Offer.userID.toString(),
+                price: formatEther(Offer.Price.toString()),
+                time: t.toString(),
+                offeredDate: Offer.offeredDate.toString(),
+                user: Offer.User.toString(),
+                contract: Offer.Contract.toString(),
+              }
+
+              setState((e) => {
+                e.offer.push(data)
+              })
             }
-
-            console.log(">>>>>>>", data)
-
-            setState((e) => {
-              e.offer.push(data)
-            })
           }
 
           const data = {
@@ -75,6 +79,7 @@ export default function OffersMade() {
       }
       getAllContractAddress()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
   const handleCancel = async (id, contract) => {

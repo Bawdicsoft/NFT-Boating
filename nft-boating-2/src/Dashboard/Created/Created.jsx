@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
 import { useContextAPI } from "./../../ContextAPI"
-import { ethers } from "ethers"
 import { useWeb3React } from "@web3-react/core"
 import { useEffect } from "react"
 
@@ -11,7 +10,7 @@ import image1 from "../../Assets/images/yachat.jpg"
 
 export default function Created() {
   const { account, active } = useWeb3React()
-  const { ContractFactory, NFTYacht, provider } = useContextAPI()
+  const { ContractFactory, ContractDeploy } = useContextAPI()
 
   const [state, SetState] = useImmer({
     data: [],
@@ -23,27 +22,27 @@ export default function Created() {
       const run = async () => {
         let addresses
         try {
-          addresses = await ContractFactory.getUserAllContractAddress(account)
+          addresses = await ContractFactory.UserAllContractAddress(account)
         } catch (e) {
           console.log(e)
         }
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
-            const contractData = await ContractFactory.getContractInfo(
+            const contractData = await ContractDeploy.contractDitals(
               addresses[i]
             )
 
             console.log(contractData)
 
             const data = {
-              id: i,
+              id: contractData.id.toString(),
               name: contractData.name.toString(),
               symbol: contractData.symbol.toString(),
               tSupply: contractData.tSupply.toString(),
               tOwnership: contractData.tOwnership.toString(),
               price: contractData.price.toString(),
-              ownerAddress: contractData.ownerAddress.toString(),
+              owner: contractData.owner.toString(),
               baseURI: contractData.baseURI.toString(),
               contractAddress: addresses[i].toString(),
               imageSrc: image1,
@@ -65,6 +64,7 @@ export default function Created() {
       }
       run()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
   const navigate = useNavigate()

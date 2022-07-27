@@ -6,16 +6,15 @@ import "./interfaces/IERC20.sol";
 import "./DeployHandler/IDeploy.sol";
 
 import "./Contracts/Ownable.sol";
-import "./Contracts/librariesViewFunction.sol";
-
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./library/BookingMap.sol";
 import "./library/UserMapping.sol";
 import "./library/DateTimeLibrary.sol";
 
+import "hardhat/console.sol";
 
-contract Factory is Ownable, librariesViewFunction {
+contract Factory is Ownable {
 
     using SafeMath for uint256;
 
@@ -170,7 +169,7 @@ contract Factory is Ownable, librariesViewFunction {
 
         uint lnewYear_ = DateTimeLibrary.timestampFromDate(year_.add(1), 12, 31);
 
-        if (newYear_ != lnewYear_) newYear_ = lnewYear_;
+        if (_newYear > lnewYear_) _newYear = lnewYear_;
         _indexOfBookedDates[contract_][id_] = _allBookedDates[contract_][newYear_].length;
         _allBookedDates[contract_][newYear_].push(_bookDates(year_, month_, day_));
         _bookDateID[contract_][year_][month_][day_] = id_;
@@ -338,6 +337,49 @@ contract Factory is Ownable, librariesViewFunction {
 
         emit offerAccepted(id_, _msgSender());
 
+    }
+
+
+    /*******************************************************
+    *   view function from UserMapping library
+    *******************************************************/
+
+    function UserIDs(address _contract, address _user) public view returns (uint256[] memory) {
+        return User.getTokens(_contract, _user);
+    }
+    function UserAllContractAddress(address _user) public view returns (address[] memory) {
+        return User.getAllContractAddress(_user);
+    }
+    function AllUser() public view returns (address[] memory) {
+        return User.getUser();
+    }
+    function userKeyAtIndex(uint _id) public view returns (address) {
+        return User.getKeyAtIndex(_id);
+    }
+    function userArraySize() public view returns (uint) {
+        return User.getSize();
+    }
+    function userArraySize(address _contract, address _user) public view returns (bool) {
+        return User.isInserted(_contract, _user);
+    }
+
+
+
+    /*******************************************************
+    *   view function from BookingMap library
+    *******************************************************/
+
+    function BookedUserIDs(address _Contract) public view returns (
+        uint[] memory _userIds
+        ) {
+        (_userIds ,) = booking.getKeys(_Contract);
+    }
+
+
+    function BookedDate(address _Contract, uint _id) public view returns (
+        uint bookingTime_, uint bookedTime_, uint newYear_ ) {
+
+        (bookingTime_, bookedTime_, newYear_) = booking.getTime(_Contract, _id);
     }
 
 }

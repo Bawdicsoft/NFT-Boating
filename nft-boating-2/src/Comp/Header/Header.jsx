@@ -1,41 +1,26 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { Disclosure, Menu, Transition } from "@headlessui/react"
-import {
-  BellIcon,
-  MenuIcon,
-  CashIcon,
-  PencilIcon,
-  XIcon
-} from "@heroicons/react/outline"
+import { BellIcon, MenuIcon, CashIcon, XIcon } from "@heroicons/react/outline"
 import { Link, useNavigate } from "react-router-dom"
-import { auth, logout, signInWithGoogle } from "../../DB/firebase-config"
+import { auth, db, logout, signInWithGoogle } from "../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { useWeb3React } from "@web3-react/core"
-import { Injected } from "../Wallets/Connectors"
 import WalletSide from "./WalletSide"
 import logo from "../../Assets/logo.png"
+import { useImmer } from "use-immer"
+import { collection, getDocs } from "firebase/firestore"
 
-// const user = {
-//   name: "Tom Cook",
-//   email: "tom@example.com",
-//   imageUrl:
-//     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-// };
 const navigation = [
   { name: "Home", href: "/", current: true },
-  { name: "Add Whitelist", href: "/Add-Whitelist-Address" },
-  { name: "Create New", href: "/create-new" },
-  { name: "About", href: "/about", current: false }
-  // { name: "Buy NFT", href: "/buy-nft", current: false },
-  // { name: "Booking Form", href: "/Booking-form", current: false },
+  { name: "Become a Host", href: "/host" },
+  { name: "About", href: "/about", current: false },
 ]
 const userNavigation = [
-  // { name: "Offers Received", href: "/offers-received" },
   { name: "NFT Collection", href: "/collected" },
   { name: "Booked Date", href: "/booked-date" },
   { name: "Offers Made", href: "/offers-made" },
-  { name: "Created", href: "/created" }
+  { name: "Created", href: "/created" },
+  { name: "Create New", href: "/create-new" },
+  { name: "Requst", href: "/requst" },
 ]
 
 function classNames(...classes) {
@@ -47,29 +32,39 @@ export default function Header() {
   const navigate = useNavigate()
 
   const [open, setOpen] = useState(false)
-
-  const { activate, active, account, deactivate } = useWeb3React()
-
   const logoutFunc = async () => {
     await logout()
     navigate(`/`)
   }
 
-  const conToMetaMask = async () => {
-    try {
-      await activate(Injected)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const [state, setState] = useImmer({
+    requstLength: null,
+  })
 
-  const disconToMetaMask = async () => {
-    try {
-      await deactivate()
-    } catch (error) {
-      console.log(error)
+  useEffect(() => {
+    if (loading) {
+      return
+    } else {
+      const fetchData = async () => {
+        if (1 > 0) {
+          try {
+            const doc = await getDocs(collection(db, "Requst"))
+            const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+            console.log(">>>>>>>>>>>")
+            console.log("data", data.length)
+            setState((e) => {
+              e.requstLength = data.length
+            })
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      }
+      fetchData()
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
+  console.log(error)
 
   return (
     <>
@@ -87,7 +82,7 @@ export default function Header() {
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map(item => (
+                        {navigation.map((item) => (
                           <Link
                             key={item.name}
                             to={item.href}
@@ -135,8 +130,25 @@ export default function Header() {
                             type="button"
                             className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                           >
-                            <span className="sr-only">View notifications </span>
-                            <BellIcon className="h-6 w-6" aria-hidden="true" />
+                            {/* <span className="sr-only">View notifications</span> */}
+                            <p
+                              className="text-Yellow-500"
+                              style={{
+                                position: "relative",
+                                bottom: "-5px",
+                                right: "-5px",
+                              }}
+                            >
+                              {state.requstLength}
+                            </p>
+                            <BellIcon
+                              style={{
+                                position: "relative",
+                                top: "-12px",
+                              }}
+                              className="h-6 w-6 "
+                              aria-hidden="true"
+                            />
                           </button>
                           <span
                             className="cursor-pointer bg-gray-800 flex-shrink-0 ml-2 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -166,7 +178,7 @@ export default function Header() {
                               leaveTo="transform opacity-0 scale-95"
                             >
                               <Menu.Items className="origin-top-right z-50 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                {userNavigation.map(item => (
+                                {userNavigation.map((item) => (
                                   <Menu.Item key={item.name}>
                                     {({ active }) => (
                                       <Link
@@ -226,7 +238,7 @@ export default function Header() {
 
               <Disclosure.Panel className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                  {navigation.map(item => (
+                  {navigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
                       as="a"
@@ -269,7 +281,7 @@ export default function Header() {
                     </button>
                   </div>
                   <div className="mt-3 px-2 space-y-1">
-                    {userNavigation.map(item => (
+                    {userNavigation.map((item) => (
                       <Disclosure.Button
                         key={item.name}
                         as="a"

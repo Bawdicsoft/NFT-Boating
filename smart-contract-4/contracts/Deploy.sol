@@ -2,15 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "./Contracts/Whitelist.sol";
-import "./interfaces/IERC20.sol";
 import "./DeployHandler/Boating.sol";
-
 import "./Contracts/Ownable.sol";
 
 
 contract Deploy is Ownable, Whitelist {
-
-    IERC20 private USDT;
 
 
     struct contractDitals_ {
@@ -36,6 +32,7 @@ contract Deploy is Ownable, Whitelist {
 
     constructor() Ownable(msg.sender) {
         decimals = 6;
+        factory = address(0);
     }
 
 
@@ -78,7 +75,7 @@ contract Deploy is Ownable, Whitelist {
 
     function updateFactoryAddress(address factory_) public onlyOwner {
         factory = factory_;
-        emit factoryAddressChanged_(address(0), factory_);
+        emit factoryAddressChanged_(factory, factory_);
     }
     function updateTotalOwnership(address contract_, uint number_) public onlyFactory returns(bool) {
         _contractDitals[contract_].tOwnership += number_;
@@ -106,7 +103,7 @@ contract Deploy is Ownable, Whitelist {
 
         address _Contract = address(new Boating{salt: keccak256(
             abi.encode(_userAllContractAddress[ownerAddress_].length, _contractCounter, ownerAddress_)
-            )} (name_, symbol_, address(this), baseURI_));
+            )} (name_, symbol_, factory, baseURI_));
 
 
         _contractDitals[_Contract] = contractDitals_(

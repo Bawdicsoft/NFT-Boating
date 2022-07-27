@@ -4,7 +4,7 @@ import { useContextAPI } from "./../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
 
 export default function BookedDate() {
-  const { ContractFactory, NFTYacht, provider } = useContextAPI()
+  const { ContractFactory } = useContextAPI()
   const { account, active } = useWeb3React()
 
   const [state, setState] = useImmer({
@@ -15,19 +15,14 @@ export default function BookedDate() {
   useEffect(() => {
     if (active) {
       async function getBookedDates() {
-        const addresses = await ContractFactory.getMapUserAllContractAddress(
-          account
-        )
+        const addresses = await ContractFactory.UserAllContractAddress(account)
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
-            const UserIDs = await ContractFactory.getUserIDs(
-              addresses[i],
-              account
-            )
+            const UserIDs = await ContractFactory.UserIDs(addresses[i], account)
 
             for (let j = 0; j < UserIDs.length; j++) {
-              const BookedDate = await ContractFactory.getBookedDate(
+              const BookedDate = await ContractFactory.BookedDate(
                 addresses[i],
                 UserIDs[j]
               )
@@ -61,22 +56,20 @@ export default function BookedDate() {
       }
       getBookedDates()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
-  const obj = [
-    {
-      name: "Great Boat",
-      id: "3212",
-      bookingdate: "Sept 28, 2019",
-      bookedDate: "Sept 28, 2019",
-    },
-    {
-      name: "BlueSea",
-      id: "312",
-      bookingdate: "Sept 28, 2022",
-      bookedDate: "Sept 28, 2022",
-    },
-  ]
+  const cancelBooking = async (Contract, id) => {
+    console.log(">>>>>>>>>>>", Contract, id)
+    try {
+      await ContractFactory.cancelBooking(Contract, id)
+      setState((draft) => {
+        draft.isBooked = false
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div className="BookedDate min-h-full">
@@ -142,7 +135,12 @@ export default function BookedDate() {
                               </p>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <button className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <button
+                                onClick={() =>
+                                  cancelBooking(item.contract, item.id)
+                                }
+                                className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
                                 Cancel
                               </button>
                             </td>

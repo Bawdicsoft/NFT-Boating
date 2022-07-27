@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useImmer } from "use-immer"
 import { useParams, Link } from "react-router-dom"
 import { useContextAPI } from "../../ContextAPI"
 import { ethers } from "ethers"
-import { formatEther, parseEther } from "ethers/lib/utils"
+import { formatEther } from "ethers/lib/utils"
 import { useWeb3React } from "@web3-react/core"
 
 export default function NFT() {
@@ -14,8 +14,8 @@ export default function NFT() {
 
   const [state, setState] = useImmer({
     contract: {
-      name: "Name",
-      symbol: "symbol",
+      name: "xxxx",
+      symbol: "xx",
       isOwner: false,
       isBooked: false,
       bookedDate: "",
@@ -28,38 +28,44 @@ export default function NFT() {
   useEffect(() => {
     if (active) {
       const fetch = async () => {
-        const ownerOf = await ContractNFTYacht.ownerOf(id)
-        const getUserData = await ContractFactory.getUserData(Contract, id)
-        const getBookedDate = await ContractFactory.getBookedDate(Contract, id)
-
         const name = await ContractNFTYacht.name()
         const symbol = await ContractNFTYacht.symbol()
-
-        var t = new Date(1970, 0, 1) // Epoch
-        t.setSeconds(getBookedDate[1].toString()).toLocaleString()
 
         setState((draft) => {
           draft.contract.name = name
           draft.contract.symbol = symbol
-          draft.contract.isOwner = ownerOf == account
-          draft.contract.isBooked = getUserData
+        })
+
+        const ownerOf = await ContractNFTYacht.ownerOf(id)
+        const BookedDate = await ContractFactory.BookedDate(Contract, id)
+
+        var t = new Date(1970, 0, 1) // Epoch
+        t.setSeconds(BookedDate[1].toString()).toLocaleString()
+
+        console.log(Boolean(BookedDate.bookedTime_.toString() > 0))
+
+        setState((draft) => {
+          draft.contract.isOwner = ownerOf === account
+          draft.contract.isBooked = Boolean(
+            BookedDate.bookedTime_.toString() > 0
+          )
           draft.contract.bookedDate = t.toString()
         })
 
-        const Offer = await ContractFactory.getOffer(Contract, id)
+        const Offer = await ContractFactory._offers(Contract, id)
 
-        var t = new Date(1970, 0, 1) // Epoch
-        t.setSeconds(Offer.Time__.toString()).toLocaleString()
+        if (Boolean(Offer.userID.toString() > 0)) {
+          var tt = new Date(1970, 0, 1) // Epoch
+          tt.setSeconds(Offer.Time.toString()).toLocaleString()
 
-        if (Number(Offer.id__.toString())) {
           const data = {
-            id: Offer.id__.toString(),
-            userID: Offer.userID__.toString(),
-            price: formatEther(Offer.Price__.toString()),
-            time: t.toString(),
-            offeredDate: Offer.offeredDate__.toString(),
-            user: Offer.User__,
-            contract: Offer.Contract__,
+            id: Offer.id.toString(),
+            userID: Offer.userID.toString(),
+            price: formatEther(Offer.Price.toString()),
+            time: tt.toString(),
+            offeredDate: Offer.offeredDate.toString(),
+            user: Offer.User,
+            contract: Offer.Contract,
           }
 
           console.log(data)
@@ -71,10 +77,10 @@ export default function NFT() {
       }
       fetch()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
   const cancelBooking = async (Contract, id) => {
-    console.log(">>>>>>>>>>>", Contract, id)
     try {
       await ContractFactory.cancelBooking(Contract, id)
       setState((draft) => {
