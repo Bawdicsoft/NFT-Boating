@@ -60,23 +60,26 @@ const products = [
 ];
 
 export default function Home() {
-  const [hoveredName, setHoveredName] = useState('')
+  const [hoveredName, setHoveredName] = useState("");
 
-  console.log('data')
+  console.log("data");
 
   useEffect(() => {
-    function getCoordinates(address){
-      fetch("https://maps.googleapis.com/maps/api/geocode/json?address="+address+'&key='+'AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw')
-        .then(response => response.json())
-        .then(data => {
-          
-          console.log(data)
-        })
+    function getCoordinates(address) {
+      fetch(
+        "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+          address +
+          "&key=" +
+          "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw"
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        });
     }
-    console.log('maimi')
-    getCoordinates('miami')
-
-  }, [])
+    console.log("maimi");
+    getCoordinates("miami");
+  }, []);
   // const { ContractDeploy, NFTYacht, provider } = useContextAPI();
   // const [state, setState] = useImmer({
   //   data: [],
@@ -210,18 +213,21 @@ export default function Home() {
         {/* farooq */}
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
             <div className="max-w-5 xl mx-auto px-4 sm:px-6 lg:max-w-5xl lg:px-8">
               <h2 className="sr-only">Products</h2>
 
               <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-1 gap-x-6 lg:grid-cols-2 xl:grid-cols-2 xl:gap-x-8">
                 {products.map((product) => (
-                  <Link key={product.id} to={product.href} className="group" 
-                  onMouseEnter={() => setHoveredName(product.name)} 
-                  onMouseOut={() => setHoveredName('')}>
+                  <Link
+                    key={product.id}
+                    to={product.href}
+                    className="group"
+                    onMouseEnter={() => setHoveredName(product.name)}
+                    onMouseOut={() => setHoveredName("")}
+                  >
                     <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
                       <img
-                        style={{height: "300px"}}
+                        style={{ height: "300px" }}
                         src={product.imageSrc}
                         alt={product.imageAlt}
                         className="w-full h-full object-center object-cover group-hover:opacity-75"
@@ -236,12 +242,12 @@ export default function Home() {
                   </Link>
                 ))}
               </div>
-
             </div>
             {/* <div className=" w-full"> */}
 
             <div className="inline-flex rounded-md w-full shadow">
-              <GoogleMapReact bootstrapURLKeys={{
+              <GoogleMapReact
+                bootstrapURLKeys={{
                   key: "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw",
                 }}
                 defaultCenter={{
@@ -253,10 +259,16 @@ export default function Home() {
                 {products.map((product) => {
                   const { lat, lng, name, color } = product.marker;
                   return (
-                    <Marker  key={lat + lng} lat={lat} lng={lng} name={name} color={color} hoveredItem={name == hoveredName} />
+                    <Marker
+                      key={lat + lng}
+                      lat={lat}
+                      lng={lng}
+                      name={name}
+                      color={color}
+                      hoveredItem={name == hoveredName}
+                    />
                   );
                 })}
-                
               </GoogleMapReact>
             </div>
             {/* </div> */}
@@ -268,15 +280,43 @@ export default function Home() {
 }
 
 const Marker = (props) => {
-  const { color, name, id , hoveredItem } = props;
+  const { color, name, id, hoveredItem } = props;
   return (
-    <div>
+    <div className="relative flex flex-col items-center group">
       <div
-        className={`pin bounce ${hoveredItem && "pinHovered"} `}
-        style={{ backgroundColor: color, cursor: "pointer" }}
-        title={name}
-      />
-      <div className="pulse" />
+        className="w-5 h-5"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 50 50"
+        fill="currentColor"
+      >
+        <div
+          className={`pin bounce ${hoveredItem && "pinHovered"} `}
+          style={{ backgroundColor: color, cursor: "pointer" }}
+          title={name} />
+        <div className="pulse" />
+      </div>
+      <div className="absolute bottom-0 flex flex-col items-center hidden mb-6 group-hover:flex">
+        <span
+          style={{ minWidth: "100px", minHeight: "50px" }}
+          className="relative text-center rounded z-10 p-2 text-xs leading-none text-black whitespace-no-wrap bg-white shadow-lg"
+        >
+          <h5>{name}</h5>
+        </span>
+        {/* <div className="w-3 h-3 -mt-2 rotate-45 bg-black">hello</div> */}
+      </div>
     </div>
   );
 };
+// const Marker = (props) => {
+//   const { color, name, id , hoveredItem } = props;
+//   return (
+//     <div className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+//       <div
+//         className={`pin bounce ${hoveredItem && "pinHovered"} `}
+//         style={{ backgroundColor: color, cursor: "pointer" }}
+//         title={name}
+//       />
+//       <div className="pulse" />
+//     </div>
+//   );
+// };
