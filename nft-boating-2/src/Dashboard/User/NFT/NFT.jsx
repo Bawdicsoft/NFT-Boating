@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useImmer } from "use-immer"
 import { useParams, Link } from "react-router-dom"
-import { useContextAPI } from "../../ContextAPI"
+import { useContextAPI } from "../../../ContextAPI"
 import { ethers } from "ethers"
 import { formatEther } from "ethers/lib/utils"
 import { useWeb3React } from "@web3-react/core"

@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
-import { useContextAPI } from "./../../ContextAPI"
+import { useContextAPI } from "../../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
 import { useEffect } from "react"
 
 /* This example requires Tailwind CSS v2.0+ */
 import { PencilIcon } from "@heroicons/react/solid"
-import image1 from "../../Assets/images/yachat.jpg"
+import image1 from "../../../Assets/images/yachat.jpg"
 
 export default function Created() {
   const { account, active } = useWeb3React()
@@ -124,7 +124,7 @@ export default function Created() {
                   <div className="mt-4 flex justify-between">
                     <div>
                       <h3 className="text-2xl text-gray-700 ">
-                        <Link to={`/contract/${Contract.contractAddress}`}>
+                        <Link to={`/ContractInfo/${Contract.contractAddress}`}>
                           <span
                             aria-hidden="true"
                             className="absolute inset-0 "

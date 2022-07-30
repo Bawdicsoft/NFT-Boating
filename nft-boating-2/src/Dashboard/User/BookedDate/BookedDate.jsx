@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useImmer } from "use-immer"
-import { useContextAPI } from "./../../ContextAPI"
+import { useContextAPI } from "./../../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
 
 export default function BookedDate() {
@@ -11,6 +11,7 @@ export default function BookedDate() {
     bookedDates: [],
     tBookedDates: 0,
   })
+  console.log(state.bookedDates, "bookedDates")
 
   useEffect(() => {
     if (active) {
@@ -28,19 +29,19 @@ export default function BookedDate() {
               )
 
               var bookingTime = new Date(1970, 0, 1) // Epoch
-              bookingTime
-                .setSeconds(BookedDate._blockTimestamp)
-                .toLocaleString()
+              bookingTime.setSeconds(BookedDate.bookingTime_).toLocaleString()
 
               var bookedTime = new Date(1970, 0, 1) // Epoch
-              bookedTime.setSeconds(BookedDate._DateAndTime).toLocaleString()
+              bookedTime.setSeconds(BookedDate.bookedTime_).toLocaleString()
+              console.log(BookedDate._DateAndTime)
+              console.log(bookedTime.toString())
 
               const data = {
                 id: UserIDs[j].toString(),
                 contract: addresses[i],
                 bookingTime: bookingTime.toString(),
                 bookedTime: bookedTime.toString(),
-                newYear: BookedDate._newYear,
+                newYear: BookedDate.newYear_.toString(),
               }
 
               setState((e) => {
@@ -76,11 +77,11 @@ export default function BookedDate() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Booked Dates</h1>
-          <p className="max-w-2xl">
+          {/* <p className="max-w-2xl">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
             ipsa commodi accusamus cupiditate blanditiis nihil voluptas
             architecto numqquam, omnis delecctus ipsa adippisicing?
-          </p>
+          </p> */}
         </div>
       </header>
       <main>

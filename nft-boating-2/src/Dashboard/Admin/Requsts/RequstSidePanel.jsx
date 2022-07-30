@@ -2,9 +2,9 @@
 import { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
-import { useContextAPI } from "../../ContextAPI"
+import { useContextAPI } from "../../../ContextAPI"
 import { doc, deleteDoc } from "firebase/firestore"
-import { db } from "../../DB/firebase-config"
+import { db } from "../../../DB/firebase-config"
 import { useImmer } from "use-immer"
 
 export default function RequstSidePanel({ open, setOpen, state, setState }) {
@@ -109,7 +109,9 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                         Wallet Address: {state.viewData.walletAddress}
                       </p>
                       <p className="mb-2">Base URI: {state.viewData.baseURI}</p>
-                      <p className="mb-6">Detals: {state.viewData.Detals}</p>
+                      <p className="mb-6">
+                        Detals: {state.viewData.description}
+                      </p>
                       <br />
                       <p className="mb-2">Images</p>
                       {state.imagesURL.map((img) => (

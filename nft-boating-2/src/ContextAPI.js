@@ -12,6 +12,7 @@ import {
   where,
   updateDoc,
   doc,
+  deleteField,
 } from "firebase/firestore"
 
 export const ContextAPI = createContext()
@@ -24,8 +25,8 @@ export const ContextProvider = ({ children }) => {
   const { activate, account } = useWeb3React()
   const [user, loading, error] = useAuthState(auth)
 
-  const DeployAddress = "0x98778C309A950e9e7F0b7A20940C799E5AFaD59b"
-  const FactoryAddress = "0xa95e737Ede9624292EaC1FEEB985BD99EA7369ca"
+  const DeployAddress = "0xe5e9B33EcAbB40469eD34220110D3E1E0aa0Ffe0"
+  const FactoryAddress = "0x14f94e170BfeE7a274d3B3ED07B361f67D46A1A4"
   const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
 
   const provider = new ethers.providers.Web3Provider(
@@ -46,46 +47,50 @@ export const ContextProvider = ({ children }) => {
 
   const [UserData, setUserData] = useState()
 
-  console.log({ UserData })
-
   useEffect(() => {
     if (loading) {
       // maybe trigger a loading screen
       return
     } else {
-      fetchUserName()
+      fetchUser()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading])
   console.log(error)
 
-  const fetchUserName = async () => {
+  const fetchUser = async () => {
     try {
-      console.log({ user })
       const q = query(collection(db, "users"), where("uid", "==", user?.uid))
       const doc = await getDocs(q)
-      // console.log(doc.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      setUserData(data)
-      console.log("userID", data[0].id)
+
+      setUserData(data[0])
     } catch (err) {
       console.error(err)
     }
   }
 
   const updateDocRequests = (collection, object) => {
-    const fieldToEdit = doc(db, collection, UserData[0].id)
+    const fieldToEdit = doc(db, collection, UserData.id)
     return updateDoc(fieldToEdit, object)
   }
 
+  const deleteDocRequests = (collection, fieldName) => {
+    const fieldToEdit = doc(db, collection, UserData.id)
+    return updateDoc(fieldToEdit, { fieldName: deleteField() })
+  }
+
   const values = {
+    UserData,
     ContractUSDT,
     ContractDeploy,
     ContractFactory,
     NFTYacht,
     provider,
     FactoryAddress,
+    fetchUser,
     updateDocRequests,
+    deleteDocRequests,
   }
 
   return <ContextAPI.Provider value={values}>{children}</ContextAPI.Provider>

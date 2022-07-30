@@ -1,12 +1,12 @@
 import { useEffect } from "react"
 import { useImmer } from "use-immer"
-import { useContextAPI } from "../../ContextAPI"
+import { useContextAPI } from "../../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
 import { formatEther } from "ethers/lib/utils"
 
-export default function OffersMade() {
+export default function OffersReceived() {
   const { ContractFactory } = useContextAPI()
-  const { account, active } = useWeb3React()
+  const { account } = useWeb3React()
 
   const [state, setState] = useImmer({
     offerMade: [
@@ -20,82 +20,73 @@ export default function OffersMade() {
   })
 
   useEffect(() => {
-    if (active) {
-      async function getAllContractAddress() {
-        const getAllContractAddress =
-          await ContractFactory.UserAllContractAddress(account)
+    async function getAllContractAddress() {
+      const getAllContractAddress =
+        await ContractFactory.getMapUserAllContractAddress(account)
 
-        for (let i = 0; i < getAllContractAddress.length; i++) {
-          const getUserAllOffers = await ContractFactory.userAllOffers(
+      for (let i = 0; i < getAllContractAddress.length; i++) {
+        const getUserAllOffers = await ContractFactory.getUserAllOffers(
+          getAllContractAddress[i],
+          account
+        )
+
+        for (let j = 0; j < getUserAllOffers.length; j++) {
+          const Offer = await ContractFactory.getOffer(
             getAllContractAddress[i],
-            account
+            getUserAllOffers[j]
           )
+          console.log(Offer)
 
-          console.log(
-            "getUserAllOffers",
-            getAllContractAddress,
-            getUserAllOffers
-          )
-
-          for (let j = 0; j < getUserAllOffers.length; j++) {
-            const Offer = await ContractFactory._offers(
-              getAllContractAddress[i],
-              getUserAllOffers[j]
-            )
-
-            console.log(Offer)
-
-            if (Number(Offer.id.toString()) > 0) {
-              var t = new Date(1970, 0, 1) // Epoch
-              t.setSeconds(Offer.Time.toString()).toLocaleString()
-
-              console.log("t.toString()", t.toString())
-
-              const data = {
-                id: Offer.id.toString(),
-                userID: Offer.userID.toString(),
-                price: formatEther(Offer.Price.toString()),
-                time: t.toString(),
-                offeredDate: Offer.offeredDate.toString(),
-                user: Offer.User.toString(),
-                contract: Offer.Contract.toString(),
-              }
-
-              setState((e) => {
-                e.offer.push(data)
-              })
-            }
-          }
+          var t = new Date(1970, 0, 1) // Epoch
+          t.setSeconds(Offer.Time__.toString()).toLocaleString()
 
           const data = {
-            Contract: getAllContractAddress[i].toString(),
-            IDs: getUserAllOffers.toString(),
+            id: Offer.id__.toString(),
+            userID: Offer.userID__.toString(),
+            price: formatEther(Offer.Price__.toString()),
+            time: t.toString(),
+            offeredDate: Offer.offeredDate__.toString(),
+            user: Offer.User__.toString(),
+            contract: Offer.Contract__.toString(),
           }
 
+          console.log(data)
+
           setState((e) => {
-            e.offerMade.push(data)
+            e.offer.push(data)
           })
         }
+
+        const data = {
+          Contract: getAllContractAddress[i].toString(),
+          IDs: getUserAllOffers.toString(),
+        }
+
+        setState((e) => {
+          e.offerMade.push(data)
+        })
       }
-      getAllContractAddress()
     }
+    getAllContractAddress()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
-  const handleCancel = async (id, contract) => {
-    console.log(contract, id)
-    await ContractFactory.cancelOffer(contract, id)
-      .then((r) => {
-        console.log(r)
-      })
-      .catch((e) => console.log(e.reason))
+  const handelAccept = async (OfferTokenID) => {
+    console.log({ OfferTokenID })
+    // await ContractYacht.acceptOffer(OfferTokenID)
+    //   .then((res) => {
+    //     console.log({ res });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.reason || err.massage);
+    //   });
   }
 
   return (
-    <div className="OffersMade min-h-full">
+    <div className="OffersReceived min-h-full">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">Offers Made</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Offers Received</h1>
           <p className="max-w-2xl">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
             ipsa commodi accusamus cupiditate blanditiis nihil voluptas
@@ -128,31 +119,29 @@ export default function OffersMade() {
                       </tr>
                     </thead>
                     <tbody>
-                      {state.offer.map((item) => {
+                      {state.map((item) => {
                         return (
-                          <tr key={item.offeredDate}>
+                          <tr>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-600 whitespace-no-wrap">
-                                {`${item.user.slice(0, 5)}...${item.user.slice(
-                                  -4
-                                )}`}
+                                {item.walletAddress}
                               </p>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                USDT: {item.price}
+                                ${item.amount}
                               </p>
-                              {/* <p className="text-gray-600 whitespace-no-wrap">
+                              <p className="text-gray-600 whitespace-no-wrap">
                                 USD
-                              </p> */}
+                              </p>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                {item.time}
+                                {item.date}
                               </p>
-                              {/* <p className="text-gray-600 whitespace-no-wrap">
+                              <p className="text-gray-600 whitespace-no-wrap">
                                 Due in 3 days
-                              </p> */}
+                              </p>
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
@@ -165,12 +154,10 @@ export default function OffersMade() {
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <button
-                                onClick={() =>
-                                  handleCancel(item.id, item.contract)
-                                }
+                                onClick={() => handelAccept}
                                 className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                               >
-                                Cancel
+                                Accept
                               </button>
                             </td>
                           </tr>

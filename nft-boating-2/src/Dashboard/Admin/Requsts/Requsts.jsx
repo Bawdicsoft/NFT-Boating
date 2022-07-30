@@ -2,13 +2,13 @@ import { Fragment, useEffect, useState } from "react"
 import { Disclosure, Menu, Transition } from "@headlessui/react"
 import { BellIcon, MenuIcon, CashIcon, XIcon } from "@heroicons/react/outline"
 import { Link, useNavigate } from "react-router-dom"
-import { auth, db, logout, signInWithGoogle } from "../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useImmer } from "use-immer"
 import { collection, getDocs } from "firebase/firestore"
 import RequstSidePanel from "./RequstSidePanel"
+import { auth, db } from "../../../DB/firebase-config"
 
-export default function Requst() {
+export default function Requsts() {
   const [user, loading, error] = useAuthState(auth)
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -31,7 +31,6 @@ export default function Requst() {
           try {
             const doc = await getDocs(collection(db, "Requst"))
             const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-            console.log(data[0].id)
             setState((e) => {
               e.requsts = data
             })
@@ -58,7 +57,12 @@ export default function Requst() {
 
   return (
     <>
-      <RequstSidePanel open={open} setOpen={setOpen} state={state} setState={setState} />
+      <RequstSidePanel
+        open={open}
+        setOpen={setOpen}
+        state={state}
+        setState={setState}
+      />
       <div className="OffersReceived min-h-full">
         <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

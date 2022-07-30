@@ -10,7 +10,8 @@ import { useImmer } from "use-immer"
 import { collection, getDocs } from "firebase/firestore"
 
 const navigation = [
-  { name: "Home", href: "/", current: true },
+  { name: "LandingPage", href: "/", current: true },
+  { name: "Home", href: "/home", current: false },
   { name: "Become a Host", href: "/host" },
   { name: "About", href: "/about", current: false },
 ]
@@ -18,9 +19,15 @@ const userNavigation = [
   { name: "NFT Collection", href: "/collected" },
   { name: "Booked Date", href: "/booked-date" },
   { name: "Offers Made", href: "/offers-made" },
+]
+const hostNavigation = [
   { name: "Created", href: "/created" },
   { name: "Create New", href: "/create-new" },
-  { name: "Requst", href: "/requst" },
+]
+const adminNavigation = [
+  { name: "All Users", href: "/all-users" },
+  { name: "Requsts", href: "/requsts" },
+  { name: "Booked Dates", href: "/booked-dates" },
 ]
 
 function classNames(...classes) {
@@ -178,7 +185,46 @@ export default function Header() {
                               leaveTo="transform opacity-0 scale-95"
                             >
                               <Menu.Items className="origin-top-right z-50 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <p className="bg-gray-300 block px-4 py-2 text-sm text-gray-700">
+                                  User Nav
+                                </p>
                                 {userNavigation.map((item) => (
+                                  <Menu.Item key={item.name}>
+                                    {({ active }) => (
+                                      <Link
+                                        to={item.href}
+                                        className={classNames(
+                                          active ? "bg-gray-100" : "",
+                                          "block px-4 py-2 text-sm text-gray-700"
+                                        )}
+                                      >
+                                        {item.name}
+                                      </Link>
+                                    )}
+                                  </Menu.Item>
+                                ))}
+                                <p className="bg-gray-300 block px-4 py-2 text-sm text-gray-700">
+                                  Host Nav
+                                </p>
+                                {hostNavigation.map((item) => (
+                                  <Menu.Item key={item.name}>
+                                    {({ active }) => (
+                                      <Link
+                                        to={item.href}
+                                        className={classNames(
+                                          active ? "bg-gray-100" : "",
+                                          "block px-4 py-2 text-sm text-gray-700"
+                                        )}
+                                      >
+                                        {item.name}
+                                      </Link>
+                                    )}
+                                  </Menu.Item>
+                                ))}
+                                <p className="bg-gray-300 block px-4 py-2 text-sm text-gray-700">
+                                  Admin Nav
+                                </p>
+                                {adminNavigation.map((item) => (
                                   <Menu.Item key={item.name}>
                                     {({ active }) => (
                                       <Link

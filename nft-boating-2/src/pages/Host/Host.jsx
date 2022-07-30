@@ -40,7 +40,7 @@ export default function Host() {
       price: e.price,
       walletAddress: account,
       baseURI: e.baseURI,
-      Detals: e.detals,
+      description: e.description,
     }
 
     setState((draft) => {
@@ -325,11 +325,13 @@ export default function Host() {
                             htmlFor="email-address"
                             className="block text-sm font-medium text-gray-700 mb-2"
                           >
-                            Other Detals
+                            Description
                           </label>
                           <textarea
-                            placeholder="Detals"
-                            {...register("detals", {})}
+                            placeholder="Description"
+                            {...register("description", {
+                              required: true,
+                            })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md h-60"
                           />
                         </div>

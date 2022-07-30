@@ -3,7 +3,7 @@ import { useImmer } from "use-immer"
 import { Link, useNavigate } from "react-router-dom"
 import { PencilIcon } from "@heroicons/react/solid"
 import { useWeb3React } from "@web3-react/core"
-import { useContextAPI } from "./../../ContextAPI"
+import { useContextAPI } from "../../../ContextAPI"
 
 export default function Collected() {
   const navigate = useNavigate()

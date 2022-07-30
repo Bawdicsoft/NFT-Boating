@@ -3,20 +3,46 @@ import { useEffect } from "react"
 import { useContextAPI } from "./../../ContextAPI"
 import { ethers } from "ethers"
 import { Link } from "react-router-dom"
+import { collection, doc, getDoc, getDocs } from "firebase/firestore"
+import { db } from "../../DB/firebase-config"
 
 export default function Home() {
   const { ContractDeploy, NFTYacht, provider } = useContextAPI()
   const [state, setState] = useImmer({
     data: [],
+    products: [],
     contractCounter: null,
     isLoding: true,
   })
+
+  console.log("home products", state.products)
 
   const callEvent = () => {
     ContractDeploy.on("deploy_", () => {
       console.log("callEvent > Event")
     })
   }
+
+  useEffect(() => {
+    const run = async () => {
+      const querySnapshot = await getDocs(collection(db, "ContractInfo"))
+      console.log(">>>>>>", querySnapshot)
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data())
+
+        const data = {
+          id: doc.id,
+          data: doc.data().data,
+          imgs: doc.data().imgUrls,
+        }
+
+        setState((d) => {
+          d.products.push(data)
+        })
+      })
+    }
+    run()
+  }, [])
 
   useEffect(() => {
     const run = async () => {
@@ -83,24 +109,24 @@ export default function Home() {
             </>
           ) : (
             <>
-              {state.data.map((Contract) => (
+              {state.products.map((Contract) => (
                 <div key={Contract.id} className="group relative">
-                  <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                  <div className="w-full mh-96 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
                     <img
-                      src={Contract.imageSrc}
-                      alt={Contract.imageAlt}
-                      className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                      src={Contract.imgs[0]}
+                      // alt={Contract.imageAlt}
+                      className="w-full h-96 object-center object-cover lg:w-full lg:h-full"
                     />
                   </div>
                   <div className="mt-4 flex justify-between">
                     <div>
                       <h3 className="text-sm text-gray-700">
-                        <Link to={`/contract/${Contract.address}`}>
+                        <Link to={`/contract/${Contract.id}`}>
                           <span
                             aria-hidden="true"
                             className="absolute inset-0"
                           />
-                          {Contract.name}
+                          {Contract.data.name} ({Contract.data.symbol})
                         </Link>
                       </h3>
                     </div>

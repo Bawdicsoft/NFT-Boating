@@ -8,6 +8,8 @@ import { useContextAPI } from "./../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
 import OfferSidePanel from "./OfferSidePanel"
 import { useNavigate, useParams } from "react-router-dom"
+import { doc, setDoc } from "firebase/firestore"
+import { db } from "../../DB/firebase-config"
 
 export default function BookingForm() {
   const navigate = useNavigate()
@@ -99,14 +101,6 @@ export default function BookingForm() {
   } = useForm()
 
   const onSubmit = async (data) => {
-    console.log({
-      year: selectedDay.year,
-      month: selectedDay.month,
-      day: selectedDay.day,
-      Contract,
-      id,
-    })
-
     try {
       const tx = await ContractFactory.bookDate(
         selectedDay.year,
@@ -116,12 +110,30 @@ export default function BookingForm() {
         id
       )
       await tx.wait()
-
-      console.log(tx)
-      navigate(`/Contract/${Contract}/nft/${id}`)
     } catch (e) {
       console.error(e)
     }
+
+    try {
+      // set doc in db
+      const date = `${selectedDay.year}/${selectedDay.month}/${selectedDay.day}`
+      await setDoc(doc(db, Contract, date), {
+        date: {
+          year: selectedDay.year,
+          month: selectedDay.month,
+          day: selectedDay.day,
+        },
+        contractinfo: { Contract, id },
+        mobileNumber: data.mobileNumber,
+        persons: data.persons,
+        food: data.food,
+        note: data.note,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    navigate(`/Contract/${Contract}/nft/${id}`)
   }
   console.log(errors)
 
@@ -187,7 +199,7 @@ export default function BookingForm() {
                           value={food.name}
                           placeholder="Chose Your Food"
                           onClick={() => setOpen(true)}
-                          {...register("Chose Your Food", {})}
+                          {...register("food", {})}
                           className="w-full py-2.5 px-3 border mb-4 rounded-md"
                         />
                       </div>
@@ -202,7 +214,7 @@ export default function BookingForm() {
                         <input
                           type="tel"
                           placeholder="Mobile number"
-                          {...register("Mobile number", {
+                          {...register("mobileNumber", {
                             required: true,
                             minLength: 6,
                             maxLength: 12,
@@ -218,7 +230,7 @@ export default function BookingForm() {
                         <input
                           type="number"
                           placeholder="How many person will you be with?"
-                          {...register("How many person will you be with?", {
+                          {...register("persons", {
                             required: true,
                             max: 12,
                             min: 3,
@@ -232,11 +244,11 @@ export default function BookingForm() {
                           htmlFor="email-address"
                           className="block text-sm font-medium text-gray-700 mb-2"
                         >
-                          Notes (optional)
+                          Note (optional)
                         </label>
                         <textarea
-                          placeholder="Notes (optional)"
-                          {...register("Notes (optional)", {})}
+                          placeholder="Note (optional)"
+                          {...register("note", {})}
                           className="w-full py-2.5 px-3 border mb-4 rounded-md h-60"
                         />
                       </div>

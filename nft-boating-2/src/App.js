@@ -15,13 +15,18 @@ import AddWhitelistAddress from "./pages/AddWhitelistAddress/AddWhitelistAddress
 import About from "./pages/About/About"
 
 // Dashboard
-import OffersReceived from "./Dashboard/OffersReceived/OffersReceived"
-import OffersMade from "./Dashboard/OffersMade/OffersMade"
-import BookedDate from "./Dashboard/BookedDate/BookedDate"
-import Collected from "./Dashboard/Collected/Collected"
-import Created from "./Dashboard/Created/Created"
-import NFT from "./Dashboard/NFT/NFT"
-import Requst from "./Dashboard/Requst/Requst"
+import OffersReceived from "./Dashboard/User/OffersReceived/OffersReceived"
+import OffersMade from "./Dashboard/User/OffersMade/OffersMade"
+import BookedDate from "./Dashboard/User/BookedDate/BookedDate"
+import Collected from "./Dashboard/User/Collected/Collected"
+import Created from "./Dashboard/Host/Created/Created"
+import NFT from "./Dashboard/User/NFT/NFT"
+import BookedDates from "./Dashboard/Admin/BookedDates/BookedDates"
+import Requsts from "./Dashboard/Admin/Requsts/Requsts"
+import AllUsers from "./Dashboard/Admin/AllUsers/AllUsers"
+import ContractBookedDates from "./Dashboard/Host/ContractBookedDates/ContractBookedDates"
+import ContractInfo from "./Dashboard/Host/ContractInfo/ContractInfo"
+import LandingPage from "./pages/LandingPage/LandingPage"
 
 export default function App() {
   return (
@@ -30,7 +35,8 @@ export default function App() {
       <div className="main-root">
         <Routes>
           {/* Pages Routes */}
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<LandingPage />} />
           <Route
             path="/Add-Whitelist-Address"
             element={<AddWhitelistAddress />}
@@ -41,10 +47,17 @@ export default function App() {
             path="/Contract/:Contract/Booking-form/:id"
             element={<BookingForm />}
           />
+          <Route path="/ContractInfo/:Contract" element={<ContractInfo />} />
+          <Route
+            path="/ContractInfo/:Contract/booked-dates"
+            element={<ContractBookedDates />}
+          />
           <Route path="/create-new" element={<CreateNew />} />
           <Route path="/about" element={<About />} />
           <Route path="/host" element={<Host />} />
-          <Route path="/requst" element={<Requst />} />
+          <Route path="/requsts" element={<Requsts />} />
+          <Route path="/booked-dates" element={<BookedDates />} />
+          <Route path="/all-users" element={<AllUsers />} />
 
           {/* Dashboard Routes */}
           <Route path="/Contract/:Contract/nft/:id" element={<NFT />} />
