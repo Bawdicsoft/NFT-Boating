@@ -142,7 +142,7 @@ export default function CreateNew() {
     <div className="CreateNew min-h-full">
       <header className="bg-white">
         <div className="mt-20 mb-20 text-center">
-          <h1 className="mb-1 font-bold text-5xl "> Create New </h1>
+          <h1 className="mb-1 font-bold text-5xl "> List Your Boat </h1>
           <div className="max-w-3xl mx-auto text-center">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
             ipsa commodi accusamus cupiditate blanditiis nihil voluptas

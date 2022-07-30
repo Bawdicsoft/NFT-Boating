@@ -68,8 +68,8 @@ export default function Home() {
     function getCoordinates(address) {
       fetch(
         "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-          address +
-          "&key=" +
+            address +
+            "&key=" +
           "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw"
       )
         .then((response) => response.json())
@@ -80,6 +80,7 @@ export default function Home() {
     console.log("maimi");
     getCoordinates("miami");
   }, []);
+
   // const { ContractDeploy, NFTYacht, provider } = useContextAPI();
   // const [state, setState] = useImmer({
   //   data: [],

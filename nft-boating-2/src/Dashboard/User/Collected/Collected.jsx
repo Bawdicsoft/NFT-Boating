@@ -97,7 +97,7 @@ export default function Collected() {
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
               <h1 className="text-3xl font-bold text-gray-900">
-                Collected ( NFT )
+                Member Ships ( NFT )
               </h1>
             </div>
             <div className="mt-5 flex lg:mt-0 lg:ml-4">
