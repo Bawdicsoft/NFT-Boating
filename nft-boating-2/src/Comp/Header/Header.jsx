@@ -12,7 +12,7 @@ import { collection, getDocs } from "firebase/firestore"
 const navigation = [
   { name: "LandingPage", href: "/", current: true },
   { name: "Home", href: "/home", current: false },
-  { name: "Become a Host", href: "/host" },
+  { name: "List Your Boat", href: "/list-boat" },
   { name: "About", href: "/about", current: false },
 ]
 const userNavigation = [
@@ -21,7 +21,7 @@ const userNavigation = [
   { name: "Offers Made", href: "/offers-made" },
 ]
 const hostNavigation = [
-  { name: "Created", href: "/created" },
+  { name: "Boats", href: "/Boats" },
   { name: "Create New", href: "/create-new" },
 ]
 const adminNavigation = [

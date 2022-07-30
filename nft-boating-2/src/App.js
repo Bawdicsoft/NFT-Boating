@@ -8,24 +8,24 @@ import Footer from "./Comp/Footer/Footer"
 import Home from "./pages/Home/Home"
 import BuyForm from "./pages/BuyForm/BuyForm"
 import BookingForm from "./pages/BookingForm/BookingForm"
-import Contract from "./pages/Contract/Contract"
-import CreateNew from "./pages/CreateNew/CreateNew"
-import Host from "./pages/Host/Host"
+import Boat from "./pages/Boat/Boat"
+import ListBoat from "./pages/ListBoat/ListBoat"
 import AddWhitelistAddress from "./pages/AddWhitelistAddress/AddWhitelistAddress"
 import About from "./pages/About/About"
 
 // Dashboard
+import CreateNew from "./Dashboard/Host/CreateNew/CreateNew"
 import OffersReceived from "./Dashboard/User/OffersReceived/OffersReceived"
 import OffersMade from "./Dashboard/User/OffersMade/OffersMade"
 import BookedDate from "./Dashboard/User/BookedDate/BookedDate"
 import Collected from "./Dashboard/User/Collected/Collected"
-import Created from "./Dashboard/Host/Created/Created"
+import Boats from "./Dashboard/Host/Boats/Boats"
 import NFT from "./Dashboard/User/NFT/NFT"
 import BookedDates from "./Dashboard/Admin/BookedDates/BookedDates"
 import Requsts from "./Dashboard/Admin/Requsts/Requsts"
 import AllUsers from "./Dashboard/Admin/AllUsers/AllUsers"
 import ContractBookedDates from "./Dashboard/Host/ContractBookedDates/ContractBookedDates"
-import ContractInfo from "./Dashboard/Host/ContractInfo/ContractInfo"
+import BoatInfo from "./Dashboard/Host/BoatInfo/BoatInfo"
 import LandingPage from "./pages/LandingPage/LandingPage"
 
 export default function App() {
@@ -41,20 +41,20 @@ export default function App() {
             path="/Add-Whitelist-Address"
             element={<AddWhitelistAddress />}
           />
-          <Route path="/Contract/:Contract" element={<Contract />} />
+          <Route path="/Boat/:Contract" element={<Boat />} />
           <Route path="/Contract/:Contract/buy-nft" element={<BuyForm />} />
           <Route
             path="/Contract/:Contract/Booking-form/:id"
             element={<BookingForm />}
           />
-          <Route path="/ContractInfo/:Contract" element={<ContractInfo />} />
+          <Route path="/BoatInfo/:Contract" element={<BoatInfo />} />
           <Route
             path="/ContractInfo/:Contract/booked-dates"
             element={<ContractBookedDates />}
           />
           <Route path="/create-new" element={<CreateNew />} />
           <Route path="/about" element={<About />} />
-          <Route path="/host" element={<Host />} />
+          <Route path="/list-boat" element={<ListBoat />} />
           <Route path="/requsts" element={<Requsts />} />
           <Route path="/booked-dates" element={<BookedDates />} />
           <Route path="/all-users" element={<AllUsers />} />
@@ -65,7 +65,7 @@ export default function App() {
           <Route path="/booked-date" element={<BookedDate />} />
           <Route path="/offers-made" element={<OffersMade />} />
           <Route path="/collected" element={<Collected />} />
-          <Route path="/created" element={<Created />} />
+          <Route path="/Boats" element={<Boats />} />
           <Route path="/nft" element={<NFT />} />
         </Routes>
       </div>

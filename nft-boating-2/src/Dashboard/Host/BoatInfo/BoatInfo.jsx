@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { ethers } from "ethers"
-import { useContextAPI } from "./../../../ContextAPI"
+import { useContextAPI } from "../../../ContextAPI"
 import { useImmer } from "use-immer"
 import { Link, useNavigate } from "react-router-dom"
 import { collection, doc, getDoc, getDocs } from "firebase/firestore"
-import { auth, db } from "./../../../DB/firebase-config"
+import { auth, db } from "../../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
 import BookedDatesSidePanel from "./BookedDatesSidePanel"
 
-export default function ContractInfo() {
+export default function BoatInfo() {
   const { Contract } = useParams()
   const [open, setOpen] = useState(false)
 
@@ -18,14 +18,16 @@ export default function ContractInfo() {
       name: "name",
       symbol: "symbol",
     },
-    product: {
-      name: ".....",
-      symbol: "..",
-      totalSupply: "00",
+    boat: {
+      featuredImage: "",
+      coverImage: "",
+      name: "Name",
+      year: "0000",
+      make: "XXXX",
+      model: "XXXX",
       price: "0.0",
-      walletAddress: "0x0000000000000000000000",
-      images: [],
-      description: "................",
+      walletAddress: "0x00000000000000",
+      description: "",
     },
     BookingInfo: [],
     data: {
@@ -48,16 +50,11 @@ export default function ContractInfo() {
       const docRef = doc(db, "ContractInfo", Contract)
       const docSnap = await getDoc(docRef)
 
+      console.log(">>>>>>>>>>>>>>>")
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data())
         SetState((d) => {
-          d.product.name = docSnap.data().data.name
-          d.product.symbol = docSnap.data().data.symbol
-          d.product.totalSupply = docSnap.data().data.totalSupply
-          d.product.price = docSnap.data().data.price
-          d.product.walletAddress = docSnap.data().data.walletAddress
-          d.product.images = docSnap.data().imgUrls
-          d.product.description = docSnap.data().data.description
+          d.boat = docSnap.data()
           d.isLoading = false
         })
 
@@ -94,8 +91,7 @@ export default function ContractInfo() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            {State.product.name} ({State.product.symbol}) USDT:{" "}
-            {State.product.price}
+            {State.boat.name} USDT: {State.boat.price}
           </h1>
         </div>
       </header>
@@ -109,7 +105,7 @@ export default function ContractInfo() {
             }
           >
             <img
-              src={State.product.images[0]}
+              src={State.boat.featuredImage}
               // alt={product.images[0].alt}
               className="w-screen h-96 bg-slate-500 object-center object-cover rounded-lg"
             />

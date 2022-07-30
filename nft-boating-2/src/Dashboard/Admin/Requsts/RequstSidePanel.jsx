@@ -16,18 +16,17 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
 
   const addToWhiteList = async () => {
     try {
-      await ContractDeploy.addAddressToWhitelist(state.viewData.walletAddress)
+      await ContractDeploy.addAddressToWhitelist(state.request.walletAddress)
       await deleteDoc(doc(db, "Requst", state.id))
       setState((e) => {
         if (state.index > -1) {
-          e.requsts.splice(state.index, 1)
+          e.requests.splice(state.index, 1)
         }
       })
       setOpen(false)
     } catch (e) {
       console.log(e.reason)
       if (e.reason === "execution reverted: !whitelist") {
-        console.log(">>>>>>>>>>>")
         setStatep((e) => {
           e.err = "Alredy Witelisted"
         })
@@ -39,7 +38,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
     await deleteDoc(doc(db, "Requst", state.id))
     setState((e) => {
       if (state.index > -1) {
-        e.requsts.splice(state.index, 1)
+        e.requests.splice(state.index, 1)
       }
     })
     setOpen(false)
@@ -96,33 +95,34 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <Dialog.Title className="text-lg font-medium text-gray-900">
-                        {state.viewData.name} ({state.viewData.symbol})
+                        {state.request.name}
                       </Dialog.Title>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       {/* Replace with your content */}
-                      <p className="mb-2">
-                        Total Supply: {state.viewData.totalSupply}
-                      </p>
-                      <p className="mb-2">Price: {state.viewData.price}</p>
-                      <p className="mb-2">
-                        Wallet Address: {state.viewData.walletAddress}
-                      </p>
-                      <p className="mb-2">Base URI: {state.viewData.baseURI}</p>
+                      <p className="mb-2">Year: {state.request.year}</p>
+                      <p className="mb-2">Make: {state.request.make}</p>
+                      <p className="mb-2">Model: {state.request.model}</p>
                       <p className="mb-6">
-                        Detals: {state.viewData.description}
+                        Detals: {state.request.description}
                       </p>
                       <br />
-                      <p className="mb-2">Images</p>
-                      {state.imagesURL.map((img) => (
-                        <img
-                          key={img}
-                          src={img}
-                          width="400"
-                          className="mb-4"
-                          alt=""
-                        ></img>
-                      ))}
+
+                      <p className="mb-2">Featured Image</p>
+                      <img
+                        src={state.request.featuredImage}
+                        width="400"
+                        className="mb-4"
+                        alt=""
+                      ></img>
+
+                      <p className="mb-2">Cover Image</p>
+                      <img
+                        src={state.request.coverImage}
+                        width="400"
+                        className="mb-4"
+                        alt=""
+                      ></img>
                       <div className="pt-6">
                         {Boolean(statep.err !== "") && (
                           <p className="text-red text-center mb-2">

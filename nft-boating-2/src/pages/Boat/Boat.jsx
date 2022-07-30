@@ -1,13 +1,9 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { ethers } from "ethers"
-import { useContextAPI } from "./../../ContextAPI"
+import { useContextAPI } from "../../ContextAPI"
 import { useImmer } from "use-immer"
 import { Link, useNavigate } from "react-router-dom"
-import image1 from "../../Assets/images/image1.jpg"
-import image2 from "../../Assets/images/image2.jpg"
-import image3 from "../../Assets/images/image3.jpg"
-import image4 from "../../Assets/images/wedding.jpg"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../DB/firebase-config"
 
@@ -21,24 +17,22 @@ const product = {
   description: "",
 }
 
-export default function Contract() {
+export default function Boat() {
   const { Contract } = useParams()
   const { NFTYacht, provider } = useContextAPI()
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
 
   const [State, SetState] = useImmer({
-    Contract: {
-      name: "name",
-      symbol: "symbol",
-    },
-    product: {
-      name: ".....",
-      symbol: "..",
-      totalSupply: "00",
+    request: {
+      featuredImage: "",
+      coverImage: "",
+      name: "xxxx",
+      year: "0000",
+      make: "xxxx",
+      model: "xxxx",
       price: "0.0",
-      walletAddress: "0x0000000000000000000000",
-      images: [],
-      description: "................",
+      walletAddress: "0x000000000",
+      description: "description",
     },
     isLoading: true,
   })
@@ -51,13 +45,7 @@ export default function Contract() {
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data())
         SetState((d) => {
-          d.product.name = docSnap.data().data.name
-          d.product.symbol = docSnap.data().data.symbol
-          d.product.totalSupply = docSnap.data().data.totalSupply
-          d.product.price = docSnap.data().data.price
-          d.product.walletAddress = docSnap.data().data.walletAddress
-          d.product.images = docSnap.data().imgUrls
-          d.product.description = docSnap.data().data.description
+          d.request = docSnap.data()
           d.isLoading = false
         })
       } else {
@@ -103,8 +91,8 @@ export default function Contract() {
             }
           >
             <img
-              src={State.product.images[0]}
-              // alt={product.images[0].alt}
+              src={State.request.featuredImage}
+              alt=""
               className="w-screen h-96 bg-slate-500 object-center object-cover rounded-lg"
             />
           </div>
@@ -168,12 +156,11 @@ export default function Contract() {
         <div className="max-w-2xl mx-auto pt-10 pb-16 px-4 sm:px-6 lg:max-w-7xl lg:pt-16 lg:pb-24 lg:px-8 lg:grid lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8">
           <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
             <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-              {State.product.name} ({State.product.symbol}) USDT:{" "}
-              {State.product.price}
+              {State.request.name} USDT: {State.request.price}
             </h1>
             <p>
-              Owner: {State.product.walletAddress.slice(0, 5)}...
-              {State.product.walletAddress.slice(-4)}
+              Owner: {State.request.walletAddress.slice(0, 5)}...
+              {State.request.walletAddress.slice(-4)}
             </p>
           </div>
 
@@ -198,7 +185,7 @@ export default function Contract() {
               <h3 className="text-sm font-medium text-gray-900">Description</h3>
               <div className="space-y-6">
                 <p className="text-base text-gray-900">
-                  {State.product.description}
+                  {State.request.description}
                 </p>
               </div>
             </div>

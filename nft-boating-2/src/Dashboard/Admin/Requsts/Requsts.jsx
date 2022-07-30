@@ -15,11 +15,10 @@ export default function Requsts() {
 
   const [state, setState] = useImmer({
     openSidebar: false,
-    requsts: [],
+    requests: [],
     id: null,
     index: null,
-    viewData: {},
-    imagesURL: [],
+    request: {},
   })
 
   useEffect(() => {
@@ -31,8 +30,9 @@ export default function Requsts() {
           try {
             const doc = await getDocs(collection(db, "Requst"))
             const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+            console.log(data)
             setState((e) => {
-              e.requsts = data
+              e.requests = data
             })
           } catch (error) {
             console.log(error)
@@ -49,8 +49,7 @@ export default function Requsts() {
     setState((e) => {
       e.id = data.id
       e.index = data.index
-      e.viewData = data.data
-      e.imagesURL = data.imgUrls
+      e.request = data.request
     })
     setOpen(true)
   }
@@ -79,42 +78,42 @@ export default function Requsts() {
                       <thead>
                         <tr>
                           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Name
+                            Location
                           </th>
                           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Symbol
+                            Year
                           </th>
                           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Total Supply
+                            Make
                           </th>
                           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Price
+                            Model
                           </th>
                           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th>
                         </tr>
                       </thead>
                       <tbody>
-                        {state.requsts.map((item, index) => {
+                        {state.requests.map((item, index) => {
                           return (
                             <tr key={item.id}>
                               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p className="text-gray-600 whitespace-no-wrap">
-                                  {item.request.data.name}
+                                  {item.request.name}
                                 </p>
                               </td>
                               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p className="text-gray-900 whitespace-no-wrap">
-                                  {item.request.data.symbol}
+                                  {item.request.year}
                                 </p>
                               </td>
                               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p className="text-gray-900 whitespace-no-wrap">
-                                  {item.request.data.totalSupply}
+                                  {item.request.make}
                                 </p>
                               </td>
                               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p className="text-gray-900 whitespace-no-wrap">
-                                  {item.request.data.price}
+                                  {item.request.model}
                                 </p>
                               </td>
                               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -123,8 +122,7 @@ export default function Requsts() {
                                     hendleView({
                                       id: item.id,
                                       index: index,
-                                      data: item.request.data,
-                                      imgUrls: item.request.imgUrls,
+                                      request: item.request,
                                     })
                                   }
                                   className="cursor-pointer bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-end font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
