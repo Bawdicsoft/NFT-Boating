@@ -1,87 +1,160 @@
-import { useImmer } from "use-immer"
-import { useEffect } from "react"
-import { useContextAPI } from "./../../ContextAPI"
-import { ethers } from "ethers"
-import { Link } from "react-router-dom"
-import { collection, doc, getDoc, getDocs } from "firebase/firestore"
-import { db } from "../../DB/firebase-config"
+import { useImmer } from "use-immer";
+import { useEffect, useState } from "react";
+import { useContextAPI } from "./../../ContextAPI";
+import { ethers } from "ethers";
+import { Link } from "react-router-dom";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../../DB/firebase-config";
+import GoogleMapReact from "google-map-react";
+
+const products = [
+  {
+    id: 1,
+    name: "Miami",
+    href: "#",
+    price: "$48",
+    imageSrc:
+      "https://images.pexels.com/photos/163236/luxury-yacht-boat-speed-water-163236.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    imageAlt:
+      "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
+    marker: {
+      lat: 25.761681,
+      lng: -80.191788,
+      name: "Miami",
+      color: "blue",
+    },
+  },
+  {
+    id: 3,
+    name: "Myrtle Beach",
+    href: "#",
+    price: "$89",
+    imageSrc:
+      "https://images.pexels.com/photos/4934659/pexels-photo-4934659.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    imageAlt:
+      "Person using a pen to cross a task off a productivity paper card.",
+    marker: {
+      lat: 33.68906,
+      lng: -78.886696,
+      name: "Myrtle Beach",
+      color: "blue",
+    },
+  },
+  {
+    id: 4,
+    name: "West Palm Beach",
+    href: "#",
+    price: "$35",
+    imageSrc:
+      "https://images.pexels.com/photos/4934661/pexels-photo-4934661.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    imageAlt:
+      "Hand holding black machined steel mechanical pencil with brass tip and top.",
+    marker: {
+      lat: 26.709723,
+      lng: -80.064163,
+      name: "West Palm Beach",
+      color: "blue",
+    },
+  },
+  // More products...
+];
 
 export default function Home() {
-  const { ContractDeploy, NFTYacht, provider } = useContextAPI()
-  const [state, setState] = useImmer({
-    data: [],
-    products: [],
-    contractCounter: null,
-    isLoding: true,
-  })
+  const [hoveredName, setHoveredName] = useState("");
 
-  console.log("home products", state.products)
-
-  const callEvent = () => {
-    ContractDeploy.on("deploy_", () => {
-      console.log("callEvent > Event")
-    })
-  }
+  console.log("data");
 
   useEffect(() => {
-    const run = async () => {
-      const querySnapshot = await getDocs(collection(db, "ContractInfo"))
-      console.log(">>>>>>", querySnapshot)
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data())
-
-        const data = {
-          id: doc.id,
-          data: doc.data().data,
-          imgs: doc.data().imgUrls,
-        }
-
-        setState((d) => {
-          d.products.push(data)
-        })
-      })
+    function getCoordinates(address) {
+      fetch(
+        "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+          address +
+          "&key=" +
+          "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw"
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        });
     }
-    run()
-  }, [])
+    console.log("maimi");
+    getCoordinates("miami");
+  }, []);
+  // const { ContractDeploy, NFTYacht, provider } = useContextAPI();
+  // const [state, setState] = useImmer({
+  //   data: [],
+  //   products: [],
+  //   contractCounter: null,
+  //   isLoding: true,
+  // });
 
-  useEffect(() => {
-    const run = async () => {
-      let addresses
-      try {
-        addresses = await ContractDeploy.allContractAddress()
-      } catch (e) {
-        console.error(e)
-      }
+  // console.log("home products", state.products);
 
-      for (let i = 0; i < addresses.length; i++) {
-        const Contract = new ethers.Contract(addresses[i], NFTYacht, provider)
+  // const callEvent = () => {
+  //   ContractDeploy.on("deploy_", () => {
+  //     console.log("callEvent > Event");
+  //   });
+  // };
 
-        const name = await Contract.name()
-        const symbol = await Contract.symbol()
+  // useEffect(() => {
+  //   const run = async () => {
+  //     const querySnapshot = await getDocs(collection(db, "ContractInfo"));
+  //     console.log(">>>>>>", querySnapshot);
+  //     querySnapshot.forEach((doc) => {
+  //       console.log(doc.id, " => ", doc.data());
 
-        const date = {
-          id: i,
-          name: name,
-          symbol: symbol,
-          address: addresses[i],
-          imageSrc:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9S6_bhnGv0Gh--081Azem3rSTXXd-_sc9jA&usqp=CAU",
-          imageAlt: "Front of men's Basic Tee in black.",
-        }
+  //       const data = {
+  //         id: doc.id,
+  //         data: doc.data().data,
+  //         imgs: doc.data().imgUrls,
+  //       };
 
-        setState((draft) => {
-          draft.data.push(date)
-          draft.isLoding = false
-        })
-      }
-    }
-    run()
-    callEvent()
-  }, [state.contractCounter])
+  //       setState((d) => {
+  //         d.products.push(data);
+  //       });
+  //     });
+  //   };
+  //   run();
+  // }, []);
+
+  // useEffect(() => {
+  //   const run = async () => {
+  //     let addresses;
+  //     try {
+  //       addresses = await ContractDeploy.allContractAddress();
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+
+  //     for (let i = 0; i < addresses.length; i++) {
+  //       const Contract = new ethers.Contract(addresses[i], NFTYacht, provider);
+
+  //       const name = await Contract.name();
+  //       const symbol = await Contract.symbol();
+
+  //       const date = {
+  //         id: i,
+  //         name: name,
+  //         symbol: symbol,
+  //         address: addresses[i],
+  //         imageSrc:
+  //           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9S6_bhnGv0Gh--081Azem3rSTXXd-_sc9jA&usqp=CAU",
+  //         imageAlt: "Front of men's Basic Tee in black.",
+  //       };
+
+  //       setState((draft) => {
+  //         draft.data.push(date);
+  //         draft.isLoding = false;
+  //       });
+  //     }
+  //   };
+  //   run();
+  //   callEvent();
+  // }, [state.contractCounter]);
 
   return (
     <div className="bg-white">
-      <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className=" mx-auto py-16 sm:py-24">
         <div className=" mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Home </h1>
           <div className="max-w-3xl mx-auto text-center">
@@ -91,7 +164,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        {/* <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {state.isLoding ? (
             <>
               <div className="px-4 py-6 sm:px-0">
@@ -135,8 +208,115 @@ export default function Home() {
               ))}
             </>
           )}
+        </div> */}
+
+        {/* farooq */}
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="max-w-5 xl mx-auto px-4 sm:px-6 lg:max-w-5xl lg:px-8">
+              <h2 className="sr-only">Products</h2>
+
+              <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-1 gap-x-6 lg:grid-cols-2 xl:grid-cols-2 xl:gap-x-8">
+                {products.map((product) => (
+                  <Link
+                    key={product.id}
+                    to={product.href}
+                    className="group"
+                    onMouseEnter={() => setHoveredName(product.name)}
+                    onMouseOut={() => setHoveredName("")}
+                  >
+                    <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+                      <img
+                        style={{ height: "300px" }}
+                        src={product.imageSrc}
+                        alt={product.imageAlt}
+                        className="w-full h-full object-center object-cover group-hover:opacity-75"
+                      />
+                    </div>
+                    <h3 className="mt-4 text-sm text-gray-700">
+                      {product.name}
+                    </h3>
+                    <p className="mt-1 text-lg font-medium text-gray-900">
+                      {product.price}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            {/* <div className=" w-full"> */}
+
+            <div className="inline-flex rounded-md w-full shadow">
+              <GoogleMapReact
+                bootstrapURLKeys={{
+                  key: "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw",
+                }}
+                defaultCenter={{
+                  lat: 25.761681,
+                  lng: -80.191788,
+                }}
+                defaultZoom={7}
+              >
+                {products.map((product) => {
+                  const { lat, lng, name, color } = product.marker;
+                  return (
+                    <Marker
+                      key={lat + lng}
+                      lat={lat}
+                      lng={lng}
+                      name={name}
+                      color={color}
+                      hoveredItem={name == hoveredName}
+                    />
+                  );
+                })}
+              </GoogleMapReact>
+            </div>
+            {/* </div> */}
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+const Marker = (props) => {
+  const { color, name, id, hoveredItem } = props;
+  return (
+    <div className="relative flex flex-col items-center group">
+      <div
+        className="w-5 h-5"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 50 50"
+        fill="currentColor"
+      >
+        <div
+          className={`pin bounce ${hoveredItem && "pinHovered"} `}
+          style={{ backgroundColor: color, cursor: "pointer" }}
+          title={name} />
+        <div className="pulse" />
+      </div>
+      <div className="absolute bottom-0 flex flex-col items-center hidden mb-6 group-hover:flex">
+        <span
+          style={{ minWidth: "100px", minHeight: "50px" }}
+          className="relative text-center rounded z-10 p-2 text-xs leading-none text-black whitespace-no-wrap bg-white shadow-lg"
+        >
+          <h5>{name}</h5>
+        </span>
+        {/* <div className="w-3 h-3 -mt-2 rotate-45 bg-black">hello</div> */}
+      </div>
+    </div>
+  );
+};
+// const Marker = (props) => {
+//   const { color, name, id , hoveredItem } = props;
+//   return (
+//     <div className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+//       <div
+//         className={`pin bounce ${hoveredItem && "pinHovered"} `}
+//         style={{ backgroundColor: color, cursor: "pointer" }}
+//         title={name}
+//       />
+//       <div className="pulse" />
+//     </div>
+//   );
+// };
