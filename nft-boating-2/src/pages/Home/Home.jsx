@@ -1,11 +1,11 @@
-import { useImmer } from "use-immer";
-import { useEffect, useState } from "react";
-import { useContextAPI } from "./../../ContextAPI";
-import { ethers } from "ethers";
-import { Link } from "react-router-dom";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "../../DB/firebase-config";
-import GoogleMapReact from "google-map-react";
+import { useImmer } from "use-immer"
+import { useEffect, useState } from "react"
+import { useContextAPI } from "./../../ContextAPI"
+import { ethers } from "ethers"
+import { Link } from "react-router-dom"
+import { collection, doc, getDoc, getDocs } from "firebase/firestore"
+import { db } from "../../DB/firebase-config"
+import GoogleMapReact from "google-map-react"
 
 const products = [
   {
@@ -57,12 +57,12 @@ const products = [
     },
   },
   // More products...
-];
+]
 
 export default function Home() {
-  const [hoveredName, setHoveredName] = useState("");
+  const [hoveredName, setHoveredName] = useState("")
 
-  console.log("data");
+  console.log("data")
 
   useEffect(() => {
     function getCoordinates(address) {
@@ -74,21 +74,21 @@ export default function Home() {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-        });
+          console.log(data)
+        })
     }
-    console.log("maimi");
-    getCoordinates("miami");
-  }, []);
+    console.log("maimi")
+    getCoordinates("miami")
+  }, [])
   // const { ContractDeploy, NFTYacht, provider } = useContextAPI();
-  // const [state, setState] = useImmer({
-  //   data: [],
-  //   products: [],
-  //   contractCounter: null,
-  //   isLoding: true,
-  // });
+  const [state, setState] = useImmer({
+    boats: [],
+    boatsID: [],
+    contractCounter: null,
+    isLoding: true,
+  })
 
-  // console.log("home products", state.products);
+  console.log("home boats", state.boats)
 
   // const callEvent = () => {
   //   ContractDeploy.on("deploy_", () => {
@@ -96,65 +96,26 @@ export default function Home() {
   //   });
   // };
 
-  // useEffect(() => {
-  //   const run = async () => {
-  //     const querySnapshot = await getDocs(collection(db, "ContractInfo"));
-  //     console.log(">>>>>>", querySnapshot);
-  //     querySnapshot.forEach((doc) => {
-  //       console.log(doc.id, " => ", doc.data());
+  useEffect(() => {
+    const run = async () => {
+      const querySnapshot = await getDocs(collection(db, "ContractInfo"))
+      console.log(">>>>>>", querySnapshot)
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data())
 
-  //       const data = {
-  //         id: doc.id,
-  //         data: doc.data().data,
-  //         imgs: doc.data().imgUrls,
-  //       };
-
-  //       setState((d) => {
-  //         d.products.push(data);
-  //       });
-  //     });
-  //   };
-  //   run();
-  // }, []);
-
-  // useEffect(() => {
-  //   const run = async () => {
-  //     let addresses;
-  //     try {
-  //       addresses = await ContractDeploy.allContractAddress();
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-
-  //     for (let i = 0; i < addresses.length; i++) {
-  //       const Contract = new ethers.Contract(addresses[i], NFTYacht, provider);
-
-  //       const name = await Contract.name();
-  //       const symbol = await Contract.symbol();
-
-  //       const date = {
-  //         id: i,
-  //         name: name,
-  //         symbol: symbol,
-  //         address: addresses[i],
-  //         imageSrc:
-  //           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9S6_bhnGv0Gh--081Azem3rSTXXd-_sc9jA&usqp=CAU",
-  //         imageAlt: "Front of men's Basic Tee in black.",
-  //       };
-
-  //       setState((draft) => {
-  //         draft.data.push(date);
-  //         draft.isLoding = false;
-  //       });
-  //     }
-  //   };
-  //   run();
-  //   callEvent();
-  // }, [state.contractCounter]);
+        setState((d) => {
+          d.boats.push(doc.data())
+          d.boatsID.push(doc.id)
+          d.isLoding = false
+        })
+      })
+    }
+    run()
+  }, [])
 
   return (
     <div className="bg-white">
-      <div className=" mx-auto py-16 sm:py-24">
+      <div className="max-w-7xl px-10 mx-auto py-16 sm:py-24">
         <div className=" mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Home </h1>
           <div className="max-w-3xl mx-auto text-center">
@@ -164,88 +125,55 @@ export default function Home() {
           </div>
         </div>
 
-        {/* <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {state.isLoding ? (
-            <>
-              <div className="px-4 py-6 sm:px-0">
-                <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-              </div>
-              <div className="px-4 py-6 sm:px-0">
-                <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-              </div>
-              <div className="px-4 py-6 sm:px-0">
-                <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-              </div>
-              <div className="px-4 py-6 sm:px-0">
-                <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-              </div>
-            </>
-          ) : (
-            <>
-              {state.products.map((Contract) => (
-                <div key={Contract.id} className="group relative">
-                  <div className="w-full mh-96 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                    <img
-                      src={Contract.imgs[0]}
-                      // alt={Contract.imageAlt}
-                      className="w-full h-96 object-center object-cover lg:w-full lg:h-full"
-                    />
-                  </div>
-                  <div className="mt-4 flex justify-between">
-                    <div>
-                      <h3 className="text-sm text-gray-700">
-                        <Link to={`/contract/${Contract.id}`}>
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0"
-                          />
-                          {Contract.data.name} ({Contract.data.symbol})
-                        </Link>
-                      </h3>
-                    </div>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className=" grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:gap-x-3">
+            {state.isLoding ? (
+              <>
+                <div className="px-4 py-6 sm:px-0">
+                  <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
                 </div>
-              ))}
-            </>
-          )}
-        </div> */}
-
-        {/* farooq */}
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="max-w-5 xl mx-auto px-4 sm:px-6 lg:max-w-5xl lg:px-8">
-              <h2 className="sr-only">Products</h2>
-
-              <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-1 gap-x-6 lg:grid-cols-2 xl:grid-cols-2 xl:gap-x-8">
-                {products.map((product) => (
-                  <Link
-                    key={product.id}
-                    to={product.href}
-                    className="group"
-                    onMouseEnter={() => setHoveredName(product.name)}
-                    onMouseOut={() => setHoveredName("")}
-                  >
-                    <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+                <div className="px-4 py-6 sm:px-0">
+                  <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
+                </div>
+                <div className="px-4 py-6 sm:px-0">
+                  <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
+                </div>
+                <div className="px-4 py-6 sm:px-0">
+                  <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
+                </div>
+              </>
+            ) : (
+              <>
+                {state.boats.map((boat, index) => (
+                  <div key={index} className="group relative">
+                    <div className="w-full mh-96 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
                       <img
-                        style={{ height: "300px" }}
-                        src={product.imageSrc}
-                        alt={product.imageAlt}
-                        className="w-full h-full object-center object-cover group-hover:opacity-75"
+                        src={boat.coverImage}
+                        // alt={Contract.imageAlt}
+                        className="w-full h-96 object-center object-cover lg:w-full lg:h-full"
                       />
                     </div>
-                    <h3 className="mt-4 text-sm text-gray-700">
-                      {product.name}
-                    </h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">
-                      {product.price}
-                    </p>
-                  </Link>
+                    <div className="mt-2 flex justify-between">
+                      <div>
+                        <h3 className="text-sm text-gray-700">
+                          <Link to={`/contract/${state.boatsID[index]}`}>
+                            <span
+                              aria-hidden="true"
+                              className="absolute inset-0"
+                            />
+                            {boat.name}
+                          </Link>
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </div>
-            </div>
-            {/* <div className=" w-full"> */}
+              </>
+            )}
+          </div>
 
-            <div className="inline-flex rounded-md w-full shadow">
+          <div>
+            <div className="inline-flex rounded-md w-full h-96 shadow">
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw",
@@ -257,7 +185,7 @@ export default function Home() {
                 defaultZoom={7}
               >
                 {products.map((product) => {
-                  const { lat, lng, name, color } = product.marker;
+                  const { lat, lng, name, color } = product.marker
                   return (
                     <Marker
                       key={lat + lng}
@@ -267,20 +195,19 @@ export default function Home() {
                       color={color}
                       hoveredItem={name == hoveredName}
                     />
-                  );
+                  )
                 })}
               </GoogleMapReact>
             </div>
-            {/* </div> */}
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 const Marker = (props) => {
-  const { color, name, id, hoveredItem } = props;
+  const { color, name, id, hoveredItem } = props
   return (
     <div className="relative flex flex-col items-center group">
       <div
@@ -292,7 +219,8 @@ const Marker = (props) => {
         <div
           className={`pin bounce ${hoveredItem && "pinHovered"} `}
           style={{ backgroundColor: color, cursor: "pointer" }}
-          title={name} />
+          title={name}
+        />
         <div className="pulse" />
       </div>
       <div className="absolute bottom-0 flex flex-col items-center hidden mb-6 group-hover:flex">
@@ -305,8 +233,8 @@ const Marker = (props) => {
         {/* <div className="w-3 h-3 -mt-2 rotate-45 bg-black">hello</div> */}
       </div>
     </div>
-  );
-};
+  )
+}
 // const Marker = (props) => {
 //   const { color, name, id , hoveredItem } = props;
 //   return (
