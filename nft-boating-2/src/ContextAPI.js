@@ -37,13 +37,13 @@ export const ContextProvider = ({ children }) => {
   const ContractFactory = new ethers.Contract(FactoryAddress, Factory, provider)
   const ContractUSDT = new ethers.Contract(USDTAddress, USDT, provider)
 
-  useEffect(() => {
-    const conToMetamask = async () => {
-      await activate(Injected)
-    }
-    conToMetamask()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account])
+  // useEffect(() => {
+  //   const conToMetamask = async () => {
+  //     await activate(Injected)
+  //   }
+  //   conToMetamask()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [account])
 
   const [UserData, setUserData] = useState()
 
