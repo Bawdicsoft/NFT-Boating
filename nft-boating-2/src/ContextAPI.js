@@ -25,8 +25,8 @@ export const ContextProvider = ({ children }) => {
   const { activate, account } = useWeb3React()
   const [user, loading, error] = useAuthState(auth)
 
-  const DeployAddress = "0xe5e9B33EcAbB40469eD34220110D3E1E0aa0Ffe0"
-  const FactoryAddress = "0x14f94e170BfeE7a274d3B3ED07B361f67D46A1A4"
+  const DeployAddress = "0x633799A5C73cdEfC16Cc7310C3CedDbbe6E11257"
+  const FactoryAddress = "0x069B70258850789B666c7A14a524E57A24df9C37"
   const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
 
   const provider = new ethers.providers.Web3Provider(
@@ -71,7 +71,7 @@ export const ContextProvider = ({ children }) => {
   }
 
   const updateDocRequests = (collection, object) => {
-    const fieldToEdit = doc(db, collection, UserData.id)
+    const fieldToEdit = doc(db, collection, UserData?.id)
     return updateDoc(fieldToEdit, object)
   }
 

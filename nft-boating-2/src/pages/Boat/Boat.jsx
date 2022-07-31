@@ -166,7 +166,7 @@ export default function Boat() {
 
           {/* Options */}
           <div className="mt-4 lg:mt-0 lg:row-span-3">
-            <h2 className="mb-1 font-bold">Buy MemberShip Form</h2>
+            <h2 className="mb-1 font-bold">Buy MemberShip</h2>
             <p className="font-normal mb-3">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Architecto, maiores?{" "}
@@ -175,7 +175,7 @@ export default function Boat() {
               to={`/Contract/${Contract}/buy-nft`}
               className="mb-5 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Buy NFT
+              Buy MemberShip
             </Link>
           </div>
 

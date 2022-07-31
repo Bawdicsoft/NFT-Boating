@@ -25,17 +25,15 @@ export default function OffersMade() {
         const getAllContractAddress =
           await ContractFactory.UserAllContractAddress(account)
 
+        console.log(getAllContractAddress, "getAllContractAddress>>>>")
+
         for (let i = 0; i < getAllContractAddress.length; i++) {
           const getUserAllOffers = await ContractFactory.userAllOffers(
             getAllContractAddress[i],
             account
           )
 
-          console.log(
-            "getUserAllOffers",
-            getAllContractAddress,
-            getUserAllOffers
-          )
+          console.log("getUserAllOffers", getUserAllOffers)
 
           for (let j = 0; j < getUserAllOffers.length; j++) {
             const Offer = await ContractFactory._offers(

@@ -123,7 +123,9 @@ export default function CreateNew() {
 
       // deleting feld in user collection
       try {
-        await updateDocRequests("users", { request: deleteField() })
+        await updateDocRequests("users", {
+          request: deleteField(),
+        })
       } catch (error) {
         console.error(error)
       }

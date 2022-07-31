@@ -116,7 +116,9 @@ export default function BookingForm() {
 
     try {
       // set doc in db
-      const date = `${selectedDay.year}/${selectedDay.month}/${selectedDay.day}`
+      console.log("selectedDay", selectedDay.toString())
+      const date = `${selectedDay.day}-${selectedDay.month}-${selectedDay.year}`
+      console.log(date)
       await setDoc(doc(db, Contract, date), {
         date: {
           year: selectedDay.year,
@@ -133,7 +135,28 @@ export default function BookingForm() {
       console.log(error)
     }
 
-    navigate(`/Contract/${Contract}/nft/${id}`)
+    try {
+      // set doc in db
+      console.log("selectedDay", selectedDay.toString())
+      const date = `${selectedDay.day}-${selectedDay.month}-${selectedDay.year}`
+      console.log(date)
+      await setDoc(doc(db, "BookingInfo", date), {
+        date: {
+          year: selectedDay.year,
+          month: selectedDay.month,
+          day: selectedDay.day,
+        },
+        contractinfo: { Contract, id },
+        mobileNumber: data.mobileNumber,
+        persons: data.persons,
+        food: data.food,
+        note: data.note,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    // navigate(`/Contract/${Contract}/nft/${id}`)
   }
   console.log(errors)
 

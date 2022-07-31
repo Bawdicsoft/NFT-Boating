@@ -81,6 +81,7 @@ export default function ListBoat() {
                     featuredImage: featuredImageURL,
                     coverImage: coverImageURL,
                     name: e.name,
+                    phone: e.phone,
                     year: e.year,
                     make: e.make,
                     model: e.model,
@@ -98,10 +99,13 @@ export default function ListBoat() {
                   } catch (error) {
                     console.log(error)
                   }
+                  console.log("host>>>>>>>>>>>")
 
                   try {
                     await updateDocRequests("users", {
                       request,
+                      role: "host",
+                      hello: "helo>>>>>>>>>>>>>>>>>>>>",
                     })
                   } catch (error) {
                     console.log(error)
@@ -171,7 +175,7 @@ export default function ListBoat() {
                   <div className="shadow sm:rounded-md">
                     <div className="px-4 py-5 bg-white sm:p-6">
                       <div className="grid grid-cols-6 gap-4">
-                        <div className="col-span-6 sm:col-span-6">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor="name"
                             className="block text-sm font-medium text-gray-700 mb-2"
@@ -183,6 +187,24 @@ export default function ListBoat() {
                             id="name"
                             placeholder="Name"
                             {...register("name", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                          />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="phone"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Phone Number
+                          </label>
+                          <input
+                            type="text"
+                            id="phone"
+                            placeholder="Phone Number"
+                            {...register("phone", {
                               required: true,
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"

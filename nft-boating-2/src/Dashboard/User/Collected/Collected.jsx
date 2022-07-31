@@ -30,7 +30,7 @@ export default function Collected() {
           console.log(e)
         }
         console.log(">>>>>>>>")
-        console.log(addresses)
+        console.log(addresses, "addresses >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {

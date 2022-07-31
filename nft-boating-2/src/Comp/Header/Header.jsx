@@ -1,77 +1,88 @@
-import { Fragment, useEffect, useState } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuIcon, CashIcon, XIcon } from "@heroicons/react/outline";
-import { Link, useNavigate } from "react-router-dom";
-import { auth, db, logout, signInWithGoogle } from "../../DB/firebase-config";
-import { useAuthState } from "react-firebase-hooks/auth";
-import WalletSide from "./WalletSide";
-import logo from "../../Assets/logo.png";
-import { useImmer } from "use-immer";
-import { collection, getDocs } from "firebase/firestore";
+import { Fragment, useEffect, useState } from "react"
+import { Disclosure, Menu, Transition } from "@headlessui/react"
+import { BellIcon, MenuIcon, CashIcon, XIcon } from "@heroicons/react/outline"
+import { Link, useNavigate } from "react-router-dom"
+import { auth, db, logout, signInWithGoogle } from "../../DB/firebase-config"
+import { useAuthState } from "react-firebase-hooks/auth"
+import WalletSide from "./WalletSide"
+import logo from "../../Assets/logo.png"
+import { useImmer } from "use-immer"
+import { collection, getDocs } from "firebase/firestore"
+import { useWeb3React } from "@web3-react/core"
+import { useContextAPI } from "../../ContextAPI"
 
 const navigation = [
   { name: "LandingPage", href: "/", current: true },
-  { name: "Home", href: "/home", current: false },
+  { name: "Boats", href: "/home", current: false },
   { name: "List Your Boat", href: "/list-boat" },
   { name: "About", href: "/about", current: false },
-];
+]
 const userNavigation = [
   { name: "NFT Collection", href: "/collected" },
   { name: "Booked Date", href: "/booked-date" },
   { name: "Offers Made", href: "/offers-made" },
-];
+]
 const hostNavigation = [
   { name: "Boats", href: "/Boats" },
-  { name: "Create New", href: "/create-new" },
-];
+  { name: "List Your Boat", href: "/create-new" },
+]
 const adminNavigation = [
   { name: "All Users", href: "/all-users" },
   { name: "Requsts", href: "/requsts" },
   { name: "Booked Dates", href: "/booked-dates" },
-];
+]
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(" ")
 }
 
 export default function Header() {
-  const [user, loading, error] = useAuthState(auth);
-  const navigate = useNavigate();
+  const { UserData } = useContextAPI()
 
-  const [open, setOpen] = useState(false);
+  console.log({ UserData })
+  const { active, account } = useWeb3React()
+  const [user, loading, error] = useAuthState(auth)
+  const navigate = useNavigate()
+
+  const [open, setOpen] = useState(false)
   const logoutFunc = async () => {
-    await logout();
-    navigate(`/`);
-  };
+    await logout()
+    navigate(`/`)
+  }
 
   const [state, setState] = useImmer({
+    role: "user",
     requstLength: null,
-  });
+  })
 
   useEffect(() => {
     if (loading) {
-      return;
+      return
     } else {
+      setState((e) => {
+        e.role = UserData?.role
+      })
+
       const fetchData = async () => {
         if (1 > 0) {
           try {
-            const doc = await getDocs(collection(db, "Requst"));
-            const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-            console.log(">>>>>>>>>>>");
-            console.log("data", data.length);
+            const doc = await getDocs(collection(db, "Requst"))
+            const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+            console.log(">>>>>>>>>>>")
+            console.log("data", data.length)
             setState((e) => {
-              e.requstLength = data.length;
-            });
+              e.requstLength = data.length
+            })
           } catch (error) {
-            console.log(error);
+            console.log(error)
           }
         }
-      };
-      fetchData();
+      }
+      fetchData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-  console.log(error);
+  }, [user])
+  console.log(error)
 
   return (
     <>
@@ -157,10 +168,21 @@ export default function Header() {
                               aria-hidden="true"
                             />
                           </button>
-                          <button
-                            onClick={() => setOpen(true)}
-                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          >Connect To Wallet</button>
+                          {active ? (
+                            <button
+                              onClick={() => setOpen(true)}
+                              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                              {account.slice(0, 4)}...{account.slice(-4)}
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => setOpen(true)}
+                              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                              Connect To Wallet
+                            </button>
+                          )}
                           <Menu as="div" className="ml-3 relative">
                             <div>
                               <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -182,60 +204,118 @@ export default function Header() {
                               leaveTo="transform opacity-0 scale-95"
                             >
                               <Menu.Items className="origin-top-right z-50 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <p className="bg-gray-300 block px-4 py-2 text-sm text-gray-700">
-                                  User Nav
-                                </p>
-                                {userNavigation.map((item) => (
-                                  <Menu.Item key={item.name}>
-                                    {({ active }) => (
-                                      <Link
-                                        to={item.href}
-                                        className={classNames(
-                                          active ? "bg-gray-100" : "",
-                                          "block px-4 py-2 text-sm text-gray-700"
+                                {UserData?.role == "user" && (
+                                  <>
+                                    {userNavigation.map((item) => (
+                                      <Menu.Item key={item.name}>
+                                        {({ active }) => (
+                                          <Link
+                                            to={item.href}
+                                            className={classNames(
+                                              active ? "bg-gray-100" : "",
+                                              "block px-4 py-2 text-sm text-gray-700"
+                                            )}
+                                          >
+                                            {item.name}
+                                          </Link>
                                         )}
-                                      >
-                                        {item.name}
-                                      </Link>
-                                    )}
-                                  </Menu.Item>
-                                ))}
-                                <p className="bg-gray-300 block px-4 py-2 text-sm text-gray-700">
-                                  Host Nav
-                                </p>
-                                {hostNavigation.map((item) => (
-                                  <Menu.Item key={item.name}>
-                                    {({ active }) => (
-                                      <Link
-                                        to={item.href}
-                                        className={classNames(
-                                          active ? "bg-gray-100" : "",
-                                          "block px-4 py-2 text-sm text-gray-700"
+                                      </Menu.Item>
+                                    ))}
+                                  </>
+                                )}
+
+                                {UserData?.role == "host" && (
+                                  <>
+                                    {userNavigation.map((item) => (
+                                      <Menu.Item key={item.name}>
+                                        {({ active }) => (
+                                          <Link
+                                            to={item.href}
+                                            className={classNames(
+                                              active ? "bg-gray-100" : "",
+                                              "block px-4 py-2 text-sm text-gray-700"
+                                            )}
+                                          >
+                                            {item.name}
+                                          </Link>
                                         )}
-                                      >
-                                        {item.name}
-                                      </Link>
-                                    )}
-                                  </Menu.Item>
-                                ))}
-                                <p className="bg-gray-300 block px-4 py-2 text-sm text-gray-700">
-                                  Admin Nav
-                                </p>
-                                {adminNavigation.map((item) => (
-                                  <Menu.Item key={item.name}>
-                                    {({ active }) => (
-                                      <Link
-                                        to={item.href}
-                                        className={classNames(
-                                          active ? "bg-gray-100" : "",
-                                          "block px-4 py-2 text-sm text-gray-700"
+                                      </Menu.Item>
+                                    ))}
+                                    <hr />
+
+                                    {hostNavigation.map((item) => (
+                                      <Menu.Item key={item.name}>
+                                        {({ active }) => (
+                                          <Link
+                                            to={item.href}
+                                            className={classNames(
+                                              active ? "bg-gray-100" : "",
+                                              "block px-4 py-2 text-sm text-gray-700"
+                                            )}
+                                          >
+                                            {item.name}
+                                          </Link>
                                         )}
-                                      >
-                                        {item.name}
-                                      </Link>
-                                    )}
-                                  </Menu.Item>
-                                ))}
+                                      </Menu.Item>
+                                    ))}
+                                  </>
+                                )}
+
+                                {UserData?.role == "admin" && (
+                                  <>
+                                    {userNavigation.map((item) => (
+                                      <Menu.Item key={item.name}>
+                                        {({ active }) => (
+                                          <Link
+                                            to={item.href}
+                                            className={classNames(
+                                              active ? "bg-gray-100" : "",
+                                              "block px-4 py-2 text-sm text-gray-700"
+                                            )}
+                                          >
+                                            {item.name}
+                                          </Link>
+                                        )}
+                                      </Menu.Item>
+                                    ))}
+                                    <hr />
+
+                                    {hostNavigation.map((item) => (
+                                      <Menu.Item key={item.name}>
+                                        {({ active }) => (
+                                          <Link
+                                            to={item.href}
+                                            className={classNames(
+                                              active ? "bg-gray-100" : "",
+                                              "block px-4 py-2 text-sm text-gray-700"
+                                            )}
+                                          >
+                                            {item.name}
+                                          </Link>
+                                        )}
+                                      </Menu.Item>
+                                    ))}
+                                    <hr />
+
+                                    {adminNavigation.map((item) => (
+                                      <Menu.Item key={item.name}>
+                                        {({ active }) => (
+                                          <Link
+                                            to={item.href}
+                                            className={classNames(
+                                              active ? "bg-gray-100" : "",
+                                              "block px-4 py-2 text-sm text-gray-700"
+                                            )}
+                                          >
+                                            {item.name}
+                                          </Link>
+                                        )}
+                                      </Menu.Item>
+                                    ))}
+                                  </>
+                                )}
+                                <hr />
+
                                 <Menu.Item>
                                   {({ active }) => (
                                     <button
@@ -342,5 +422,5 @@ export default function Header() {
         </Disclosure>
       </div>
     </>
-  );
+  )
 }

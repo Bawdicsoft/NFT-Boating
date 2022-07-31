@@ -68,8 +68,8 @@ export default function Home() {
     function getCoordinates(address) {
       fetch(
         "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-            address +
-            "&key=" +
+          address +
+          "&key=" +
           "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw"
       )
         .then((response) => response.json())
@@ -118,7 +118,7 @@ export default function Home() {
     <div className="bg-white">
       <div className="max-w-7xl px-10 mx-auto py-16 sm:py-24">
         <div className=" mb-20 text-center">
-          <h1 className="mb-1 font-bold text-5xl "> Home </h1>
+          <h1 className="mb-1 font-bold text-5xl "> Boats </h1>
           <div className="max-w-3xl mx-auto text-center">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
             ipsa commodi accusamus cupiditate blanditiis nihil voluptas
@@ -157,7 +157,7 @@ export default function Home() {
                     <div className="mt-2 flex justify-between">
                       <div>
                         <h3 className="text-sm text-gray-700">
-                          <Link to={`/contract/${state.boatsID[index]}`}>
+                          <Link to={`/boat/${state.boatsID[index]}`}>
                             <span
                               aria-hidden="true"
                               className="absolute inset-0"

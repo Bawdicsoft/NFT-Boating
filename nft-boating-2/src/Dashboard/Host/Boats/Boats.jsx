@@ -23,6 +23,7 @@ export default function Boats() {
         let addresses
         try {
           addresses = await ContractFactory.UserAllContractAddress(account)
+          console.log(addresses, "addresses>>>>>>>>>")
         } catch (e) {
           console.log(e)
         }
@@ -64,7 +65,7 @@ export default function Boats() {
       run()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active])
+  }, [account])
 
   const navigate = useNavigate()
   const createNew = () => {

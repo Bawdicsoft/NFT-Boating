@@ -154,7 +154,7 @@ export default function BuyForm() {
   return (
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
       <div className="mb-20 text-center">
-        <h1 className="mb-1 font-bold text-5xl "> Your OwnerShips</h1>
+        <h1 className="mb-1 font-bold text-5xl "> Buy MemberShips</h1>
         <div className="max-w-3xl mx-auto text-center">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa
           commodi accusamus cupiditate blanditiis nihil voluptas architecto
@@ -166,7 +166,7 @@ export default function BuyForm() {
           <div className="md:col-span-1">
             <div className="px-4 sm:px-0">
               <h3 className="text-lg font-medium leading-6 text-gray-900">
-                Mint Your NFT
+                MemberShips
               </h3>
               <p className="mt-1 text-sm text-gray-600">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui,
@@ -293,12 +293,26 @@ export default function BuyForm() {
                               A
                             </svg> */}
                             {State.approveIsLoading && (
-                              <p
-                                className="animate-spin h-5 w-5 mr-3 text-white"
+                              <svg
+                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
                                 viewBox="0 0 24 24"
                               >
-                                A
-                              </p>
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
                             )}
                             Approve
                           </span>
@@ -314,12 +328,26 @@ export default function BuyForm() {
                             type="submit"
                           >
                             {State.confirmIsLoading && (
-                              <p
-                                className="animate-spin h-5 w-5 mr-3 text-white"
+                              <svg
+                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
                                 viewBox="0 0 24 24"
                               >
-                                A
-                              </p>
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
                             )}
                             Confirm
                           </button>

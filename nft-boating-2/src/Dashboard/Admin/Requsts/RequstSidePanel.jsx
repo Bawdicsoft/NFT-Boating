@@ -100,6 +100,9 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       {/* Replace with your content */}
+                      <p className="mb-2">
+                        Phone Number: {state.request.phone}
+                      </p>
                       <p className="mb-2">Year: {state.request.year}</p>
                       <p className="mb-2">Make: {state.request.make}</p>
                       <p className="mb-2">Model: {state.request.model}</p>
