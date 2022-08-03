@@ -25,8 +25,8 @@ export const ContextProvider = ({ children }) => {
   const { activate, account } = useWeb3React()
   const [user, loading, error] = useAuthState(auth)
 
-  const DeployAddress = "0x633799A5C73cdEfC16Cc7310C3CedDbbe6E11257"
-  const FactoryAddress = "0x069B70258850789B666c7A14a524E57A24df9C37"
+  const DeployAddress = "0x0076e13F382458FA68B335e2a92c0ac981C179b4"
+  const FactoryAddress = "0x22bB41F0C2CCb90D0C5f7565ed054bd6b26ff8C6"
   const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
 
   const provider = new ethers.providers.Web3Provider(
@@ -36,6 +36,16 @@ export const ContextProvider = ({ children }) => {
   const ContractDeploy = new ethers.Contract(DeployAddress, Deploy, provider)
   const ContractFactory = new ethers.Contract(FactoryAddress, Factory, provider)
   const ContractUSDT = new ethers.Contract(USDTAddress, USDT, provider)
+
+  const webSocketProvider = new ethers.providers.WebSocketProvider(
+    "wss://rinkeby.infura.io/ws/v3/461d35d8280c4ee78f25da15fdcc48c1",
+    "rinkeby"
+  )
+  const readContractFactory = new ethers.Contract(
+    FactoryAddress,
+    Factory,
+    webSocketProvider
+  )
 
   // useEffect(() => {
   //   const conToMetamask = async () => {
@@ -51,7 +61,7 @@ export const ContextProvider = ({ children }) => {
     if (loading) {
       // maybe trigger a loading screen
       return
-    } else {
+    } else if (user) {
       fetchUser()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,6 +95,7 @@ export const ContextProvider = ({ children }) => {
     ContractUSDT,
     ContractDeploy,
     ContractFactory,
+    readContractFactory,
     NFTYacht,
     provider,
     FactoryAddress,

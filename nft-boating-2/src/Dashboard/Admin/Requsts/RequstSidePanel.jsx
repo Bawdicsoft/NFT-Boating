@@ -1,5 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react"
+import axios from "axios"
 import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
 import { useContextAPI } from "../../../ContextAPI"
@@ -8,7 +9,8 @@ import { db } from "../../../DB/firebase-config"
 import { useImmer } from "use-immer"
 
 export default function RequstSidePanel({ open, setOpen, state, setState }) {
-  const { ContractDeploy } = useContextAPI()
+  const { ContractDeploy, UserData } = useContextAPI()
+  console.log(state.request)
 
   const [statep, setStatep] = useImmer({
     err: "",
@@ -18,6 +20,17 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
     try {
       await ContractDeploy.addAddressToWhitelist(state.request.walletAddress)
       await deleteDoc(doc(db, "Requst", state.id))
+
+      const Mail = {
+        fromName: "NFT Boating",
+        from: "nabeelatdappvert@gmail.com",
+        to: `${UserData.email}`,
+        subject: "your request was accepted",
+        text: `http://localhost:3010/create-new`,
+      }
+      const res = await axios.post("http://localhost:8080/email", Mail)
+      console.log(res.data.msg)
+
       setState((e) => {
         if (state.index > -1) {
           e.requests.splice(state.index, 1)
@@ -26,6 +39,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
       setOpen(false)
     } catch (e) {
       console.log(e.reason)
+
       if (e.reason === "execution reverted: !whitelist") {
         setStatep((e) => {
           e.err = "Alredy Witelisted"
@@ -36,6 +50,17 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
 
   const deleteMyDoc = async () => {
     await deleteDoc(doc(db, "Requst", state.id))
+
+    const Mail = {
+      fromName: "NFT Boating",
+      from: "nabeelatdappvert@gmail.com",
+      to: `${UserData.email}`,
+      subject: "Your request was canceled",
+      text: `Your request was canceled`,
+    }
+    const res = await axios.post("http://localhost:8080/email", Mail)
+    console.log(res.data.msg)
+
     setState((e) => {
       if (state.index > -1) {
         e.requests.splice(state.index, 1)

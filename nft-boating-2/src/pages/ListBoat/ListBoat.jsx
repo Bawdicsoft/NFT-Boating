@@ -1,16 +1,19 @@
 import { useForm } from "react-hook-form"
 import { useImmer } from "use-immer"
 import { collection, addDoc } from "firebase/firestore"
+import axios from "axios"
 // import { useNavigate } from "react-router-dom"
 import { useWeb3React } from "@web3-react/core"
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { db, storage } from "../../DB/firebase-config"
 import { useContextAPI } from "../../ContextAPI"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { async } from "@firebase/util"
+import Popup from "./Popup"
 
 export default function ListBoat() {
-  const { updateDocRequests } = useContextAPI()
+  const { updateDocRequests, UserData } = useContextAPI()
+  console.log(UserData.email, "UserData")
   const { account } = useWeb3React()
   const {
     register,
@@ -21,9 +24,13 @@ export default function ListBoat() {
   const [state, setState] = useImmer({
     btnLoading: false,
     progresspercent: 0,
+    popup: false,
   })
 
+  const [open, setOpen] = useState(false)
+
   const onSubmit = async (e) => {
+    setOpen(true)
     setState((draft) => {
       draft.btnLoading = true
     })
@@ -86,6 +93,7 @@ export default function ListBoat() {
                     make: e.make,
                     model: e.model,
                     price: e.price,
+                    location: e.location,
                     walletAddress: account,
                     description: e.description,
                   }
@@ -104,16 +112,41 @@ export default function ListBoat() {
                   try {
                     await updateDocRequests("users", {
                       request,
-                      role: "host",
-                      hello: "helo>>>>>>>>>>>>>>>>>>>>",
+                      host: true,
                     })
                   } catch (error) {
                     console.log(error)
                   }
 
+                  const Mail = {
+                    fromName: "NFT Boating",
+                    from: "nabeelatdappvert@gmail.com",
+                    to: `farooqdaadkhan@gmail.com`,
+                    subject: "You have new request from NFT Boation",
+                    text: `featuredImage: ${featuredImageURL} \n
+                    coverImage: ${coverImageURL} \n
+                    name: ${e.name} \n
+                    phone: ${e.phone} \n
+                    email: ${UserData.email} \n
+                    year: ${e.year} \n
+                    make: ${e.make} \n
+                    model: ${e.model} \n
+                    price: ${e.price} \n
+                    location: ${e.location} \n
+                    walletAddress: ${account} \n
+                    description: ${e.description}`,
+                  }
+
+                  const res = await axios.post(
+                    "http://localhost:8080/email",
+                    Mail
+                  )
+                  console.log(res.data.msg)
+
                   setState((e) => {
                     e.btnLoading = false
                   })
+                  setOpen(false)
                 }
               )
             }
@@ -126,6 +159,7 @@ export default function ListBoat() {
 
   return (
     <div className="CreateNew min-h-full">
+      <Popup open={open} setOpen={setOpen} state={state} />
       <header className="bg-white">
         <div className="mt-20 mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Become a Host </h1>
@@ -322,18 +356,42 @@ export default function ListBoat() {
                           </p>
                         </div>
 
+                        <div className="col-span-6 ">
+                          <label
+                            htmlFor="location"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Location
+                          </label>
+                          <input
+                            type="text"
+                            id="location"
+                            placeholder="Location"
+                            {...register("location", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border rounded-md mb-4"
+                          />
+                        </div>
+
                         <div className="col-span-6 sm:col-span-6">
                           <label
                             htmlFor="account"
                             className="block text-sm font-medium text-gray-700 mb-2"
                           >
-                            Owner Address
+                            Owner Wallet Address
                           </label>
                           <p
                             id="account"
-                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                            className="w-full py-2.5 px-3 border  mb-4 rounded-md"
                           >
-                            {account}
+                            {account ? (
+                              account
+                            ) : (
+                              <span className="text-red-600">
+                                Connect MetaMask
+                              </span>
+                            )}
                           </p>
                         </div>
 

@@ -1,26 +1,31 @@
 import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css"
-
+import axios from "axios"
 import DatePicker from "@amir04lm26/react-modern-calendar-date-picker"
 import Food from "./Food"
 import { useContextAPI } from "./../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
 import OfferSidePanel from "./OfferSidePanel"
 import { useNavigate, useParams } from "react-router-dom"
-import { doc, setDoc } from "firebase/firestore"
+import { doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from "../../DB/firebase-config"
+import { useImmer } from "use-immer"
 
 export default function BookingForm() {
   const navigate = useNavigate()
 
   const { Contract, id } = useParams()
-  const { ContractFactory } = useContextAPI()
+  const { ContractFactory, UserData } = useContextAPI()
   const { account, active } = useWeb3React()
 
   // handle Side Panel
   const [open, setOpen] = useState(false)
   const [food, setFood] = useState({ name: "" })
+
+  const [state, setState] = useImmer({
+    ContractInfo: { email: "" },
+  })
 
   // Date Picker
   const [selectedDay, setSelectedDay] = useState(null)
@@ -44,6 +49,24 @@ export default function BookingForm() {
   const [dateError, setDateError] = useState()
   const [offerSideNav, setOfferSideNav] = useState(false)
   // const [getBookDateID, setGetBookDateID] = useState()
+
+  useEffect(() => {
+    const run = async () => {
+      const docRef = doc(db, "ContractInfo", Contract)
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data())
+        setState((e) => {
+          e.ContractInfo.email = docSnap.data().email
+        })
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!")
+      }
+    }
+    run()
+  }, [Contract])
 
   const handleDisabledSelect = async (disabledDay) => {
     for (let i = 0; i < disabledDays.length; i++) {
@@ -113,6 +136,25 @@ export default function BookingForm() {
     } catch (e) {
       console.error(e)
     }
+
+    const Mail = {
+      fromName: "NFT Boating",
+      from: "nabeelatdappvert@gmail.com",
+      to: `nabeelatdappvert@gmail.com, ${state.ContractInfo.email}, ${UserData.email}`,
+      subject: "New Date Was Booked",
+      text: `date: {
+        year: ${selectedDay.year},
+        month: ${selectedDay.month},
+        day: ${selectedDay.day},
+      },
+      contractinfo: { ${Contract}, ${id} },
+      mobileNumber: ${data.mobileNumber},
+      persons: ${data.persons},
+      food: ${data.food},
+      note: ${data.note},`,
+    }
+    const res = await axios.post("http://localhost:8080/email", Mail)
+    console.log(res.data.msg)
 
     try {
       // set doc in db

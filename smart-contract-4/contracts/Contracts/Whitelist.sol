@@ -36,4 +36,9 @@ abstract contract Whitelist is Ownable {
     emit WhitelistedAddressRemoved(addr);
   }
 
+  function removeWhitelist(address addr) internal {
+    whitelist[addr] = false;
+    emit WhitelistedAddressRemoved(addr);
+  }
+
 }

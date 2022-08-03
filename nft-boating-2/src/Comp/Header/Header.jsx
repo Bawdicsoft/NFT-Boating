@@ -204,7 +204,7 @@ export default function Header() {
                               leaveTo="transform opacity-0 scale-95"
                             >
                               <Menu.Items className="origin-top-right z-50 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                {UserData?.role == "user" && (
+                                {UserData?.user && (
                                   <>
                                     {userNavigation.map((item) => (
                                       <Menu.Item key={item.name}>
@@ -224,7 +224,7 @@ export default function Header() {
                                   </>
                                 )}
 
-                                {UserData?.role == "host" && (
+                                {UserData?.host && (
                                   <>
                                     {userNavigation.map((item) => (
                                       <Menu.Item key={item.name}>
@@ -261,7 +261,7 @@ export default function Header() {
                                   </>
                                 )}
 
-                                {UserData?.role == "admin" && (
+                                {UserData?.admin && (
                                   <>
                                     {userNavigation.map((item) => (
                                       <Menu.Item key={item.name}>

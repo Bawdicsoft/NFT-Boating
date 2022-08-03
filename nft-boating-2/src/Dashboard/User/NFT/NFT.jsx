@@ -1,18 +1,22 @@
 import { useEffect } from "react"
 import { useImmer } from "use-immer"
 import { useParams, Link } from "react-router-dom"
+import axios from "axios"
 import { useContextAPI } from "../../../ContextAPI"
 import { ethers } from "ethers"
 import { formatEther } from "ethers/lib/utils"
 import { useWeb3React } from "@web3-react/core"
+import { db } from "../../../DB/firebase-config"
+import { doc, getDoc } from "firebase/firestore"
 
 export default function NFT() {
   const { Contract, id } = useParams()
-  const { NFTYacht, provider, ContractFactory } = useContextAPI()
+  const { NFTYacht, provider, ContractFactory, UserData } = useContextAPI()
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
   const { account, active } = useWeb3React()
 
   const [state, setState] = useImmer({
+    ContractInfo: { email: "" },
     contract: {
       name: "xxxx",
       symbol: "xx",
@@ -80,9 +84,39 @@ export default function NFT() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
+  useEffect(() => {
+    const run = async () => {
+      const docRef = doc(db, "ContractInfo", Contract)
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data())
+        setState((e) => {
+          e.ContractInfo.email = docSnap.data().email
+        })
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!")
+      }
+    }
+    run()
+  }, [Contract])
+
   const cancelBooking = async (Contract, id) => {
     try {
       await ContractFactory.cancelBooking(Contract, id)
+
+      const Mail = {
+        fromName: "NFT Boating",
+        from: "nabeelatdappvert@gmail.com",
+        to: `nabeelatdappvert@gmail.com, ${state.ContractInfo.email}, ${UserData.email}`,
+        subject: "user has cancelled the booking",
+        text: `user has cancelled the booking \n
+        date: ${state.contract.bookedDate}`,
+      }
+      const res = await axios.post("http://localhost:8080/email", Mail)
+      console.log(res.data.msg)
+
       setState((draft) => {
         draft.isBooked = false
       })
@@ -93,8 +127,21 @@ export default function NFT() {
 
   const handelAcceptOffer = async (contract, id) => {
     await ContractFactory.acceptOffer(contract, id)
-      .then((r) => {
+      .then(async (r) => {
         console.log(r)
+
+        const Mail = {
+          fromName: "NFT Boating",
+          from: "nabeelatdappvert@gmail.com",
+          to: `nabeelatdappvert@gmail.com, ${state.ContractInfo.email}, ${UserData.email}`,
+          subject: "user has accepted the offer",
+          text: `user has accepted the offer price \n
+          date: ${state.contract.bookedDate} \n
+          ownerAddress: ${contract} \n
+          memberShip ID: ${id}`,
+        }
+        const res = await axios.post("http://localhost:8080/email", Mail)
+        console.log(res.data.msg)
       })
       .catch((e) => e.reason)
   }

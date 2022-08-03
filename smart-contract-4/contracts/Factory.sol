@@ -258,8 +258,6 @@ contract Factory is Ownable {
         return _userAllOffers[contract_][user_];
     }
 
-
-
     function offer(address contract_, uint id_, uint userID_, uint256 USDT_ ) public {
 
         require(!_offerdID[contract_][id_], "offerdID");

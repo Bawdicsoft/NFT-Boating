@@ -5,8 +5,11 @@ import { useImmer } from "use-immer"
 import { Link, useNavigate } from "react-router-dom"
 import { Injected } from "./../../../Comp/Wallets/Connectors"
 import { useEffect } from "react"
+import axios from "axios"
 import { auth, db } from "./../../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
+import QRCode from "react-qr-code"
+import html2canvas from "html2canvas"
 import {
   addDoc,
   collection,
@@ -15,6 +18,44 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore"
+
+const createTicketFunc = async () => {
+  html2canvas(document.getElementById("HTML-IMG")).then(async (canvas) => {
+    const API_KEY = "52204a85c1a51d7f3ed2"
+    const API_SECRET =
+      "4b678ed52b09e15f4cb39c5db0f49365d9bae9d1914605648d2137e4cd937e36"
+
+    const URLforpinJSONtoIPFS = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
+
+    axios
+      .post(
+        URLforpinJSONtoIPFS,
+        {
+          name: "name",
+          description: "description",
+          image: canvas.toDataURL(),
+          attributes: [
+            {
+              trait_type: "trait",
+              value: 100,
+            },
+          ],
+        },
+        {
+          headers: {
+            pinata_api_key: API_KEY,
+            pinata_secret_api_key: API_SECRET,
+          },
+        }
+      )
+      .then(async (response) => {
+        console.log("responseFromFiletoIPFS: ", response.data.IpfsHash)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  })
+}
 
 export default function CreateNew() {
   const { account, active, activate } = useWeb3React()
@@ -26,10 +67,11 @@ export default function CreateNew() {
   const [State, SetState] = useImmer({
     SetBtnDisable: false,
     haveRequest: null,
+    executionReverted: false,
     request: {},
   })
 
-  console.log(State.userData)
+  console.log(State.request)
 
   const {
     register,
@@ -87,24 +129,54 @@ export default function CreateNew() {
       draft.SetBtnDisable = true
     })
 
-    // deploy smart contract
-    try {
-      await ContractDeploy.deploy(
-        State.request.name,
-        State.request.name.slice(0, 1),
-        "365",
-        State.request.price,
-        account,
-        `ipfs://Qmb6UB5AtMgXzUyfz98StkFnNfa3Jesv9QnimojmRP4z6c/`
-      )
-    } catch (e) {
-      SetState((draft) => {
-        draft.SetBtnDisable = false
-      })
-    }
+    html2canvas(document.getElementById("HTML-IMG")).then(async (canvas) => {
+      const API_KEY = "6486e5c40cd049a8d0d1"
+      const API_SECRET =
+        "f8ffade9a388141c898be2d960ba8e52e1a2ef45717469caf9d9985ab68ad2bb"
+
+      const URLforpinJSONtoIPFS = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
+
+      axios
+        .post(
+          URLforpinJSONtoIPFS,
+          {
+            name: State.request.name,
+            description: State.request.description,
+            image: canvas.toDataURL(),
+          },
+          {
+            headers: {
+              pinata_api_key: API_KEY,
+              pinata_secret_api_key: API_SECRET,
+            },
+          }
+        )
+        .then(async (response) => {
+          console.log("responseFromFiletoIPFS: ", response.data.IpfsHash)
+
+          try {
+            await ContractDeploy.deploy(
+              State.request.name,
+              State.request.name.slice(0, 1),
+              "365",
+              State.request.price,
+              account,
+              `ipfs://${response.data.IpfsHash}/`
+            )
+          } catch (e) {
+            console.log(e.reason)
+            SetState((draft) => {
+              draft.SetBtnDisable = false
+              draft.executionReverted = true
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    })
 
     ContractDeploy.on("deploy_", async (_Contract) => {
-      // set doc in db
       try {
         await setDoc(doc(db, "ContractInfo", _Contract), {
           featuredImage: State.request.featuredImage,
@@ -115,13 +187,13 @@ export default function CreateNew() {
           model: State.request.model,
           price: State.request.price,
           walletAddress: account,
+          email: UserData.email,
           description: State.request.description,
         })
       } catch (error) {
         console.error(error)
       }
 
-      // deleting feld in user collection
       try {
         await updateDocRequests("users", {
           request: deleteField(),
@@ -129,6 +201,18 @@ export default function CreateNew() {
       } catch (error) {
         console.error(error)
       }
+
+      const Mail = {
+        fromName: "NFT Boating",
+        from: "nabeelatdappvert@gmail.com",
+        to: `nabeelatdappvert@gmail.com, ${UserData.email}`,
+        subject: "New Smart Contract Deployed",
+        text: `New Smart Contract Deployed \n
+        contract address: ${_Contract} \n
+        email: ${UserData.email}`,
+      }
+      const res = await axios.post("http://localhost:8080/email", Mail)
+      console.log(res.data.msg)
 
       fetchUser()
       navigate(`/Boat/${_Contract}`)
@@ -191,6 +275,26 @@ export default function CreateNew() {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="shadow sm:rounded-md">
                       <div className="px-4 py-5 bg-white sm:p-6">
+                        <div
+                          id="HTML-IMG"
+                          className="mb-4 relative h-[300px] w-[300px]"
+                        >
+                          <img
+                            src={State.request.featuredImage}
+                            alt=""
+                            className=""
+                          />
+                          <div className="absolute bottom-1 w-full justify-center flex ">
+                            <img
+                              src="https://firebasestorage.googleapis.com/v0/b/nft-yacht.appspot.com/o/assets%2FlogoNFTBoating.png?alt=media&token=4267a8e3-37bc-4223-90f9-6e63501382bc"
+                              alt=""
+                              className="w-[180px]"
+                            />
+                            <div className="px-1 py-1 bg-white">
+                              <QRCode value={"Hello"} size="70" />
+                            </div>
+                          </div>
+                        </div>
                         <div className="grid grid-cols-6 gap-4">
                           <div className="col-span-6 sm:col-span-3">
                             <label
@@ -224,7 +328,7 @@ export default function CreateNew() {
                               Owner Address
                             </label>
                             <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                              {account}
+                              {account ? account : "Connect your Wallet"}
                             </p>
                           </div>
 
@@ -237,13 +341,21 @@ export default function CreateNew() {
                                 Connect With MetaMask
                               </span>
                             ) : (
-                              <button
-                                className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                type="submit"
-                                disabled={State.btnDisable}
-                              >
-                                Create
-                              </button>
+                              <>
+                                {State.executionReverted && (
+                                  <span className="text-red-500">
+                                    your request is not accepted yet. you will
+                                    receive an confirmation email
+                                  </span>
+                                )}
+                                <button
+                                  className="mt-4 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                  type="submit"
+                                  disabled={State.btnDisable}
+                                >
+                                  Create
+                                </button>
+                              </>
                             )}
                           </div>
                         </div>

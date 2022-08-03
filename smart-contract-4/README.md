@@ -14,4 +14,4 @@ npx hardhat run scripts/deploy.js
 
 npx hardhat --network localhost test
 npx hardhat run --network test scripts/deploy.js
-npx hardhat verify --contract "contracts/Factory.sol:Factory" --network test 0x0568E0791e85B8d7f6125e63eDE3D1D5cf1D2539
+npx hardhat verify --contract "contracts/Deploy.sol:Deploy" --network test 0x0568E0791e85B8d7f6125e63eDE3D1D5cf1D2539

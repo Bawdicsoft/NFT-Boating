@@ -70,16 +70,17 @@ export default function Home() {
         "https://maps.googleapis.com/maps/api/geocode/json?address=" +
           address +
           "&key=" +
-          "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw"
+          "AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k"
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
+          console.log("data", data)
         })
+        .catch((err) => console.log("err", err))
     }
 
     console.log("maimi")
-    getCoordinates("miami")
+    getCoordinates("maimi")
   }, [])
   // const { ContractDeploy, NFTYacht, provider } = useContextAPI();
   const [state, setState] = useImmer({
@@ -177,7 +178,7 @@ export default function Home() {
             <div className="inline-flex rounded-md w-full h-96 shadow">
               <GoogleMapReact
                 bootstrapURLKeys={{
-                  key: "AIzaSyBcQP4YqrbUOZIAtj59IztR78bzk27Lghw",
+                  key: "AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k",
                 }}
                 defaultCenter={{
                   lat: 25.761681,

@@ -87,6 +87,9 @@ contract Deploy is Ownable, Whitelist {
     function updateBaseURI(address contract_, string memory baseURI_) public onlyContractOwner(contract_) {
         _contractDitals[contract_].baseURI = baseURI_;
     }
+    function changeOwner(address contract_, address owner_) public onlyContractOwner(contract_) {
+        _contractDitals[contract_].owner = owner_;
+    }
 
 
 
@@ -113,6 +116,9 @@ contract Deploy is Ownable, Whitelist {
 
         _allContractAddress.push(_Contract);
         _userAllContractAddress[ownerAddress_].push(_Contract);
+
+        removeWhitelist(ownerAddress_);
+        
         emit deploy_(_Contract, _contractCounter);
 
     }

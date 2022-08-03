@@ -22,6 +22,12 @@ export default function Collected() {
 
   useEffect(() => {
     if (active) {
+      SetState((draft) => {
+        draft.userNFT = 0
+        draft.data = []
+        draft.isLoading = true
+      })
+
       const run = async () => {
         let addresses
         try {
@@ -29,8 +35,6 @@ export default function Collected() {
         } catch (e) {
           console.log(e)
         }
-        console.log(">>>>>>>>")
-        console.log(addresses, "addresses >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
@@ -42,8 +46,6 @@ export default function Collected() {
             } catch (error) {
               console.log(error)
             }
-            console.log(">>>>>>>>>>>>")
-            console.log(">>>>>>>>>>>>", UserIDs, contractData)
 
             const id = contractData.id.toString()
             const name = contractData.name.toString()
@@ -88,7 +90,7 @@ export default function Collected() {
       run()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active])
+  }, [account])
 
   return (
     <div className="Collected min-h-full">
