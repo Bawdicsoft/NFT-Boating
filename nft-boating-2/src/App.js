@@ -28,46 +28,71 @@ import ContractBookedDates from "./Dashboard/Host/ContractBookedDates/ContractBo
 import BoatInfo from "./Dashboard/Host/BoatInfo/BoatInfo"
 import LandingPage from "./pages/LandingPage/LandingPage"
 
+import StateContext from "./StateContext"
+import DispatchContext from "./DispatchContext"
+import { useImmerReducer } from "use-immer"
+import HeaderBanner from "./Comp/HeaderBanner/HeaderBanner"
+
 export default function App() {
+  const initialState = {
+    food: {},
+  }
+
+  function ourReducer(draft, action) {
+    switch (action.type) {
+      case "food":
+        draft.food = action.value
+        return
+    }
+  }
+
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState)
+  // console.log(state, "useImmerReducer")
+
   return (
     <>
+      {typeof window.ethereum === "undefined" && <HeaderBanner />}
       <Header />
       <div className="main-root">
-        <Routes>
-          {/* Pages Routes */}
-          <Route path="/home" element={<Home />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route
-            path="/Add-Whitelist-Address"
-            element={<AddWhitelistAddress />}
-          />
-          <Route path="/Boat/:Contract" element={<Boat />} />
-          <Route path="/Contract/:Contract/buy-nft" element={<BuyForm />} />
-          <Route
-            path="/Contract/:Contract/Booking-form/:id"
-            element={<BookingForm />}
-          />
-          <Route path="/BoatInfo/:Contract" element={<BoatInfo />} />
-          <Route
-            path="/ContractInfo/:Contract/booked-dates"
-            element={<ContractBookedDates />}
-          />
-          <Route path="/create-new" element={<CreateNew />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/list-boat" element={<ListBoat />} />
-          <Route path="/requsts" element={<Requsts />} />
-          <Route path="/booked-dates" element={<BookedDates />} />
-          <Route path="/all-users" element={<AllUsers />} />
+        <StateContext.Provider value={state}>
+          <DispatchContext.Provider value={dispatch}>
+            <Routes>
+              {/* Pages Routes */}
+              <Route path="/home" element={<Home />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route
+                path="/Add-Whitelist-Address"
+                element={<AddWhitelistAddress />}
+              />
+              <Route path="/Boat/:Contract" element={<Boat />} />
+              <Route path="/Contract/:Contract/buy-nft" element={<BuyForm />} />
+              <Route
+                path="/Contract/:Contract/Booking-form/:id"
+                element={<BookingForm />}
+              />
+              <Route path="/BoatInfo/:Contract" element={<BoatInfo />} />
+              <Route
+                path="/ContractInfo/:Contract/booked-dates"
+                element={<ContractBookedDates />}
+              />
+              <Route path="/create-new" element={<CreateNew />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/list-boat" element={<ListBoat />} />
+              <Route path="/requsts" element={<Requsts />} />
+              <Route path="/booked-dates" element={<BookedDates />} />
+              <Route path="/all-users" element={<AllUsers />} />
 
-          {/* Dashboard Routes */}
-          <Route path="/Contract/:Contract/nft/:id" element={<NFT />} />
-          <Route path="/offers-received" element={<OffersReceived />} />
-          <Route path="/booked-date" element={<BookedDate />} />
-          <Route path="/offers-made" element={<OffersMade />} />
-          <Route path="/collected" element={<Collected />} />
-          <Route path="/Boats" element={<Boats />} />
-          <Route path="/nft" element={<NFT />} />
-        </Routes>
+              {/* Dashboard Routes */}
+              <Route path="/Contract/:Contract/nft/:id" element={<NFT />} />
+              <Route path="/offers-received" element={<OffersReceived />} />
+              <Route path="/booked-date" element={<BookedDate />} />
+              <Route path="/offers-made" element={<OffersMade />} />
+              <Route path="/collected" element={<Collected />} />
+              <Route path="/Boats" element={<Boats />} />
+              <Route path="/nft" element={<NFT />} />
+            </Routes>
+          </DispatchContext.Provider>
+        </StateContext.Provider>
       </div>
       <Footer />
     </>

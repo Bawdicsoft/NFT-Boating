@@ -22,38 +22,43 @@ export const useContextAPI = () => {
 }
 
 export const ContextProvider = ({ children }) => {
-  const { activate, account } = useWeb3React()
+  const { activate, account, active } = useWeb3React()
   const [user, loading, error] = useAuthState(auth)
 
   const DeployAddress = "0x0076e13F382458FA68B335e2a92c0ac981C179b4"
   const FactoryAddress = "0x22bB41F0C2CCb90D0C5f7565ed054bd6b26ff8C6"
   const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
 
-  const provider = new ethers.providers.Web3Provider(
-    window.ethereum
-  ).getSigner()
+  let provider
+  if (typeof window.ethereum !== "undefined") {
+    provider = new ethers.providers.Web3Provider(window.ethereum).getSigner()
+  }
 
   const ContractDeploy = new ethers.Contract(DeployAddress, Deploy, provider)
   const ContractFactory = new ethers.Contract(FactoryAddress, Factory, provider)
   const ContractUSDT = new ethers.Contract(USDTAddress, USDT, provider)
 
-  const webSocketProvider = new ethers.providers.WebSocketProvider(
+  var wsProvider = new ethers.providers.JsonRpcProvider(
     "wss://rinkeby.infura.io/ws/v3/461d35d8280c4ee78f25da15fdcc48c1",
     "rinkeby"
   )
-  const readContractFactory = new ethers.Contract(
-    FactoryAddress,
-    Factory,
-    webSocketProvider
-  )
+  console.log()
+  const wsp = new ethers.providers.WebSocketProvider([
+    "wss://rinkeby.infura.io/ws/v3/461d35d8280c4ee78f25da15fdcc48c1"["rinkeby"],
+  ])
+  console.log(wsp)
+  const readContractFactory = new ethers.Contract(FactoryAddress, Factory, wsp)
 
   // useEffect(() => {
-  //   const conToMetamask = async () => {
-  //     await activate(Injected)
+  //   if (isconnected) {
+  //     const conToMetamask = async () => {
+  //       await activate(Injected)
+  //     }
+  //     conToMetamask()
   //   }
-  //   conToMetamask()
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [account])
+  // }, [])
+  // console.log(isconnected, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>isconnected")
 
   const [UserData, setUserData] = useState()
 

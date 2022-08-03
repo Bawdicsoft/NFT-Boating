@@ -1,47 +1,82 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
+import { Fragment, useContext, useEffect, useState } from "react"
+import { Dialog, Transition } from "@headlessui/react"
+import { XIcon } from "@heroicons/react/outline"
+import { useForm } from "react-hook-form"
+import { collection, getDocs } from "firebase/firestore"
+import { db } from "../../DB/firebase-config"
+import { useImmer } from "use-immer"
+import DispatchContext from "../../DispatchContext"
 
-const products = [
-  {
-    id: 1,
-    name: "Large Pizza",
-    href: "#",
-    description: "Et mus nibh lacus integer augue mollis suspendisse lectus",
-    price: "90.00",
-    quantity: 1,
-    imageSrc:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxu2JIpa_bzp_M0TAMVt3MAs3PNWCSzc9PFA&usqp=CAU",
-    imageAlt:
-      "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
-  },
-  {
-    id: 2,
-    name: "Andy Wala Burger",
-    href: "#",
-    description: "Mujhe Andy Wala Burger..",
-    price: "32.00",
-    quantity: 1,
-    imageSrc:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKkYHUs76FATcuUSWWln5SyAaLHetbUHZo1Q&usqp=CAU",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
+export default function Food({ setOpen, open, setState, state }) {
+  const appDispatch = useContext(DispatchContext)
+
+  const [stateFood, setFoodState] = useImmer({
+    food: [],
+    isLoding: true,
+  })
+
+  useEffect(() => {
+    const run = async () => {
+      setFoodState((d) => {
+        d.food = []
+        d.isLoding = true
+      })
+
+      const querySnapshot = await getDocs(collection(db, "foodMenu"))
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data())
+
+        setFoodState((d) => {
+          d.food.push(doc.data())
+          d.isLoding = false
+        })
+      })
+    }
+    run()
+  }, [])
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
+
+  // const food = watch(["food"])
+  // console.log(food, ">>>>>>>>>>>>")
+
+  const onFoodSubmit = (data) => {
+    let foodArray = []
+    for (const key in data) {
+      if (data[key]) {
+        console.log(`${key}: ${data[key]}`)
+        foodArray.push(key)
+      }
+    }
+
+    let foodArray2 = []
+    let totalPrice = 0
+    for (let i = 0; i < foodArray.length; i++) {
+      for (let j = 0; j < stateFood.food.length; j++) {
+        if (foodArray[i] == stateFood.food[j].name) {
+          foodArray2.push(stateFood.food[j])
+          totalPrice += stateFood.food[j].price
+        }
+      }
+    }
+
+    appDispatch({
+      type: "food",
+      value: { array: foodArray2, total: totalPrice },
+    })
+    setOpen(false)
   }
-  // More products...
-];
-
-export default function Food(props) {
-  // const [open, setOpen] = useState(true);
-
-  const handleSelect = data => {
-    props.setFood(data);
-    props.setOpen(false);
-  };
+  console.log(errors)
 
   return (
-    <Transition.Root show={props.open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={props.setOpen}>
+    <Transition.Root show={open} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -67,7 +102,10 @@ export default function Food(props) {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                  <form
+                    onSubmit={handleSubmit(onFoodSubmit)}
+                    className="flex h-full flex-col bg-white shadow-xl"
+                  >
                     <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="text-lg font-medium text-gray-900">
@@ -77,7 +115,7 @@ export default function Food(props) {
                           <button
                             type="button"
                             className="-m-2 p-2 text-gray-400 hover:text-gray-500"
-                            onClick={() => props.setOpen(false)}
+                            onClick={() => setOpen(false)}
                           >
                             <span className="sr-only">Close panel</span>
                             <XIcon className="h-6 w-6" aria-hidden="true" />
@@ -91,8 +129,8 @@ export default function Food(props) {
                             role="list"
                             className="-my-6 divide-y divide-gray-200"
                           >
-                            {products.map(product => (
-                              <li key={product.id} className="flex py-6">
+                            {stateFood.food.map((product, index) => (
+                              <li key={index} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
                                     src={product.imageSrc}
@@ -104,14 +142,8 @@ export default function Food(props) {
                                 <div className="ml-4 flex flex-1 flex-col">
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
-                                      <h3>
-                                        <a href={product.href}>
-                                          {product.name}
-                                        </a>
-                                      </h3>
-                                      <p className="ml-4">
-                                        USDT {product.price}
-                                      </p>
+                                      <h3>{product.name}</h3>
+                                      <p className="ml-4">$ {product.price}</p>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">
                                       {product.description}
@@ -123,19 +155,14 @@ export default function Food(props) {
                                     </p>
 
                                     <div className="flex">
-                                      <button
-                                        type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                                        onClick={() =>
-                                          handleSelect({
-                                            id: product.id,
-                                            name: product.name,
-                                            price: product.price
-                                          })
-                                        }
-                                      >
+                                      <label htmlFor={product.name}>
+                                        <input
+                                          type="checkbox"
+                                          id={product.name}
+                                          {...register(product.name, {})}
+                                        />{" "}
                                         Select
-                                      </button>
+                                      </label>
                                     </div>
                                   </div>
                                 </div>
@@ -146,25 +173,30 @@ export default function Food(props) {
                       </div>
                     </div>
 
-                    {/* <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
-                      <div className="flex justify-between text-base font-medium text-gray-900">
+                    <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
+                      {/* <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
                         <p>USDT 262.00</p>
-                      </div>
+                      </div> */}
                       <p className="mt-0.5 text-sm text-gray-500">
-                        Shipping and taxes calculated at checkout.
+                        You have to pay amount before your ride
                       </p>
                       <div className="mt-6">
-                        <button
+                        {/* <button
                           type="button"
                           className="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                          onClick={() => props.setOpen(false)}
+                          onClick={() => setOpen(false)}
                         >
-                          Continue Shopping
-                        </button>
+                          Continue
+                        </button> */}
+                        <input
+                          className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          type="submit"
+                          value="Continue"
+                        />
                       </div>
-                    </div> */}
-                  </div>
+                    </div>
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -172,5 +204,5 @@ export default function Food(props) {
         </div>
       </Dialog>
     </Transition.Root>
-  );
+  )
 }

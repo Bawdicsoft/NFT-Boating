@@ -10,6 +10,8 @@ import { auth, db } from "./../../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
 import QRCode from "react-qr-code"
 import html2canvas from "html2canvas"
+import logo from "./../../../Assets/logo.png"
+import img1 from "./../../../Assets/img1.jpg"
 import {
   addDoc,
   collection,
@@ -129,7 +131,10 @@ export default function CreateNew() {
       draft.SetBtnDisable = true
     })
 
-    html2canvas(document.getElementById("HTML-IMG")).then(async (canvas) => {
+    html2canvas(document.getElementById("HTML-IMG"), {
+      allowTaint: true,
+      useCORS: true,
+    }).then(async (canvas) => {
       const API_KEY = "6486e5c40cd049a8d0d1"
       const API_SECRET =
         "f8ffade9a388141c898be2d960ba8e52e1a2ef45717469caf9d9985ab68ad2bb"
@@ -161,7 +166,7 @@ export default function CreateNew() {
               "365",
               State.request.price,
               account,
-              `ipfs://${response.data.IpfsHash}/`
+              `ipfs://${response.data.IpfsHash}`
             )
           } catch (e) {
             console.log(e.reason)
@@ -279,17 +284,9 @@ export default function CreateNew() {
                           id="HTML-IMG"
                           className="mb-4 relative h-[300px] w-[300px]"
                         >
-                          <img
-                            src={State.request.featuredImage}
-                            alt=""
-                            className=""
-                          />
+                          <img src={img1} alt="" className="" />
                           <div className="absolute bottom-1 w-full justify-center flex ">
-                            <img
-                              src="https://firebasestorage.googleapis.com/v0/b/nft-yacht.appspot.com/o/assets%2FlogoNFTBoating.png?alt=media&token=4267a8e3-37bc-4223-90f9-6e63501382bc"
-                              alt=""
-                              className="w-[180px]"
-                            />
+                            <img src={logo} alt="" className="w-[180px]" />
                             <div className="px-1 py-1 bg-white">
                               <QRCode value={"Hello"} size="70" />
                             </div>

@@ -15,8 +15,8 @@ async function main() {
   await factory.deployed()
   console.log(factory.address)
 
-  // 0x0076e13F382458FA68B335e2a92c0ac981C179b4
-  // 0x22bB41F0C2CCb90D0C5f7565ed054bd6b26ff8C6
+  // 0x1C43fd747b973089Ba7747Ec5F116f38c86BCc9f
+  // 0x49aaD763dA7A1e07c0B7a0880527D7f915fe5579
 }
 
 main()

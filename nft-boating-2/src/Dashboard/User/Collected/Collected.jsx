@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { PencilIcon } from "@heroicons/react/solid"
 import { useWeb3React } from "@web3-react/core"
 import { useContextAPI } from "../../../ContextAPI"
+import axios from "axios"
 
 export default function Collected() {
   const navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function Collected() {
     isLoading: true,
     data: [],
     userNFT: 0,
+    images: null,
   })
 
   useEffect(() => {
@@ -29,6 +31,19 @@ export default function Collected() {
       })
 
       const run = async () => {
+        await axios({
+          url: `https://gateway.pinata.cloud/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
+          method: "get",
+        })
+          .then((response) => {
+            SetState((draft) => {
+              draft.images = response.data.image
+            })
+          })
+          .then((err) => {
+            console.log(err)
+          })
+
         let addresses
         try {
           addresses = await ContractFactory.UserAllContractAddress(account)
@@ -70,7 +85,7 @@ export default function Collected() {
                 baseURI: baseURI,
 
                 contractAddress: addresses[i].toString(),
-                imageSrc: `https://cloudflare-ipfs.com/ipfs/Qmacuvgf1m4j35prXdbUJhmkycpYDk2Km9rZEhMv2Causz/${nftid.toString()}.png`,
+                imageSrc: `https://cloudflare-ipfs.com/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
                 imageAlt: "Front of men's Basic Tee in black.",
               }
               SetState((draft) => {
@@ -147,7 +162,7 @@ export default function Collected() {
                     >
                       <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
                         <img
-                          src={Contract.imageSrc}
+                          src={state.images}
                           alt={Contract.imageAlt}
                           className="w-full h-full object-center object-cover lg:w-full lg:h-full"
                         />

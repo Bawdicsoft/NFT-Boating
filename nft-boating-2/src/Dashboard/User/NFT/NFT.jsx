@@ -8,15 +8,17 @@ import { formatEther } from "ethers/lib/utils"
 import { useWeb3React } from "@web3-react/core"
 import { db } from "../../../DB/firebase-config"
 import { doc, getDoc } from "firebase/firestore"
+import { Injected } from "../../../Comp/Wallets/Connectors"
 
 export default function NFT() {
   const { Contract, id } = useParams()
   const { NFTYacht, provider, ContractFactory, UserData } = useContextAPI()
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
-  const { account, active } = useWeb3React()
+  const { account, active, activate } = useWeb3React()
 
   const [state, setState] = useImmer({
-    ContractInfo: { email: "" },
+    image: null,
+    ContractInfo: { name: "xxxx", email: "", featuredImage: null },
     contract: {
       name: "xxxx",
       symbol: "xx",
@@ -29,77 +31,93 @@ export default function NFT() {
 
   console.log({ state })
 
+  const fetch = async () => {
+    console.log("runing >>>>>>>>>>>>>>>>> 1")
+    const name = await ContractNFTYacht.name()
+    console.log("runing >>>>>>>>>>>>>>>>> 2")
+    console.log("NAME!!!!!!!!!!!!!!!!!!!!!!!!!!", name)
+    const symbol = await ContractNFTYacht.symbol()
+      .then((e) => console.log(e))
+      .catch((e) => console.log(e))
+
+    setState((draft) => {
+      draft.contract.name = name
+      draft.contract.symbol = symbol
+    })
+
+    const ownerOf = await ContractNFTYacht.ownerOf(id)
+    const BookedDate = await ContractFactory.BookedDate(Contract, id)
+
+    var t = new Date(1970, 0, 1) // Epoch
+    t.setSeconds(BookedDate[1].toString()).toLocaleString()
+
+    console.log(Boolean(BookedDate.bookedTime_.toString() > 0))
+
+    setState((draft) => {
+      draft.contract.isOwner = ownerOf === account
+      draft.contract.isBooked = Boolean(BookedDate.bookedTime_.toString() > 0)
+      draft.contract.bookedDate = t.toString()
+    })
+
+    const Offer = await ContractFactory._offers(Contract, id)
+
+    if (Boolean(Offer.userID.toString() > 0)) {
+      var tt = new Date(1970, 0, 1) // Epoch
+      tt.setSeconds(Offer.Time.toString()).toLocaleString()
+
+      const data = {
+        id: Offer.id.toString(),
+        userID: Offer.userID.toString(),
+        price: formatEther(Offer.Price.toString()),
+        time: tt.toString(),
+        offeredDate: Offer.offeredDate.toString(),
+        user: Offer.User,
+        contract: Offer.Contract,
+      }
+
+      console.log(data)
+
+      setState((draft) => {
+        draft.offer.push(data)
+      })
+    }
+  }
   useEffect(() => {
     if (active) {
-      const fetch = async () => {
-        const name = await ContractNFTYacht.name()
-        const symbol = await ContractNFTYacht.symbol()
-
-        setState((draft) => {
-          draft.contract.name = name
-          draft.contract.symbol = symbol
-        })
-
-        const ownerOf = await ContractNFTYacht.ownerOf(id)
-        const BookedDate = await ContractFactory.BookedDate(Contract, id)
-
-        var t = new Date(1970, 0, 1) // Epoch
-        t.setSeconds(BookedDate[1].toString()).toLocaleString()
-
-        console.log(Boolean(BookedDate.bookedTime_.toString() > 0))
-
-        setState((draft) => {
-          draft.contract.isOwner = ownerOf === account
-          draft.contract.isBooked = Boolean(
-            BookedDate.bookedTime_.toString() > 0
-          )
-          draft.contract.bookedDate = t.toString()
-        })
-
-        const Offer = await ContractFactory._offers(Contract, id)
-
-        if (Boolean(Offer.userID.toString() > 0)) {
-          var tt = new Date(1970, 0, 1) // Epoch
-          tt.setSeconds(Offer.Time.toString()).toLocaleString()
-
-          const data = {
-            id: Offer.id.toString(),
-            userID: Offer.userID.toString(),
-            price: formatEther(Offer.Price.toString()),
-            time: tt.toString(),
-            offeredDate: Offer.offeredDate.toString(),
-            user: Offer.User,
-            contract: Offer.Contract,
-          }
-
-          console.log(data)
-
-          setState((draft) => {
-            draft.offer.push(data)
-          })
-        }
-      }
       fetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
   useEffect(() => {
-    const run = async () => {
+    const fetchContractInfo = async () => {
+      await axios({
+        url: `https://gateway.pinata.cloud/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
+        method: "get",
+      })
+        .then((response) => {
+          setState((draft) => {
+            draft.image = response.data.image
+          })
+        })
+        .then((err) => {
+          console.log(err)
+        })
+
       const docRef = doc(db, "ContractInfo", Contract)
       const docSnap = await getDoc(docRef)
 
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data())
         setState((e) => {
-          e.ContractInfo.email = docSnap.data().email
+          e.ContractInfo = docSnap.data()
         })
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!")
       }
     }
-    run()
+    fetchContractInfo()
   }, [Contract])
 
   const cancelBooking = async (Contract, id) => {
@@ -120,6 +138,8 @@ export default function NFT() {
       setState((draft) => {
         draft.isBooked = false
       })
+
+      fetch()
     } catch (error) {
       console.error(error)
     }
@@ -161,9 +181,9 @@ export default function NFT() {
                 <div className="md:col-span-2">
                   <div className="px-4 sm:px-0">
                     <img
-                      src={`https://cloudflare-ipfs.com/ipfs/Qmacuvgf1m4j35prXdbUJhmkycpYDk2Km9rZEhMv2Causz/${id}.png`}
+                      src={state.image}
                       alt="Walnut card tray with white powder coated steel divider and 3 punchout holes."
-                      className="bg-gray-100 rounded-lg"
+                      className="bg-gray-100 rounded-lg w-full"
                     />
                   </div>
                 </div>
@@ -174,7 +194,7 @@ export default function NFT() {
                     </span>
                   )}
                   <h1 className="text-3xl mt-4 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                    {`${state.contract.name}(${state.contract.symbol})`}
+                    {state.ContractInfo.name}
                   </h1>
                   <p className="mt-4 text-gray-500">
                     The walnut wood card tray is precision milled to perfectly
@@ -206,7 +226,12 @@ export default function NFT() {
                         )}
                       </>
                     ) : (
-                      "Not Connected To Wallet"
+                      <button
+                        onClick={async () => await activate(Injected)}
+                        className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      >
+                        Connect To Wallet
+                      </button>
                     )}
                   </div>
 

@@ -3,6 +3,7 @@ import { useImmer } from "use-immer"
 import { useContextAPI } from "../../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
 import { useEffect } from "react"
+import axios from "axios"
 
 /* This example requires Tailwind CSS v2.0+ */
 import { PencilIcon } from "@heroicons/react/solid"
@@ -13,6 +14,7 @@ export default function Boats() {
   const { ContractFactory, ContractDeploy } = useContextAPI()
 
   const [state, SetState] = useImmer({
+    image: null,
     data: [],
     userNFT: 0,
   })
@@ -20,6 +22,19 @@ export default function Boats() {
   useEffect(() => {
     if (active) {
       const run = async () => {
+        await axios({
+          url: `https://gateway.pinata.cloud/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
+          method: "get",
+        })
+          .then((response) => {
+            SetState((draft) => {
+              draft.image = response.data.image
+            })
+          })
+          .then((err) => {
+            console.log(err)
+          })
+
         let addresses
         try {
           addresses = await ContractFactory.UserAllContractAddress(account)
@@ -106,7 +121,7 @@ export default function Boats() {
                 <div key={Contract.id} className="group relative mb-4">
                   <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
                     <img
-                      src={Contract.imageSrc}
+                      src={state.image}
                       alt={Contract.imageAlt}
                       className="w-full h-full object-center object-cover lg:w-full lg:h-full"
                     />

@@ -143,8 +143,8 @@ export default function OfferSidePanel({
                         {errordate.day}-{errordate.month}-{errordate.year}
                       </Dialog.Title>
                       <p className="text-red-900">
-                        * This date is already booked , You can still book this
-                        Date.
+                        This date is already booked , You can still book this
+                        Date by offering more then 300 USDT
                       </p>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">

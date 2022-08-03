@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useForm } from "react-hook-form"
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css"
-import axios from "axios"
 import DatePicker from "@amir04lm26/react-modern-calendar-date-picker"
 import Food from "./Food"
 import { useContextAPI } from "./../../ContextAPI"
@@ -11,9 +10,13 @@ import { useNavigate, useParams } from "react-router-dom"
 import { doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from "../../DB/firebase-config"
 import { useImmer } from "use-immer"
+import StateContext from "../../StateContext"
+import DispatchContext from "../../DispatchContext"
+import Popup from "./Popup"
 
 export default function BookingForm() {
   const navigate = useNavigate()
+  const appState = useContext(StateContext)
 
   const { Contract, id } = useParams()
   const { ContractFactory, UserData } = useContextAPI()
@@ -21,11 +24,18 @@ export default function BookingForm() {
 
   // handle Side Panel
   const [open, setOpen] = useState(false)
-  const [food, setFood] = useState({ name: "" })
 
   const [state, setState] = useImmer({
+    formData: {},
+    food: [],
     ContractInfo: { email: "" },
+    selectedDay: null,
+    minimumDate: {},
+    maximumDate: {},
+    disabledDays: [],
+    dateError: null,
   })
+  console.log("food", state.food)
 
   // Date Picker
   const [selectedDay, setSelectedDay] = useState(null)
@@ -48,25 +58,6 @@ export default function BookingForm() {
 
   const [dateError, setDateError] = useState()
   const [offerSideNav, setOfferSideNav] = useState(false)
-  // const [getBookDateID, setGetBookDateID] = useState()
-
-  useEffect(() => {
-    const run = async () => {
-      const docRef = doc(db, "ContractInfo", Contract)
-      const docSnap = await getDoc(docRef)
-
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data())
-        setState((e) => {
-          e.ContractInfo.email = docSnap.data().email
-        })
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!")
-      }
-    }
-    run()
-  }, [Contract])
 
   const handleDisabledSelect = async (disabledDay) => {
     for (let i = 0; i < disabledDays.length; i++) {
@@ -85,7 +76,22 @@ export default function BookingForm() {
     }
   }
 
-  async function afterOpenModal() {
+  const fachContractInfo = async () => {
+    const docRef = doc(db, "ContractInfo", Contract)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data())
+      setState((e) => {
+        e.ContractInfo.email = docSnap.data().email
+      })
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!")
+    }
+  }
+
+  async function afterUseEffect() {
     setDisabledDays([])
 
     let newYear = await ContractFactory._newYear()
@@ -101,6 +107,7 @@ export default function BookingForm() {
             year: Number(allBookedDates[i]._year.toString()),
             month: Number(allBookedDates[i]._month.toString()),
             day: Number(allBookedDates[i]._day.toString()),
+            className: "disableDay",
           })
         )
       }
@@ -111,10 +118,11 @@ export default function BookingForm() {
     if (!active) {
       return
     } else {
-      afterOpenModal()
+      afterUseEffect()
+      fachContractInfo()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account])
+  }, [account, Contract])
 
   // submit data
   const {
@@ -123,83 +131,28 @@ export default function BookingForm() {
     formState: { errors },
   } = useForm()
 
+  const [openPopup, setOpenPopup] = useState(false)
+
   const onSubmit = async (data) => {
-    try {
-      const tx = await ContractFactory.bookDate(
-        selectedDay.year,
-        selectedDay.month,
-        selectedDay.day,
-        Contract,
-        id
-      )
-      await tx.wait()
-    } catch (e) {
-      console.error(e)
+    const formData = {
+      year: selectedDay.year,
+      month: selectedDay.month,
+      day: selectedDay.day,
+      Contract,
+      id,
+      data,
+      OwnerEmail: state.ContractInfo.email,
+      userEmail: UserData.email,
+      food: appState.food.array,
+      total: appState.food.total,
     }
 
-    const Mail = {
-      fromName: "NFT Boating",
-      from: "nabeelatdappvert@gmail.com",
-      to: `nabeelatdappvert@gmail.com, ${state.ContractInfo.email}, ${UserData.email}`,
-      subject: "New Date Was Booked",
-      text: `date: {
-        year: ${selectedDay.year},
-        month: ${selectedDay.month},
-        day: ${selectedDay.day},
-      },
-      contractinfo: { ${Contract}, ${id} },
-      mobileNumber: ${data.mobileNumber},
-      persons: ${data.persons},
-      food: ${data.food},
-      note: ${data.note},`,
-    }
-    const res = await axios.post("http://localhost:8080/email", Mail)
-    console.log(res.data.msg)
-
-    try {
-      // set doc in db
-      console.log("selectedDay", selectedDay.toString())
-      const date = `${selectedDay.day}-${selectedDay.month}-${selectedDay.year}`
-      console.log(date)
-      await setDoc(doc(db, Contract, date), {
-        date: {
-          year: selectedDay.year,
-          month: selectedDay.month,
-          day: selectedDay.day,
-        },
-        contractinfo: { Contract, id },
-        mobileNumber: data.mobileNumber,
-        persons: data.persons,
-        food: data.food,
-        note: data.note,
-      })
-    } catch (error) {
-      console.log(error)
-    }
-
-    try {
-      // set doc in db
-      console.log("selectedDay", selectedDay.toString())
-      const date = `${selectedDay.day}-${selectedDay.month}-${selectedDay.year}`
-      console.log(date)
-      await setDoc(doc(db, "BookingInfo", date), {
-        date: {
-          year: selectedDay.year,
-          month: selectedDay.month,
-          day: selectedDay.day,
-        },
-        contractinfo: { Contract, id },
-        mobileNumber: data.mobileNumber,
-        persons: data.persons,
-        food: data.food,
-        note: data.note,
-      })
-    } catch (error) {
-      console.log(error)
-    }
-
-    // navigate(`/Contract/${Contract}/nft/${id}`)
+    setState((e) => {
+      e.formData = formData
+    })
+    setOpenPopup(true)
   }
+
   console.log(errors)
 
   return (
@@ -213,7 +166,8 @@ export default function BookingForm() {
           errordate={dateError}
         />
       )}
-      <Food setOpen={setOpen} open={open} setFood={setFood} />
+      <Food setOpen={setOpen} open={open} setState={setState} state={state} />
+      <Popup setOpen={setOpenPopup} open={openPopup} state={state} />
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="mt-10 sm:mt-0">
           <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -248,6 +202,7 @@ export default function BookingForm() {
                           className=""
                           disabledDays={disabledDays} // here we pass them
                           onDisabledDayError={handleDisabledSelect} // handle error
+                          customDaysClassName={disabledDays}
                           shouldHighlightWeekends
                         />
                       </div>
@@ -259,14 +214,21 @@ export default function BookingForm() {
                         >
                           Chose Your Food (optional)
                         </label>
-                        <input
-                          type="text"
-                          value={food.name}
-                          placeholder="Chose Your Food"
+                        <p
                           onClick={() => setOpen(true)}
+                          className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                        >
+                          {appState.food.total > 0
+                            ? `$${appState.food.total} total`
+                            : "Chose Your Food"}
+                        </p>
+                        {/* <input
+                          type="text"
+                          value={appState.food[0]}
+                          placeholder="Chose Your Food"
                           {...register("food", {})}
                           className="w-full py-2.5 px-3 border mb-4 rounded-md"
-                        />
+                        /> */}
                       </div>
 
                       <div className="col-span-6 sm:col-span-3">
@@ -290,7 +252,7 @@ export default function BookingForm() {
 
                       <div className="col-span-6 sm:col-span-3">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          How many person will you be with?
+                          How many people will you be with?
                         </label>
                         <input
                           type="number"
@@ -300,8 +262,9 @@ export default function BookingForm() {
                             max: 12,
                             min: 3,
                           })}
-                          className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                          className="w-full py-2.5 px-3 border rounded-md"
                         />
+                        <p className="text-xs mt-1 mb-4"> Max: 12 people</p>
                       </div>
 
                       <div className="col-span-6 sm:col-span-6">

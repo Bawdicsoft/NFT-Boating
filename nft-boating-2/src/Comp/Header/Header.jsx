@@ -96,7 +96,7 @@ export default function Header() {
                 <div className="flex items-center justify-between h-16">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img className="h-32 w-32" src={logo} alt="Workflow" />
+                      <img className="h-[60px]" src={logo} alt="Workflow" />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -226,21 +226,6 @@ export default function Header() {
 
                                 {UserData?.host && (
                                   <>
-                                    {userNavigation.map((item) => (
-                                      <Menu.Item key={item.name}>
-                                        {({ active }) => (
-                                          <Link
-                                            to={item.href}
-                                            className={classNames(
-                                              active ? "bg-gray-100" : "",
-                                              "block px-4 py-2 text-sm text-gray-700"
-                                            )}
-                                          >
-                                            {item.name}
-                                          </Link>
-                                        )}
-                                      </Menu.Item>
-                                    ))}
                                     <hr />
 
                                     {hostNavigation.map((item) => (
@@ -263,38 +248,6 @@ export default function Header() {
 
                                 {UserData?.admin && (
                                   <>
-                                    {userNavigation.map((item) => (
-                                      <Menu.Item key={item.name}>
-                                        {({ active }) => (
-                                          <Link
-                                            to={item.href}
-                                            className={classNames(
-                                              active ? "bg-gray-100" : "",
-                                              "block px-4 py-2 text-sm text-gray-700"
-                                            )}
-                                          >
-                                            {item.name}
-                                          </Link>
-                                        )}
-                                      </Menu.Item>
-                                    ))}
-                                    <hr />
-
-                                    {hostNavigation.map((item) => (
-                                      <Menu.Item key={item.name}>
-                                        {({ active }) => (
-                                          <Link
-                                            to={item.href}
-                                            className={classNames(
-                                              active ? "bg-gray-100" : "",
-                                              "block px-4 py-2 text-sm text-gray-700"
-                                            )}
-                                          >
-                                            {item.name}
-                                          </Link>
-                                        )}
-                                      </Menu.Item>
-                                    ))}
                                     <hr />
 
                                     {adminNavigation.map((item) => (

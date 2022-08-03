@@ -41,14 +41,14 @@ contract Boating is ERC721, Pausable, Ownable {
     *   _baseURI & tokenURI logic
     ***********************************************/
 
-    function _baseURI() internal view override returns (string memory) {
-        return baseURI;
-    }
+    // function _baseURI() internal view override returns (string memory) {
+    //     return baseURI;
+    // }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "Query for nonexistent token");
 
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(_baseURI(), tokenId.toString(), baseExtension)) : "";
+        return baseURI;
     }
 
 
