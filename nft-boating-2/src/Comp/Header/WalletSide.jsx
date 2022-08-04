@@ -1,51 +1,51 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useEffect, useState } from "react";
-import { Dialog, Transition, Menu } from "@headlessui/react";
-import { BellIcon, XIcon } from "@heroicons/react/outline";
-import { LockClosedIcon } from "@heroicons/react/solid";
-import { useWeb3React } from "@web3-react/core";
-import { Injected } from "../Wallets/Connectors";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../DB/firebase-config";
-import { useContextAPI } from "../../ContextAPI";
-import { useImmer } from "use-immer";
-import { formatEther } from "ethers/lib/utils";
+import { Fragment, useEffect, useState } from "react"
+import { Dialog, Transition, Menu } from "@headlessui/react"
+import { BellIcon, XIcon } from "@heroicons/react/outline"
+import { LockClosedIcon } from "@heroicons/react/solid"
+import { useWeb3React } from "@web3-react/core"
+import { Injected } from "../Wallets/Connectors"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from "../../DB/firebase-config"
+import { useContextAPI } from "../../ContextAPI"
+import { useImmer } from "use-immer"
+import { formatEther } from "ethers/lib/utils"
 
 export default function WalletSide({ open, setOpen }) {
-  const { activate, active, account, deactivate } = useWeb3React();
-  const [user, loading, error] = useAuthState(auth);
+  const { activate, active, account, deactivate } = useWeb3React()
+  const [user, loading, error] = useAuthState(auth)
 
   async function conToMetaMask() {
     try {
-      await activate(Injected);
+      await activate(Injected)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
-  const { ContractUSDT } = useContextAPI();
+  const { ContractUSDT } = useContextAPI()
 
   const [State, SetState] = useImmer({
     userBalance: "loading..",
-  });
+  })
 
   useEffect(() => {
     if (active) {
       const run = async () => {
-        console.log(account);
+        console.log(account)
         try {
-          const userBalance = await ContractUSDT.balanceOf(account);
+          const userBalance = await ContractUSDT.balanceOf(account)
 
           SetState((draft) => {
-            draft.userBalance = formatEther(userBalance.toString());
-          });
+            draft.userBalance = formatEther(userBalance.toString())
+          })
         } catch (e) {
-          console.log(e);
+          console.log(e)
         }
-      };
-      run();
+      }
+      run()
     }
-  }, [active]);
+  }, [active])
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -107,9 +107,8 @@ export default function WalletSide({ open, setOpen }) {
 
                       {!active ? (
                         <div>
-
-                        {/* metamask */}
-                        <div className="mt-6 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
+                          {/* metamask */}
+                          <div className="mt-6 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
                             <div className="flex  justify-between items-center">
                               <div className="flex text-sm items-center">
                                 <div className="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -132,8 +131,8 @@ export default function WalletSide({ open, setOpen }) {
                             </div>
                           </div>
 
-                        {/* coinbase */}
-                        <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
+                          {/* coinbase */}
+                          <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
                             <div className="flex  justify-between items-center">
                               <div className="flex text-sm items-center">
                                 <div className="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -147,16 +146,14 @@ export default function WalletSide({ open, setOpen }) {
                                 </div>
                                 <span className="ml-1">CoinBase</span>
                               </div>
-                              <button
-                                className="cursor-pointer bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              >
+                              <button className="cursor-pointer bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 connect
                               </button>
                             </div>
-                        </div>
+                          </div>
 
-                        {/* connectwallet */}
-                        <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
+                          {/* connectwallet */}
+                          <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
                             <div className="flex  justify-between items-center">
                               <div className="flex text-sm items-center">
                                 <div className="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -170,14 +167,11 @@ export default function WalletSide({ open, setOpen }) {
                                 </div>
                                 <span className="ml-1">WalletConnect</span>
                               </div>
-                              <button
-                                className="cursor-pointer  bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              >
+                              <button className="cursor-pointer  bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 connect
                               </button>
                             </div>
-                        </div>
-
+                          </div>
                         </div>
                       ) : (
                         <>
@@ -196,10 +190,6 @@ export default function WalletSide({ open, setOpen }) {
                                 <span className="ml-1">
                                   <div>
                                     {account.slice(0, 5)}...{account.slice(-4)}
-                                  </div>
-                                  <div className="text-xs">
-                                    ETH:{" "}
-                                    <span className="font-semibold">2123</span>{" "}
                                   </div>
                                 </span>
                               </div>
@@ -230,5 +220,5 @@ export default function WalletSide({ open, setOpen }) {
         </div>
       </Dialog>
     </Transition.Root>
-  );
+  )
 }

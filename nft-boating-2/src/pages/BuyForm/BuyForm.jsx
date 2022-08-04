@@ -236,11 +236,11 @@ export default function BuyForm() {
                         htmlFor="email-address"
                         className="block text-sm font-medium text-gray-700 mb-2"
                       >
-                        Total Mint
+                        Buy membership
                       </label>
                       <input
                         type="number"
-                        placeholder="Total Mint"
+                        placeholder="Buy membership"
                         min={1}
                         max={10}
                         {...register("totalMint", {

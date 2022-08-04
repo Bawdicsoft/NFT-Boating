@@ -163,7 +163,7 @@ export default function Home() {
                   lat: 25.761681,
                   lng: -80.191788,
                 }}
-                defaultZoom={5}
+                defaultZoom={8}
               >
                 {state.locations.map((location, index) => {
                   return (
