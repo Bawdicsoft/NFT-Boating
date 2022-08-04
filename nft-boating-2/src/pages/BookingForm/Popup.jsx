@@ -8,10 +8,14 @@ import { db } from "../../DB/firebase-config"
 import { doc, setDoc } from "firebase/firestore"
 import { useContextAPI } from "../../ContextAPI"
 import { useNavigate } from "react-router-dom"
+import StateContext from "../../StateContext"
 
 export default function Popup({ open, setOpen, state }) {
   const cancelButtonRef = useRef(null)
   const appDispatch = useContext(DispatchContext)
+  const appState = useContext(StateContext)
+  console.log(appState.food.array)
+
   const navigate = useNavigate()
   const { ContractFactory, UserData } = useContextAPI()
 
@@ -42,6 +46,19 @@ export default function Popup({ open, setOpen, state }) {
       console.error(e)
     }
 
+    let foodHtmlList = ""
+    for (let i = 0; i < appState.food.array.length; i++) {
+      const element = appState.food.array[i]
+      for (const key in element) {
+        foodHtmlList += `<tr>
+            <th>${key}</th>
+          </tr>
+          <tr style="background-color: #eaeaea">
+            <td>${element[key]}</td>
+          </tr>`
+      }
+    }
+
     const Mail = {
       fromName: "NFT Boating",
       from: "nabeelatdappvert@gmail.com",
@@ -58,6 +75,82 @@ export default function Popup({ open, setOpen, state }) {
         food: ${JSON.stringify(state.formData.food)},
         total: ${state.formData.total},
         note: ${state.formData.data.note},`,
+      html: `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>EMAIL</title>
+        </head>
+        <body>
+          <div
+            style="
+              text-align: left;
+              width: 100%;
+              max-width: 500px;
+              padding: 20px;
+              background-color: #f6f6f6;
+              margin: auto;
+            "
+          >
+            <h1 style="text-align: center">NFT Boading</h1>
+            <table style="width: 100%">
+              <tr>
+                <th>Confirmation</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>New Date Was Booked</td>
+              </tr>
+              <tr>
+                <th>Date</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>${state.formData.month}/${state.formData.day}/${state.formData.year}</td>
+              </tr>
+              <tr>
+                <th>contractinfo</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>${state.formData.Contract} (${state.formData.id})</td>
+              </tr>
+              <tr>
+                <th>Mobile Number</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>${state.formData.data.mobileNumber}</td>
+              </tr>
+              <tr>
+                <th>Total Persons</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>${state.formData.data.persons}</td>
+              </tr>
+              <br />
+              <h4>Food</h4>
+              ${foodHtmlList}
+              <tr>
+                <th>Total Food Amount</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>${state.formData.total}</td>
+              </tr>
+              <br />
+              <tr>
+                <th>Note</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>${state.formData.data.note}</td>
+              </tr>
+            </table>
+            <br />
+            <p style="text-align: center">
+              <a href="https://">CopyRight: NFT Boading</a>
+            </p>
+          </div>
+        </body>
+      </html>
+      `,
     }
     const res = await axios.post("http://localhost:8080/email", Mail)
     console.log(res.data.msg)

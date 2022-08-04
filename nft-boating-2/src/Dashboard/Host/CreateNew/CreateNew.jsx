@@ -21,44 +21,6 @@ import {
   setDoc,
 } from "firebase/firestore"
 
-const createTicketFunc = async () => {
-  html2canvas(document.getElementById("HTML-IMG")).then(async (canvas) => {
-    const API_KEY = "52204a85c1a51d7f3ed2"
-    const API_SECRET =
-      "4b678ed52b09e15f4cb39c5db0f49365d9bae9d1914605648d2137e4cd937e36"
-
-    const URLforpinJSONtoIPFS = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
-
-    axios
-      .post(
-        URLforpinJSONtoIPFS,
-        {
-          name: "name",
-          description: "description",
-          image: canvas.toDataURL(),
-          attributes: [
-            {
-              trait_type: "trait",
-              value: 100,
-            },
-          ],
-        },
-        {
-          headers: {
-            pinata_api_key: API_KEY,
-            pinata_secret_api_key: API_SECRET,
-          },
-        }
-      )
-      .then(async (response) => {
-        console.log("responseFromFiletoIPFS: ", response.data.IpfsHash)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  })
-}
-
 export default function CreateNew() {
   const { account, active, activate } = useWeb3React()
   const [user, error] = useAuthState(auth)
@@ -131,55 +93,22 @@ export default function CreateNew() {
       draft.SetBtnDisable = true
     })
 
-    html2canvas(document.getElementById("HTML-IMG"), {
-      allowTaint: true,
-      useCORS: true,
-    }).then(async (canvas) => {
-      const API_KEY = "6486e5c40cd049a8d0d1"
-      const API_SECRET =
-        "f8ffade9a388141c898be2d960ba8e52e1a2ef45717469caf9d9985ab68ad2bb"
-
-      const URLforpinJSONtoIPFS = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
-
-      axios
-        .post(
-          URLforpinJSONtoIPFS,
-          {
-            name: State.request.name,
-            description: State.request.description,
-            image: canvas.toDataURL(),
-          },
-          {
-            headers: {
-              pinata_api_key: API_KEY,
-              pinata_secret_api_key: API_SECRET,
-            },
-          }
-        )
-        .then(async (response) => {
-          console.log("responseFromFiletoIPFS: ", response.data.IpfsHash)
-
-          try {
-            await ContractDeploy.deploy(
-              State.request.name,
-              State.request.name.slice(0, 1),
-              "365",
-              State.request.price,
-              account,
-              `ipfs://${response.data.IpfsHash}`
-            )
-          } catch (e) {
-            console.log(e.reason)
-            SetState((draft) => {
-              draft.SetBtnDisable = false
-              draft.executionReverted = true
-            })
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    })
+    try {
+      await ContractDeploy.deploy(
+        State.request.name,
+        State.request.name.slice(0, 1),
+        "365",
+        State.request.price,
+        account,
+        `ipfs://${State.request.IpfsHash}`
+      )
+    } catch (e) {
+      console.log(e.reason)
+      SetState((draft) => {
+        draft.SetBtnDisable = false
+        draft.executionReverted = true
+      })
+    }
 
     ContractDeploy.on("deploy_", async (_Contract) => {
       try {
@@ -191,8 +120,10 @@ export default function CreateNew() {
           make: State.request.make,
           model: State.request.model,
           price: State.request.price,
+          location: State.request.location,
           walletAddress: account,
           email: UserData.email,
+          IpfsHash: State.request.IpfsHash,
           description: State.request.description,
         })
       } catch (error) {
@@ -215,6 +146,54 @@ export default function CreateNew() {
         text: `New Smart Contract Deployed \n
         contract address: ${_Contract} \n
         email: ${UserData.email}`,
+        html: `<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>EMAIL</title>
+          </head>
+          <body>
+            <div
+              style="
+                text-align: left;
+                width: 100%;
+                max-width: 500px;
+                padding: 20px;
+                background-color: #f6f6f6;
+                margin: auto;
+              "
+            >
+              <h1 style="text-align: center">NFT Boading</h1>
+              <table style="width: 100%">
+                <tr>
+                  <th>Confirmation</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td>New Boat Listed</td>
+                </tr>
+                <tr>
+                  <th>Listed Boat Name</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td>${State.request.name}</td>
+                </tr>
+                <tr>
+                  <th>Boat Lister Email</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td>${UserData.email}</td>
+                </tr>
+              </table>
+              <br />
+              <p style="text-align: center">
+                <a href="https://">CopyRight: NFT Boading</a>
+              </p>
+            </div>
+          </body>
+        </html>
+        `,
       }
       const res = await axios.post("http://localhost:8080/email", Mail)
       console.log(res.data.msg)
@@ -280,18 +259,11 @@ export default function CreateNew() {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="shadow sm:rounded-md">
                       <div className="px-4 py-5 bg-white sm:p-6">
-                        <div
-                          id="HTML-IMG"
-                          className="mb-4 relative h-[300px] w-[300px]"
-                        >
-                          <img src={img1} alt="" className="" />
-                          <div className="absolute bottom-1 w-full justify-center flex ">
-                            <img src={logo} alt="" className="w-[180px]" />
-                            <div className="px-1 py-1 bg-white">
-                              <QRCode value={"Hello"} size="70" />
-                            </div>
-                          </div>
-                        </div>
+                        <img
+                          src={State.request.featuredImage}
+                          className="w-[300px] mb-6"
+                        />
+
                         <div className="grid grid-cols-6 gap-4">
                           <div className="col-span-6 sm:col-span-3">
                             <label
@@ -350,7 +322,7 @@ export default function CreateNew() {
                                   type="submit"
                                   disabled={State.btnDisable}
                                 >
-                                  Create
+                                  List your Boat
                                 </button>
                               </>
                             )}

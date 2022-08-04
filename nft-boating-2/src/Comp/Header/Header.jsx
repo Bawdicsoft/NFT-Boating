@@ -12,7 +12,7 @@ import { useWeb3React } from "@web3-react/core"
 import { useContextAPI } from "../../ContextAPI"
 
 const navigation = [
-  { name: "LandingPage", href: "/", current: true },
+  { name: "Home", href: "/", current: false },
   { name: "Boats", href: "/home", current: false },
   { name: "List Your Boat", href: "/list-boat" },
   { name: "About", href: "/about", current: false },

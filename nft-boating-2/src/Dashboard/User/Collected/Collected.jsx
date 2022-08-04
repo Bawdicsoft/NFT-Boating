@@ -31,19 +31,6 @@ export default function Collected() {
       })
 
       const run = async () => {
-        await axios({
-          url: `https://gateway.pinata.cloud/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
-          method: "get",
-        })
-          .then((response) => {
-            SetState((draft) => {
-              draft.images = response.data.image
-            })
-          })
-          .then((err) => {
-            console.log(err)
-          })
-
         let addresses
         try {
           addresses = await ContractFactory.UserAllContractAddress(account)
@@ -71,6 +58,12 @@ export default function Collected() {
             const owner = contractData.owner.toString()
             const baseURI = contractData.baseURI.toString()
 
+            const getBaseURL = baseURI.split("//").pop()
+            console.log({ getBaseURL })
+            const ipfsRes = await axios.get(
+              `https://gateway.pinata.cloud/ipfs/${getBaseURL}/`
+            )
+
             UserIDs.forEach((nftid) => {
               let data = {
                 nftNumber: nftid.toString(),
@@ -85,8 +78,8 @@ export default function Collected() {
                 baseURI: baseURI,
 
                 contractAddress: addresses[i].toString(),
-                imageSrc: `https://cloudflare-ipfs.com/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
-                imageAlt: "Front of men's Basic Tee in black.",
+                imageSrc: ipfsRes.data.image,
+                imageAlt: `${name} (${symbol})`,
               }
               SetState((draft) => {
                 draft.userNFT = UserIDs.length
@@ -162,7 +155,7 @@ export default function Collected() {
                     >
                       <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
                         <img
-                          src={state.images}
+                          src={Contract.imageSrc}
                           alt={Contract.imageAlt}
                           className="w-full h-full object-center object-cover lg:w-full lg:h-full"
                         />

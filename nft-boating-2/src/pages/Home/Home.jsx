@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 import { collection, doc, getDoc, getDocs } from "firebase/firestore"
 import { db } from "../../DB/firebase-config"
 import GoogleMapReact from "google-map-react"
+import axios from "axios"
 
 const products = [
   {
@@ -60,53 +61,37 @@ const products = [
 ]
 
 export default function Home() {
-  const [hoveredName, setHoveredName] = useState("")
-
-  console.log("data")
-
-  useEffect(() => {
-    function getCoordinates(address) {
-      fetch(
-        "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-          address +
-          "&key=" +
-          "AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k"
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("data", data)
-        })
-        .catch((err) => console.log("err", err))
-    }
-
-    console.log("maimi")
-    getCoordinates("maimi")
-  }, [])
-  // const { ContractDeploy, NFTYacht, provider } = useContextAPI();
   const [state, setState] = useImmer({
     boats: [],
+    locations: [],
     boatsID: [],
     contractCounter: null,
     isLoding: true,
+    hoveredName: "",
   })
 
   console.log("home boats", state.boats)
-
-  // const callEvent = () => {
-  //   ContractDeploy.on("deploy_", () => {
-  //     console.log("callEvent > Event");
-  //   });
-  // };
 
   useEffect(() => {
     const run = async () => {
       const querySnapshot = await getDocs(collection(db, "ContractInfo"))
       console.log(">>>>>>", querySnapshot)
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data())
+      querySnapshot.forEach(async (doc) => {
+        const res = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${
+            doc.data().location
+          }&key=AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k`
+        )
+
+        const location = {
+          lat: res.data.results[0].geometry.location.lat,
+          lng: res.data.results[0].geometry.location.lng,
+          name: doc.data().name,
+        }
 
         setState((d) => {
           d.boats.push(doc.data())
+          d.locations.push(location)
           d.boatsID.push(doc.id)
           d.isLoding = false
         })
@@ -127,75 +112,67 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className=" grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:gap-x-3">
-            {state.isLoding ? (
-              <>
-                <div className="px-4 py-6 sm:px-0">
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-3 sm:col-span-2">
+            <div className=" grid grid-cols-1 gap-y-8 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:gap-x-3">
+              {state.isLoding ? (
+                <>
                   <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-                </div>
-                <div className="px-4 py-6 sm:px-0">
                   <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-                </div>
-                <div className="px-4 py-6 sm:px-0">
                   <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-                </div>
-                <div className="px-4 py-6 sm:px-0">
                   <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-                </div>
-              </>
-            ) : (
-              <>
-                {state.boats.map((boat, index) => (
-                  <div key={index} className="group relative">
-                    <div className="w-full mh-96 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                      <img
-                        src={boat.coverImage}
-                        // alt={Contract.imageAlt}
-                        className="w-full h-96 object-center object-cover lg:w-full lg:h-full"
-                      />
-                    </div>
-                    <div className="mt-2 flex justify-between">
-                      <div>
-                        <h3 className="text-sm text-gray-700">
-                          <Link to={`/boat/${state.boatsID[index]}`}>
-                            <span
-                              aria-hidden="true"
-                              className="absolute inset-0"
-                            />
-                            {boat.name}
-                          </Link>
-                        </h3>
+                </>
+              ) : (
+                <>
+                  {state.boats.map((boat, index) => (
+                    <div key={index} className="group relative">
+                      <div className="w-full mh-96 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                        <img
+                          src={boat.featuredImage}
+                          // alt={Contract.imageAlt}
+                          className="w-full h-96 object-center object-cover lg:w-full lg:h-full"
+                        />
+                      </div>
+                      <div className="mt-2 flex justify-between">
+                        <div>
+                          <h3 className="text-sm text-gray-700">
+                            <Link to={`/boat/${state.boatsID[index]}`}>
+                              <span
+                                aria-hidden="true"
+                                className="absolute inset-0"
+                              />
+                              {boat.name}
+                            </Link>
+                          </h3>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </>
-            )}
+                  ))}
+                </>
+              )}
+            </div>
           </div>
 
-          <div>
-            <div className="inline-flex rounded-md w-full h-96 shadow">
+          <div className="col-span-3 sm:col-span-1">
+            <div className="inline-flex w-full h-[80vh] shadow rounded-lg">
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: "AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k",
                 }}
-                defaultCenter={{
+                center={{
                   lat: 25.761681,
                   lng: -80.191788,
                 }}
-                defaultZoom={7}
+                defaultZoom={5}
               >
-                {products.map((product) => {
-                  const { lat, lng, name, color } = product.marker
+                {state.locations.map((location, index) => {
                   return (
                     <Marker
-                      key={lat + lng}
-                      lat={lat}
-                      lng={lng}
-                      name={name}
-                      color={color}
-                      hoveredItem={name == hoveredName}
+                      key={location.lat + location.lng + index}
+                      lat={location.lat}
+                      lng={location.lng}
+                      name={location.name}
+                      hoveredItem={location.name == state.hoveredName}
                     />
                   )
                 })}
@@ -220,12 +197,12 @@ const Marker = (props) => {
       >
         <div
           className={`pin bounce ${hoveredItem && "pinHovered"} `}
-          style={{ backgroundColor: color, cursor: "pointer" }}
+          style={{ backgroundColor: "red", cursor: "pointer" }}
           title={name}
         />
         <div className="pulse" />
       </div>
-      <div className="absolute bottom-0 flex flex-col items-center hidden mb-6 group-hover:flex">
+      <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
         <span
           style={{ minWidth: "100px", minHeight: "50px" }}
           className="relative text-center rounded z-10 p-2 text-xs leading-none text-black whitespace-no-wrap bg-white shadow-lg"
@@ -237,16 +214,3 @@ const Marker = (props) => {
     </div>
   )
 }
-// const Marker = (props) => {
-//   const { color, name, id , hoveredItem } = props;
-//   return (
-//     <div className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-//       <div
-//         className={`pin bounce ${hoveredItem && "pinHovered"} `}
-//         style={{ backgroundColor: color, cursor: "pointer" }}
-//         title={name}
-//       />
-//       <div className="pulse" />
-//     </div>
-//   );
-// };

@@ -12,12 +12,14 @@ import { Injected } from "../../../Comp/Wallets/Connectors"
 
 export default function NFT() {
   const { Contract, id } = useParams()
-  const { NFTYacht, provider, ContractFactory, UserData } = useContextAPI()
+  const { NFTYacht, provider, ContractFactory, UserData, ContractDeploy } =
+    useContextAPI()
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
   const { account, active, activate } = useWeb3React()
 
   const [state, setState] = useImmer({
-    image: null,
+    imageSrc: null,
+    imageAlt: null,
     ContractInfo: { name: "xxxx", email: "", featuredImage: null },
     contract: {
       name: "xxxx",
@@ -32,18 +34,32 @@ export default function NFT() {
   console.log({ state })
 
   const fetch = async () => {
-    console.log("runing >>>>>>>>>>>>>>>>> 1")
-    const name = await ContractNFTYacht.name()
-    console.log("runing >>>>>>>>>>>>>>>>> 2")
-    console.log("NAME!!!!!!!!!!!!!!!!!!!!!!!!!!", name)
-    const symbol = await ContractNFTYacht.symbol()
-      .then((e) => console.log(e))
-      .catch((e) => console.log(e))
+    let contractData
+    try {
+      contractData = await ContractDeploy.contractDitals(Contract)
+    } catch (error) {
+      console.log(error)
+    }
+
+    const name = contractData.name.toString()
+    const symbol = contractData.symbol.toString()
+    const baseURI = contractData.baseURI.toString()
 
     setState((draft) => {
       draft.contract.name = name
       draft.contract.symbol = symbol
     })
+
+    // const getBaseURL = baseURI.split("//").pop()
+    // console.log({ getBaseURL })
+    // const ipfsRes = await axios.get(
+    //   `https://gateway.pinata.cloud/ipfs/${getBaseURL}/`
+    // )
+    // console.log(ipfsRes.data.image)
+    // setState((draft) => {
+    //   draft.imageSrc = ipfsRes.data.image
+    //   draft.imageAlt = `${name} (${symbol})`
+    // })
 
     const ownerOf = await ContractNFTYacht.ownerOf(id)
     const BookedDate = await ContractFactory.BookedDate(Contract, id)
@@ -91,19 +107,6 @@ export default function NFT() {
 
   useEffect(() => {
     const fetchContractInfo = async () => {
-      await axios({
-        url: `https://gateway.pinata.cloud/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
-        method: "get",
-      })
-        .then((response) => {
-          setState((draft) => {
-            draft.image = response.data.image
-          })
-        })
-        .then((err) => {
-          console.log(err)
-        })
-
       const docRef = doc(db, "ContractInfo", Contract)
       const docSnap = await getDoc(docRef)
 
@@ -131,6 +134,48 @@ export default function NFT() {
         subject: "user has cancelled the booking",
         text: `user has cancelled the booking \n
         date: ${state.contract.bookedDate}`,
+        html: `<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>EMAIL</title>
+          </head>
+          <body>
+            <div
+              style="
+                text-align: left;
+                width: 100%;
+                max-width: 500px;
+                padding: 20px;
+                background-color: #f6f6f6;
+                margin: auto;
+              "
+            >
+              <h1 style="text-align: center">NFT Boading</h1>
+              <table style="width: 100%">
+                <tr>
+                  <th>confirmation</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td>user has cancelled the booking</td>
+                </tr>
+                <tr>
+                  <th>Date</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td>${state.contract.bookedDate}</td>
+                </tr>
+              </table>
+              <br />
+              <p style="text-align: center">
+                <a href="https://">CopyRight: NFT Boading</a>
+              </p>
+            </div>
+          </body>
+        </html>
+        `,
       }
       const res = await axios.post("http://localhost:8080/email", Mail)
       console.log(res.data.msg)
@@ -159,9 +204,59 @@ export default function NFT() {
           date: ${state.contract.bookedDate} \n
           ownerAddress: ${contract} \n
           memberShip ID: ${id}`,
+          html: `<!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8" />
+              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>EMAIL</title>
+            </head>
+            <body>
+              <div
+                style="
+                  text-align: left;
+                  width: 100%;
+                  max-width: 500px;
+                  padding: 20px;
+                  background-color: #f6f6f6;
+                  margin: auto;
+                "
+              >
+                <h1 style="text-align: center">NFT Boading</h1>
+                <table style="width: 100%">
+                  <tr>
+                    <th>Confirmation</th>
+                  </tr>
+                  <tr style="background-color: #eaeaea">
+                    <td>user has accepted the offer price</td>
+                  </tr>
+                  <tr>
+                    <th>Date</th>
+                  </tr>
+                  <tr style="background-color: #eaeaea">
+                    <td>${state.contract.bookedDate}</td>
+                  </tr>
+                  <tr>
+                    <th>Info</th>
+                  </tr>
+                  <tr style="background-color: #eaeaea">
+                    <td>${contract} (${id})</td>
+                  </tr>
+                </table>
+                <br />
+                <p style="text-align: center">
+                  <a href="https://">CopyRight: NFT Boading</a>
+                </p>
+              </div>
+            </body>
+          </html>
+          `,
         }
         const res = await axios.post("http://localhost:8080/email", Mail)
         console.log(res.data.msg)
+
+        fetch()
       })
       .catch((e) => e.reason)
   }
@@ -171,7 +266,7 @@ export default function NFT() {
       <div className="NFT min-h-full">
         <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-gray-900">NFT</h1>
+            <h1 className="text-3xl font-bold text-gray-900">NFTt</h1>
           </div>
         </header>
         <main>
@@ -181,8 +276,7 @@ export default function NFT() {
                 <div className="md:col-span-2">
                   <div className="px-4 sm:px-0">
                     <img
-                      src={state.image}
-                      alt="Walnut card tray with white powder coated steel divider and 3 punchout holes."
+                      src={state.ContractInfo.featuredImage}
                       className="bg-gray-100 rounded-lg w-full"
                     />
                   </div>

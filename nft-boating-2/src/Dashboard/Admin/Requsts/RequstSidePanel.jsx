@@ -7,6 +7,7 @@ import { useContextAPI } from "../../../ContextAPI"
 import { doc, deleteDoc } from "firebase/firestore"
 import { db } from "../../../DB/firebase-config"
 import { useImmer } from "use-immer"
+import Map from "../../../Comp/Map/Map"
 
 export default function RequstSidePanel({ open, setOpen, state, setState }) {
   const { ContractDeploy, UserData } = useContextAPI()
@@ -27,6 +28,54 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
         to: `${UserData.email}`,
         subject: "your request was accepted",
         text: `http://localhost:3010/create-new`,
+        html: `<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>EMAIL</title>
+          </head>
+          <body>
+            <div
+              style="
+                text-align: left;
+                width: 100%;
+                max-width: 500px;
+                padding: 20px;
+                background-color: #f6f6f6;
+                margin: auto;
+              "
+            >
+              <h1 style="text-align: center">NFT Boading</h1>
+              <table style="width: 100%">
+                <tr>
+                  <th>Confirmation</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td>Your request was accepted</td>
+                </tr>
+                <tr>
+                  <th>Name</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td>${state.request.name}</td>
+                </tr>
+                <tr>
+                  <th>Link</th>
+                </tr>
+                <tr style="background-color: #eaeaea">
+                  <td><a href="http://localhost:3010/create-new">Please go and create your listning</a></td>
+                </tr>
+              </table>
+              <br />
+              <p style="text-align: center">
+                <a href="https://">CopyRight: NFT Boading</a>
+              </p>
+            </div>
+          </body>
+        </html>
+        `,
       }
       const res = await axios.post("http://localhost:8080/email", Mail)
       console.log(res.data.msg)
@@ -57,6 +106,48 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
       to: `${UserData.email}`,
       subject: "Your request was canceled",
       text: `Your request was canceled`,
+      html: `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>EMAIL</title>
+        </head>
+        <body>
+          <div
+            style="
+              text-align: left;
+              width: 100%;
+              max-width: 500px;
+              padding: 20px;
+              background-color: #f6f6f6;
+              margin: auto;
+            "
+          >
+            <h1 style="text-align: center">NFT Boading</h1>
+            <table style="width: 100%">
+              <tr>
+                <th>Confirmation</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>Your request was canceled</td>
+              </tr>
+              <tr>
+                <th>Name</th>
+              </tr>
+              <tr style="background-color: #eaeaea">
+                <td>${state.request.name}</td>
+              </tr>
+            </table>
+            <br />
+            <p style="text-align: center">
+              <a href="https://">CopyRight: NFT Boading</a>
+            </p>
+          </div>
+        </body>
+      </html>
+      `,
     }
     const res = await axios.post("http://localhost:8080/email", Mail)
     console.log(res.data.msg)
@@ -128,6 +219,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                       <p className="mb-2">
                         Phone Number: {state.request.phone}
                       </p>
+                      <p className="mb-2">Location: {state.request.location}</p>
                       <p className="mb-2">Year: {state.request.year}</p>
                       <p className="mb-2">Make: {state.request.make}</p>
                       <p className="mb-2">Model: {state.request.model}</p>
@@ -151,6 +243,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                         className="mb-4"
                         alt=""
                       ></img>
+                      <Map address={state.request.location} />
                       <div className="pt-6">
                         {Boolean(statep.err !== "") && (
                           <p className="text-red text-center mb-2">

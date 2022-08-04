@@ -13,6 +13,7 @@
     "@web3-react/walletlink-connector": "^6.2.14",
     "axios": "^0.27.2",
     "dom-to-image": "^2.6.0",
+    "dotenv": "^16.0.1",
     "ethers": "^5.6.9",
     "firebase": "^9.9.0",
     "google-map-react": "^2.2.0",

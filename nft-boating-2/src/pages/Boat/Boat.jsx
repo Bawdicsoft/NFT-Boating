@@ -6,6 +6,7 @@ import { useImmer } from "use-immer"
 import { Link, useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../DB/firebase-config"
+import Map from "../../Comp/Map/Map"
 
 const product = {
   name: "",
@@ -91,66 +92,12 @@ export default function Boat() {
             }
           >
             <img
-              src={State.request.featuredImage}
+              src={State.request.coverImage}
               alt=""
               className="w-screen h-96 bg-slate-500 object-center object-cover rounded-lg"
             />
           </div>
         </div>
-
-        {/* {!State.isLoading ? (
-          <div className="mt-6 max-w-2xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-3 lg:gap-x-8">
-            <div className="hidden aspect-w-3 aspect-h-4 rounded-lg overflow-hidden lg:block">
-              <img
-                src={State.product.images[0]}
-                // alt={product.images[0].alt}
-                className="w-full h-full object-center object-cover"
-              />
-            </div>
-            <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
-              <div className="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden">
-                <img
-                  src={State.product.images[1]}
-                  // alt={product.images[1].alt}
-                  className="w-full h-full object-center object-cover"
-                />
-              </div>
-              <div className="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden">
-                <img
-                  src={State.product.images[2]}
-                  // alt={product.images[2].alt}
-                  className="w-full h-full object-center object-cover"
-                />
-              </div>
-            </div>
-            <div className="aspect-w-4 aspect-h-5 sm:rounded-lg sm:overflow-hidden lg:aspect-w-3 lg:aspect-h-4">
-              <img
-                src={State.product.images[3]}
-                // alt={product.images[3].alt}
-                className="w-full h-full object-center object-cover"
-              />
-            </div>
-          </div>
-        ) : (
-          // <div className="px-4 py-6 sm:px-0">
-          //   <img
-          //     src={State.product.images[0]}
-          //     // alt={product.images[0].alt}
-          //     className="w-screen h-96 bg-slate-500 object-center object-cover"
-          //   />
-          // </div>
-          <div className="animate-pulse  mt-6 max-w-2xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-3 lg:gap-x-8">
-            <div className="hidden aspect-w-3 aspect-h-4 rounded-lg overflow-hidden lg:block">
-              <div className="animate-pulse bg-slate-500 rounded-lg h-96"></div>
-
-              <img
-                src={State.product.images[0]}
-                // alt={product.images[0].alt}
-                className="w-screen h-96 bg-slate-500 object-center object-cover"
-              />
-            </div>
-          </div>
-        )} */}
 
         {/* Product info */}
         <div className="max-w-2xl mx-auto pt-10 pb-16 px-4 sm:px-6 lg:max-w-7xl lg:pt-16 lg:pb-24 lg:px-8 lg:grid lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8">
@@ -181,7 +128,7 @@ export default function Boat() {
 
           <div className="py-10 lg:pt-6 lg:pb-16 lg:col-start-1 lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
             {/* Description and details */}
-            <div>
+            <div className="mb-4">
               <h3 className="text-sm font-medium text-gray-900">Description</h3>
               <div className="space-y-6">
                 <p className="text-base text-gray-900">
@@ -190,27 +137,7 @@ export default function Boat() {
               </div>
             </div>
 
-            {/* <div className="mt-10">
-              <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
-
-            <div className="mt-4">
-                <ul role="list" className="pl-4 list-disc text-sm space-y-2">
-                  {product.highlights.map((highlight) => (
-                    <li key={highlight} className="text-gray-400">
-                      <span className="text-gray-600">{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <h2 className="text-sm font-medium text-gray-900">Details</h2>
-
-              <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product.details}</p>
-              </div>
-            </div> */}
+            <Map address={State.request.location} />
           </div>
         </div>
       </div>

@@ -25,8 +25,8 @@ export const ContextProvider = ({ children }) => {
   const { activate, account, active } = useWeb3React()
   const [user, loading, error] = useAuthState(auth)
 
-  const DeployAddress = "0x0076e13F382458FA68B335e2a92c0ac981C179b4"
-  const FactoryAddress = "0x22bB41F0C2CCb90D0C5f7565ed054bd6b26ff8C6"
+  const DeployAddress = "0x1C43fd747b973089Ba7747Ec5F116f38c86BCc9f"
+  const FactoryAddress = "0x49aaD763dA7A1e07c0B7a0880527D7f915fe5579"
   const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
 
   let provider

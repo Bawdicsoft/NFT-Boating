@@ -48,7 +48,7 @@ export default function BookingForm() {
     day: date.slice(8, 10),
   }
 
-  const availDate = new Date(new Date().setDate(new Date().getDate() + 20))
+  const availDate = new Date(new Date().setDate(new Date().getDate() + 60))
   const daysAdded = availDate.toISOString().split("T")[0]
   const maximumDate = {
     year: daysAdded.slice(0, 4),

@@ -60,7 +60,11 @@ export default function Food({ setOpen, open, setState, state }) {
     for (let i = 0; i < foodArray.length; i++) {
       for (let j = 0; j < stateFood.food.length; j++) {
         if (foodArray[i] == stateFood.food[j].name) {
-          foodArray2.push(stateFood.food[j])
+          let foodNameAndDescription = {
+            name: stateFood.food[j].name,
+            description: stateFood.food[j].description,
+          }
+          foodArray2.push(foodNameAndDescription)
           totalPrice += stateFood.food[j].price
         }
       }

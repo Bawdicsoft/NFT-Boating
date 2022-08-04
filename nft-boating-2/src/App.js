@@ -47,7 +47,7 @@ export default function App() {
   }
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
-  // console.log(state, "useImmerReducer")
+  console.log(state, "useImmerReducer")
 
   return (
     <>
