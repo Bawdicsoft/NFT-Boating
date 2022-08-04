@@ -43,8 +43,6 @@ export default function ListBoat() {
     },
   })
 
-  const [open, setOpen] = useState(false)
-
   const location = watch(["location"])
   useEffect(() => {
     const runMap = async () => {
@@ -103,7 +101,6 @@ export default function ListBoat() {
 
   const onSubmit = async (e) => {
     if (state.markerMap.status === "OK") {
-      setOpen(true)
       setState((draft) => {
         draft.btnLoading = true
       })
@@ -328,7 +325,6 @@ export default function ListBoat() {
                             setState((e) => {
                               e.btnLoading = false
                             })
-                            setOpen(false)
                           }
                         )
                       }
@@ -350,7 +346,6 @@ export default function ListBoat() {
 
   return (
     <div className="CreateNew min-h-full">
-      <Popup open={open} setOpen={setOpen} state={state} />
       <header className="bg-white">
         <div className="mt-20 mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Become a Host </h1>
