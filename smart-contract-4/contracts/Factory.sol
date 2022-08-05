@@ -29,11 +29,9 @@ contract Factory is Ownable {
     *   variables
     ***********************************************/
 
-    IERC20 private USDT;
+    IERC20 public USDT;
     IDeploy private DeployHandler;
-
-    
-    
+    uint public ownerFee = 20; // 20%
 
     
     /***********************************************
@@ -45,11 +43,10 @@ contract Factory is Ownable {
         DeployHandler = IDeploy(_DeployHandler);
     }
 
-
-
-
-
-
+    function updateOwnerFee(uint _fee) public onlyOwner {
+        require(ownerFee != _fee, "!already");
+        ownerFee = _fee;
+    }
 
 
     /******************************************************
@@ -82,8 +79,12 @@ contract Factory is Ownable {
             "!Not suffecient USDT"
         );
         
+        uint256 _ownerFee = USDT_.mul(ownerFee).div(100);
+        uint256 _boatFee = USDT_.sub(_ownerFee);
 
-        USDT.transferFrom( msg.sender, contractOwner, USDT_ );
+        USDT.transferFrom( msg.sender, owner(), _ownerFee );
+        USDT.transferFrom( msg.sender, contractOwner, _boatFee );
+
         MYIERC721 IContract = MYIERC721(contract_);
 
         for (uint256 i = 0; i < tOwnership_; i++) {
@@ -104,9 +105,9 @@ contract Factory is Ownable {
     *   BookDate loigc (bookDate, cancelBooking)
     *******************************************************/
     uint public _newYear;
-    uint public _bookingBefore = 0; // user can't book date Before (bookingBefore)date
-    uint public _bookingAfter  = 604800; // user can't book date After  (bookingAfter)date
-    uint public _cancelBefore  = 86400;
+    uint public _bookingBefore; // user can't book date Before (bookingBefore)date
+    uint public _bookingAfter = 5260000; // user can't book date After  (bookingAfter)date
+    uint public _cancelBefore;
 
     struct _bookDates {
         uint _year;
@@ -122,13 +123,13 @@ contract Factory is Ownable {
     event _cancelBooking(address _Contract, uint id, uint year, uint month, uint day);
 
     // update function
-    function updateBookingBefore(uint time_) public {
+    function updateBookingBefore(uint time_) public onlyOwner {
         _bookingBefore = time_;
     }
-    function updateBookingAfter(uint time_) public {
+    function updateBookingAfter(uint time_) public onlyOwner {
         _bookingAfter = time_;
     }
-    function updateCancelBefore(uint time_) public {
+    function updateCancelBefore(uint time_) public onlyOwner {
         _cancelBefore = time_;
     }
 
@@ -229,7 +230,7 @@ contract Factory is Ownable {
 
     uint public _offerBefore; // user can't offer After (offerBefore)date
     uint public _acceptOfferBefore; // user can't acceptOffer After (acceptOfferBefore)date
-    uint public _offerPrice; // user have to pay USDT for offer
+    uint public _offerPrice = 300 * 10 ** 6; // user have to pay USDT for offer
 
     mapping(address => mapping(uint => uint)) public _indexOfuserAllOffers;
     mapping(address => mapping(uint => offer_)) public _offers;
@@ -242,15 +243,14 @@ contract Factory is Ownable {
     event offerAccepted(uint token, address user);
 
     // update function
-    function updateOfferBefore(uint time_) public {
+    function updateOfferBefore(uint time_) public onlyOwner {
         _offerBefore = time_;
     }
-    function updateAcceptOfferBefore(uint time_) public {
+    function updateAcceptOfferBefore(uint time_) public onlyOwner {
         _acceptOfferBefore = time_;
     }
-    function updateOfferPrice(uint amount_) public {
-        uint decimals = USDT.decimals();
-        _offerPrice = (amount_ * 10 ** decimals);
+    function updateOfferPrice(uint amount_) public onlyOwner {
+        _offerPrice = amount_;
     }
 
     // view function
@@ -275,7 +275,7 @@ contract Factory is Ownable {
 
         (,uint _DateAndTime,) = booking.getTime(contract_, id_);
 
-        require ( (_DateAndTime.sub(_offerBefore)) > block.timestamp, "!Time Out");
+        require ( (_DateAndTime.sub(_offerBefore)) > block.timestamp, "Time Out");
 
         USDT.transferFrom( _msgSender, address(this), USDT_);
 
@@ -316,7 +316,7 @@ contract Factory is Ownable {
 
         require ( _offerdID[contract_][id_], "!Offerd");
         require ( booking.getOwner(contract_, id_) == _msgSender(), "!Owner");
-        require ( _offers[contract_][id_].Time > block.timestamp, "!Time Out");
+        require ( _offers[contract_][id_].Time > block.timestamp, "Time Out");
 
         (, uint bookedTime_, uint newYear_) = booking.getTime(contract_, id_);
         booking.remove(contract_, id_);
@@ -328,7 +328,12 @@ contract Factory is Ownable {
         _bookDateID[contract_][year][month][day] = _offers[contract_][id_].userID;
 
         _acceptedOffers[contract_][id_] = true;
-        USDT.transfer(_msgSender(), _offers[contract_][id_].Price);
+
+        uint256 _ownerFee = _offers[contract_][id_].Price.mul(ownerFee).div(100);
+        uint256 _boatFee = _offers[contract_][id_].Price.sub(_ownerFee);
+
+        USDT.transfer(owner(), _ownerFee);
+        USDT.transfer(_msgSender(), _boatFee);
 
         delete _offerdID[contract_][id_];
         delete _offers[contract_][id_];
