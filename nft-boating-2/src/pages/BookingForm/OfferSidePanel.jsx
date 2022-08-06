@@ -65,7 +65,7 @@ export default function OfferSidePanel({
         Contract,
         state.bookedID,
         id,
-        parseUnits(data.amount.toString(), 6)
+        parseUnits(data.amount.toString(), 6).toString()
       )
       await tx.wait()
       setOpen(false)
@@ -82,12 +82,12 @@ export default function OfferSidePanel({
     console.log(
       "handleApprove run",
       FactoryAddress,
-      parseUnits(amount.toString(), 6)
+      parseUnits(amount.toString(), 6).toString()
     )
     try {
       const tx = await ContractUSDT.approve(
         FactoryAddress,
-        parseUnits(amount.toString(), 6)
+        parseUnits(amount.toString(), 6).toString()
       )
       await tx.wait()
       setButton(false)

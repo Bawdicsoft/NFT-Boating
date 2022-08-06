@@ -172,6 +172,24 @@ export const Deploy = [
         name: "contract_",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "owner_",
+        type: "address",
+      },
+    ],
+    name: "changeOwner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "contract_",
+        type: "address",
+      },
     ],
     name: "contractDitals",
     outputs: [
@@ -619,6 +637,19 @@ export const Factory = [
         internalType: "uint256[]",
         name: "_userIds",
         type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "USDT",
+    outputs: [
+      {
+        internalType: "contract IERC20",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -1148,6 +1179,19 @@ export const Factory = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "ownerFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -1221,6 +1265,19 @@ export const Factory = [
       },
     ],
     name: "updateOfferPrice",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_fee",
+        type: "uint256",
+      },
+    ],
+    name: "updateOwnerFee",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -2015,6 +2072,19 @@ export const USDT = [
         type: "bool",
       },
     ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amout_",
+        type: "uint256",
+      },
+    ],
+    name: "mint",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
