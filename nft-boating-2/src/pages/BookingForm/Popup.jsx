@@ -9,6 +9,7 @@ import { doc, setDoc } from "firebase/firestore"
 import { useContextAPI } from "../../ContextAPI"
 import { useNavigate } from "react-router-dom"
 import StateContext from "../../StateContext"
+import { parseUnits } from "ethers/lib/utils"
 
 export default function Popup({ open, setOpen, state }) {
   const cancelButtonRef = useRef(null)
@@ -17,7 +18,7 @@ export default function Popup({ open, setOpen, state }) {
   console.log(appState.food.array)
 
   const navigate = useNavigate()
-  const { ContractFactory, UserData } = useContextAPI()
+  const { ContractFactory, UserData, ContractUSDT } = useContextAPI()
 
   //   const formData = {
   //     year: selectedDay.year,
@@ -40,6 +41,17 @@ export default function Popup({ open, setOpen, state }) {
         state.formData.day,
         state.formData.Contract,
         state.formData.id
+      )
+      await tx.wait()
+    } catch (e) {
+      console.error(e)
+    }
+
+    try {
+      const amount = state.formData.total + 400
+      const tx = await ContractUSDT.transfer(
+        "0x344A0e306cdD004508b19C51Ec5c646500acd2f6",
+        parseUnits(amount.toString(), 6)
       )
       await tx.wait()
     } catch (e) {
