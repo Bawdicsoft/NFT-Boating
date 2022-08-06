@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8080
 
 let corsOptions = {
   origin: [
-    "https://nft-boating-nft-boating.vercel.app",
+    "https://nft-boating.vercel.app",
     "http://localhost:3010",
   ],
   optionsSuccessStatus: 200,

@@ -82,11 +82,13 @@ export default function Boat() {
             }
           >
             <div className="h-56 bg-slate-500 sm:h-64 xl:h-80 2xl:h-96 rounded-lg">
-              <Carousel>
-                {State.request.gallery?.map((img, index) => (
-                  <img src={img} key={index} alt="..." />
-                ))}
-              </Carousel>
+              {State.request.gallery && (
+                <Carousel>
+                  {State.request.gallery.map((img, index) => (
+                    <img src={img} key={index} alt="..." />
+                  ))}
+                </Carousel>
+              )}
             </div>
             {/* <img
               src={State.request.coverImage}
