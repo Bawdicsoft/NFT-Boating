@@ -25,9 +25,9 @@ export const ContextProvider = ({ children }) => {
   const { activate, account, active } = useWeb3React()
   const [user, loading, error] = useAuthState(auth)
 
-  const DeployAddress = "0x1C43fd747b973089Ba7747Ec5F116f38c86BCc9f"
-  const FactoryAddress = "0x49aaD763dA7A1e07c0B7a0880527D7f915fe5579"
-  const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
+  const DeployAddress = "0x80C722d0535bd81D92ddeaBd624f2d9436d75c9a"
+  const FactoryAddress = "0x8548E2B75f3d6E3493CB0eFf80Fc47cEC2387Cc1"
+  const USDTAddress = "0xc8604af17cb5481ef010b67aa32d4621dc319247"
 
   let provider
   if (typeof window.ethereum !== "undefined") {

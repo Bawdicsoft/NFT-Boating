@@ -38,7 +38,7 @@ interface IERC20 {
      *
      * Emits a {Transfer} event.
      */
-    function transfer(address to, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external;
 
     /**
      * @dev Returns the remaining number of tokens that `spender` will be
@@ -78,8 +78,8 @@ interface IERC20 {
         address from,
         address to,
         uint256 amount
-    ) external returns (bool);
+    ) external;
 
-    function decimals() external view returns (uint8);
+    function decimals() external view returns (uint);
 
 }
