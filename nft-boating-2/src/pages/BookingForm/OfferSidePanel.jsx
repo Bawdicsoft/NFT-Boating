@@ -8,7 +8,7 @@ import { useContextAPI } from "../../ContextAPI"
 import { useNavigate } from "react-router-dom"
 
 import { useImmer } from "use-immer"
-import { parseEther } from "ethers/lib/utils"
+import { parseEther, parseUnits } from "ethers/lib/utils"
 
 export default function OfferSidePanel({
   open,
@@ -65,7 +65,7 @@ export default function OfferSidePanel({
         Contract,
         state.bookedID,
         id,
-        parseEther(data.amount)
+        parseUnits(data.amount.toString(), 6)
       )
       await tx.wait()
       setOpen(false)
@@ -79,9 +79,16 @@ export default function OfferSidePanel({
   const [button, setButton] = useState(true)
 
   const handleApprove = async (e) => {
-    console.log("handleApprove run", FactoryAddress, parseEther(amount))
+    console.log(
+      "handleApprove run",
+      FactoryAddress,
+      parseUnits(amount.toString(), 6)
+    )
     try {
-      const tx = await ContractUSDT.approve(FactoryAddress, parseEther(amount))
+      const tx = await ContractUSDT.approve(
+        FactoryAddress,
+        parseUnits(amount.toString(), 6)
+      )
       await tx.wait()
       setButton(false)
     } catch (e) {
