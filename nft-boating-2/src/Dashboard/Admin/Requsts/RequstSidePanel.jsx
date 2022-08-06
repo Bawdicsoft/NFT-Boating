@@ -48,7 +48,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                 margin: auto;
               "
             >
-              <h1 style="text-align: center">NFT Boading</h1>
+              <h1 style="text-align: center">NFT Boadting</h1>
               <table style="width: 100%">
                 <tr>
                   <th>Confirmation</th>
@@ -71,14 +71,17 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
               </table>
               <br />
               <p style="text-align: center">
-                <a href="https://">CopyRight: NFT Boading</a>
+                <a href="https://">CopyRight: NFT Boating</a>
               </p>
             </div>
           </body>
         </html>
         `,
       }
-      const res = await axios.post("http://localhost:8080/email", Mail)
+      const res = await axios.post(
+        "https://nft-boating-mail.herokuapp.com/email",
+        Mail
+      )
       console.log(res.data.msg)
 
       setState((e) => {
@@ -126,7 +129,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
               margin: auto;
             "
           >
-            <h1 style="text-align: center">NFT Boading</h1>
+            <h1 style="text-align: center">NFT Boating</h1>
             <table style="width: 100%">
               <tr>
                 <th>Confirmation</th>
@@ -143,14 +146,17 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
             </table>
             <br />
             <p style="text-align: center">
-              <a href="https://">CopyRight: NFT Boading</a>
+              <a href="https://">CopyRight: NFT Boating</a>
             </p>
           </div>
         </body>
       </html>
       `,
     }
-    const res = await axios.post("http://localhost:8080/email", Mail)
+    const res = await axios.post(
+      "https://nft-boating-mail.herokuapp.com/email",
+      Mail
+    )
     console.log(res.data.msg)
 
     setState((e) => {

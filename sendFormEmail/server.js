@@ -7,10 +7,13 @@ const { log } = console
 const app = express()
 var cors = require("cors")
 
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 
 let corsOptions = {
-  origin: "https://nft-boating-nft-boating.vercel.app/",
+  origin: [
+    "https://nft-boating-nft-boating.vercel.app",
+    "http://localhost:3010",
+  ],
   optionsSuccessStatus: 200,
 }
 
@@ -23,8 +26,12 @@ app.use(
 )
 app.use(express.json())
 
+app.get("/", function (req, res) {
+  res.send("Hello World")
+})
+
 // email, subject, text
-app.post("/email", (req, res) => {
+app.post("/email", function (req, res) {
   const { fromName, from, to, subject, text, html } = req.body
   log("Data: ", req.body)
 
@@ -40,4 +47,4 @@ app.post("/email", (req, res) => {
 })
 
 // Start server
-app.listen(PORT, () => log("Server is starting on PORT, ", 8080))
+app.listen(PORT, () => log("Server is starting on PORT, ", PORT))
