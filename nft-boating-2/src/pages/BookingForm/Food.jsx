@@ -27,8 +27,13 @@ export default function Food({ setOpen, open, setState, state }) {
       querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data())
 
+        const food = {
+          id: doc.id,
+          data: doc.data(),
+        }
+
         setFoodState((d) => {
-          d.food.push(doc.data())
+          d.food.push(food)
           d.isLoding = false
         })
       })
@@ -59,13 +64,13 @@ export default function Food({ setOpen, open, setState, state }) {
     let totalPrice = 0
     for (let i = 0; i < foodArray.length; i++) {
       for (let j = 0; j < stateFood.food.length; j++) {
-        if (foodArray[i] == stateFood.food[j].name) {
+        if (foodArray[i] == stateFood.food[j].id) {
           let foodNameAndDescription = {
-            name: stateFood.food[j].name,
-            description: stateFood.food[j].description,
+            name: stateFood.food[j].data.name,
+            description: stateFood.food[j].data.description,
           }
           foodArray2.push(foodNameAndDescription)
-          totalPrice += stateFood.food[j].price
+          totalPrice += Number(stateFood.food[j].data.price)
         }
       }
     }
@@ -137,8 +142,7 @@ export default function Food({ setOpen, open, setState, state }) {
                               <li key={index} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
+                                    src={product.data.image}
                                     className="h-full w-full object-cover object-center"
                                   />
                                 </div>
@@ -146,24 +150,26 @@ export default function Food({ setOpen, open, setState, state }) {
                                 <div className="ml-4 flex flex-1 flex-col">
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
-                                      <h3>{product.name}</h3>
-                                      <p className="ml-4">$ {product.price}</p>
+                                      <h3>{product.data.name}</h3>
+                                      <p className="ml-4">
+                                        $ {product.data.price}
+                                      </p>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">
-                                      {product.description}
+                                      {product.data.description}
                                     </p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
                                     <p className="text-gray-500">
-                                      Qty {product.quantity}
+                                      {/* Qty {product.quantity} */}
                                     </p>
 
                                     <div className="flex">
-                                      <label htmlFor={product.name}>
+                                      <label htmlFor={product.data.name}>
                                         <input
                                           type="checkbox"
-                                          id={product.name}
-                                          {...register(product.name, {})}
+                                          id={product.data.name}
+                                          {...register(product.id, {})}
                                         />{" "}
                                         Select
                                       </label>

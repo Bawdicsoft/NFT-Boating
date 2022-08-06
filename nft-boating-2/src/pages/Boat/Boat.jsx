@@ -7,16 +7,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../DB/firebase-config"
 import Map from "../../Comp/Map/Map"
-
-const product = {
-  name: "",
-  symbol: "",
-  totalSupply: "",
-  price: "",
-  walletAddress: "",
-  images: [],
-  description: "",
-}
+import { Carousel } from "flowbite-react"
 
 export default function Boat() {
   const { Contract } = useParams()
@@ -87,15 +78,21 @@ export default function Boat() {
         <div className=" mt-6 max-w-2xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
           <div
             className={
-              ` bg-slate-500 rounded-lg h-96 ` +
-              (State.isLoading && "animate-pulse")
+              ` bg-slate-500 rounded-lg ` + (State.isLoading && "animate-pulse")
             }
           >
-            <img
+            <div className="h-56 bg-slate-500 sm:h-64 xl:h-80 2xl:h-96 rounded-lg">
+              <Carousel>
+                {State.request.gallery?.map((img, index) => (
+                  <img src={img} key={index} alt="..." />
+                ))}
+              </Carousel>
+            </div>
+            {/* <img
               src={State.request.coverImage}
               alt=""
               className="w-screen h-96 bg-slate-500 object-center object-cover rounded-lg"
-            />
+            /> */}
           </div>
         </div>
 

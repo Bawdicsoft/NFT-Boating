@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .t-card {
+        max-width: 300px;
+        padding: 20px;
+        margin: auto;
+        background-color: aliceblue;
+      }
+      .t-card-img {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      .t-card-heading {
+        font-size: 26px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .t-card-grid {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        align-items: center;
+        padding: 0 20px;
+        gap: 10px;
+      }
+      .t-card-p {
+        font-size: 18px;
+      }
+      .t-card-box {
+        padding-top: 100%;
+        background-color: aqua;
+      }
+
+      .t-card-form {
+        max-width: 300px;
+        margin: auto;
+        padding: 20px;
+      }
+      .t-card-form-input {
+        width: 100%;
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+      .t-card-form-button {
+        width: 100%;
+        font-size: 18px;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="t-card">
+      <img
+        class="t-card-img"
+        src="https://images.unsplash.com/photo-1659731537771-2f78bb65a986?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
+        alt="xyz"
+      />
+      <h5 class="t-card-heading">NFT Housing</h5>
+      <div class="t-card-grid">
+        <div class="t-card-p">
+          <p>Number: 111-111-111</p>
+          <p>URL: company.com</p>
+        </div>
+        <div class="t-card-box"></div>
+      </div>
+    </div>
+    <form class="t-card-form">
+      <input class="t-card-form-input" type="file" />
+      <button class="t-card-form-button" type="submit">Submit</button>
+    </form>
+  </body>
+</html>

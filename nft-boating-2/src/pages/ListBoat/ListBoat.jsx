@@ -12,10 +12,40 @@ import { useContextAPI } from "../../ContextAPI"
 import html2canvas from "html2canvas"
 import GoogleMapReact from "google-map-react"
 import { useContext, useEffect, useState } from "react"
+import { Carousel } from "flowbite-react"
 import { async } from "@firebase/util"
 import Popup from "./Popup"
 import Map from "../../Comp/Map/Map"
 import DispatchContext from "../../DispatchContext"
+
+async function uploadImg({ name, fileName, file }) {
+  return new Promise((resolve, reject) => {
+    console.log("Uploading image ...")
+
+    const storageRef = ref(storage, `user-uploads/images/${name}/${fileName}`)
+    const uploadTask = uploadBytesResumable(storageRef, file)
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        )
+        console.log("Upload is " + progress + "% done")
+      },
+      (error) => {
+        console.error(error)
+        reject(error)
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((imgURL) => {
+          console.log(`uploaded image:`, imgURL)
+          resolve(imgURL)
+        })
+      }
+    )
+  })
+}
 
 export default function ListBoat() {
   const appDispatch = useContext(DispatchContext)
@@ -33,7 +63,7 @@ export default function ListBoat() {
     progresspercent: 0,
     popup: false,
     featuredImageData: null,
-    coverImageData: null,
+    galleryData: [],
     markerLoading: true,
     markerMap: {
       lat: 25.761681,
@@ -42,6 +72,7 @@ export default function ListBoat() {
       status: "null",
     },
   })
+  console.log(state.gallery, "state.gallery")
 
   const location = watch(["location"])
   useEffect(() => {
@@ -84,20 +115,26 @@ export default function ListBoat() {
     }
   }, [featuredImage])
 
-  const coverImage = watch(["coverImage"])
-  useEffect(() => {
-    if (coverImage[0] !== undefined) {
-      if (coverImage[0].length > 0) {
+  const [images, setImages] = useState([])
+  const handelGallery = (e) => {
+    console.log(e.target.files, "gallery")
+
+    if (e.target.files.length > 0) {
+      setImages([...e.target.files])
+      setState((e) => {
+        e.galleryData = []
+      })
+      for (let i = 0; i < e.target.files.length; i++) {
         const reader = new FileReader()
         reader.addEventListener("load", () => {
           setState((e) => {
-            e.coverImageData = reader.result
+            e.galleryData.push(reader.result)
           })
         })
-        reader.readAsDataURL(coverImage[0][0])
+        reader.readAsDataURL(e.target.files[i])
       }
     }
-  }, [coverImage])
+  }
 
   const onSubmit = async (e) => {
     if (state.markerMap.status === "OK") {
@@ -132,210 +169,171 @@ export default function ListBoat() {
           )
           .then(async (response) => {
             const file = e.featuredImage[0]
-            const storageRef = ref(storage, `files/${file.name}`)
-            const uploadTask = uploadBytesResumable(storageRef, file)
+            const name = e.name
+            const fileName = file.name
+            const featuredImageURL = await uploadImg({ name, fileName, file })
 
-            uploadTask.on(
-              "state_changed",
-              (snapshot) => {
-                const progress = Math.round(
-                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                )
-                setState((e) => {
-                  e.progresspercent = progress
-                })
-              },
-              (error) => {
-                alert(error)
-              },
-              () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(
-                  (featuredImageURL) => {
-                    const file = e.coverImage[0]
+            let gallery = []
+            for (let i = 0; i < images.length; i++) {
+              const file = images[i]
+              const name = e.name
+              const fileName = file.name
+              const imagesURL = await uploadImg({ name, fileName, file })
+              gallery.push(imagesURL)
+            }
 
-                    if (!file) return
+            const request = {
+              featuredImage: featuredImageURL,
+              gallery: gallery,
+              name: e.name,
+              phone: e.phone,
+              year: e.year,
+              make: e.make,
+              model: e.model,
+              price: e.price,
+              location: e.location,
+              walletAddress: account,
+              IpfsHash: response.data.IpfsHash,
+              description: e.description,
+            }
 
-                    const storageRef = ref(storage, `files/${file.name}`)
-                    const uploadTask = uploadBytesResumable(storageRef, file)
+            try {
+              await addDoc(collection(db, "Requst"), {
+                request,
+              })
+            } catch (error) {
+              console.error(error)
+            }
 
-                    uploadTask.on(
-                      "state_changed",
-                      (snapshot) => {
-                        const progress = Math.round(
-                          (snapshot.bytesTransferred / snapshot.totalBytes) *
-                            100
-                        )
-                        setState((e) => {
-                          e.progresspercent = progress
-                        })
-                      },
-                      (error) => {
-                        alert(error)
-                      },
-                      () => {
-                        getDownloadURL(uploadTask.snapshot.ref).then(
-                          async (coverImageURL) => {
-                            const request = {
-                              featuredImage: featuredImageURL,
-                              coverImage: coverImageURL,
-                              name: e.name,
-                              phone: e.phone,
-                              year: e.year,
-                              make: e.make,
-                              model: e.model,
-                              price: e.price,
-                              location: e.location,
-                              walletAddress: account,
-                              IpfsHash: response.data.IpfsHash,
-                              description: e.description,
-                            }
+            try {
+              await updateDocRequests("users", {
+                request,
+                host: true,
+              })
+            } catch (error) {
+              console.error(error)
+            }
 
-                            try {
-                              await addDoc(collection(db, "Requst"), {
-                                request,
-                              })
-                            } catch (error) {
-                              console.error(error)
-                            }
+            const Mail = {
+              fromName: "NFT Boating",
+              from: "nabeelatdappvert@gmail.com",
+              to: `nabeelatdappvert@gmail.com ${UserData.email} `,
+              subject: "You have new request from NFT Boation",
+              text: `
+                name: ${e.name} \n
+                phone: ${e.phone} \n
+                email: ${UserData.email} \n
+                year: ${e.year} \n
+                make: ${e.make} \n
+                model: ${e.model} \n
+                price: ${e.price} \n
+                location: ${e.location} \n
+                walletAddress: ${account} \n
+                description: ${e.description}`,
+              html: `<!DOCTYPE html>
+                <html lang="en">
+                  <head>
+                    <meta charset="UTF-8" />
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    <title>EMAIL</title>
+                  </head>
+                  <body>
+                    <div
+                      style="
+                        text-align: left;
+                        width: 100%;
+                        max-width: 500px;
+                        padding: 20px;
+                        background-color: #f6f6f6;
+                        margin: auto;
+                      "
+                    >
+                      <h1 style="text-align: center">NFT Boading</h1>
+                      <table style="width: 100%">
+                        <tr>
+                          <th>Name</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.name}</td>
+                        </tr>
+                        <tr>
+                          <th>Phone</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.phone}</td>
+                        </tr>
+                        <tr>
+                          <th>Email</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${UserData.email}</td>
+                        </tr>
+                        <tr>
+                          <th>Year</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.year}</td>
+                        </tr>
+                        <tr>
+                          <th>Make</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.make}</td>
+                        </tr>
+                        <tr>
+                          <th>Model</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.model}</td>
+                        </tr>
+                        <tr>
+                          <th>Price</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.price}</td>
+                        </tr>
+                        <tr>
+                          <th>Location</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.location}</td>
+                        </tr>
+                        <tr>
+                          <th>Wallet Address</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${account}</td>
+                        </tr>
+                        <tr>
+                          <th>Description</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.description}</td>
+                        </tr>
+                      </table>
+                      <br />
+                      <p style="text-align: center">
+                        <a href="https://">CopyRight: NFT Boading</a>
+                      </p>
+                    </div>
+                  </body>
+                </html>
+                `,
+            }
 
-                            try {
-                              await updateDocRequests("users", {
-                                request,
-                                host: true,
-                              })
-                            } catch (error) {
-                              console.error(error)
-                            }
+            const res = await axios.post("http://localhost:8080/email", Mail)
+            console.log(res.data)
 
-                            const Mail = {
-                              fromName: "NFT Boating",
-                              from: "nabeelatdappvert@gmail.com",
-                              to: `nabeelatdappvert@gmail.com ${UserData.email} `,
-                              subject: "You have new request from NFT Boation",
-                              text: `featuredImage: ${featuredImageURL} \n
-                              coverImage: ${coverImageURL} \n
-                              name: ${e.name} \n
-                              phone: ${e.phone} \n
-                              email: ${UserData.email} \n
-                              year: ${e.year} \n
-                              make: ${e.make} \n
-                              model: ${e.model} \n
-                              price: ${e.price} \n
-                              location: ${e.location} \n
-                              walletAddress: ${account} \n
-                              description: ${e.description}`,
-                              html: `<!DOCTYPE html>
-                              <html lang="en">
-                                <head>
-                                  <meta charset="UTF-8" />
-                                  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                                  <title>EMAIL</title>
-                                </head>
-                                <body>
-                                  <div
-                                    style="
-                                      text-align: left;
-                                      width: 100%;
-                                      max-width: 500px;
-                                      padding: 20px;
-                                      background-color: #f6f6f6;
-                                      margin: auto;
-                                    "
-                                  >
-                                    <h1 style="text-align: center">NFT Boading</h1>
-                                    <table style="width: 100%">
-                                      <tr>
-                                        <th>Name</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.name}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Phone</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.phone}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Email</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${UserData.email}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Year</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.year}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Make</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.make}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Model</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.model}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Price</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.price}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Location</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.location}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Wallet Address</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${account}</td>
-                                      </tr>
-                                      <tr>
-                                        <th>Description</th>
-                                      </tr>
-                                      <tr style="background-color: #eaeaea">
-                                        <td>${e.description}</td>
-                                      </tr>
-                                    </table>
-                                    <br />
-                                    <p style="text-align: center">
-                                      <a href="https://">CopyRight: NFT Boading</a>
-                                    </p>
-                                  </div>
-                                </body>
-                              </html>
-                              `,
-                            }
-
-                            const res = await axios.post(
-                              "http://localhost:8080/email",
-                              Mail
-                            )
-                            console.log(res.data)
-
-                            setState((e) => {
-                              e.btnLoading = false
-                            })
-                          }
-                        )
-                      }
-                    )
-                  }
-                )
-              }
-            )
+            setState((e) => {
+              e.btnLoading = false
+            })
           })
           .catch((error) => {
             console.error(error)
+            setState((e) => {
+              e.btnLoading = false
+            })
           })
       })
     } else {
@@ -601,7 +599,6 @@ export default function ListBoat() {
                                       type="file"
                                       className="sr-only"
                                       id="featuredImage"
-                                      multiple
                                       {...register("featuredImage", {
                                         required: true,
                                       })}
@@ -633,7 +630,7 @@ export default function ListBoat() {
                           </div>
                         </div>
 
-                        <div className="col-span-6 sm:col-span-6 mb-3">
+                        {/* <div className="col-span-6 sm:col-span-6 mb-3">
                           <label className="block text-sm font-medium text-gray-700">
                             Cover Image
                           </label>
@@ -667,6 +664,47 @@ export default function ListBoat() {
                               className="w-full mt-4"
                               src={state.coverImageData}
                             />
+                          </div>
+                        </div> */}
+
+                        <div className="col-span-6 sm:col-span-6 mb-3">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Gallery
+                          </label>
+                          <div className="mt-1 px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                            <div className=" flex justify-center ">
+                              <div className="space-y-1 text-center">
+                                <div className="flex text-sm text-gray-600">
+                                  <label
+                                    htmlFor="gallery"
+                                    className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                  >
+                                    <span>Upload files</span>
+                                    <input
+                                      type="file"
+                                      className="sr-only"
+                                      id="gallery"
+                                      multiple
+                                      onChange={handelGallery}
+                                      required
+                                    />
+                                  </label>
+                                  <p className="pl-1">Size should be 16x9</p>
+                                </div>
+                                <p className="text-xs text-gray-500">
+                                  PNG, JPG, GIF up to 10MB
+                                </p>
+                              </div>
+                            </div>
+                            {state.galleryData.length > 0 && (
+                              <div className="h-56 mt-4 bg-slate-500 sm:h-64 xl:h-80 2xl:h-96 rounded-lg">
+                                <Carousel>
+                                  {state.galleryData.map((img, index) => (
+                                    <img key={index} src={img} alt="..." />
+                                  ))}
+                                </Carousel>
+                              </div>
+                            )}
                           </div>
                         </div>
 

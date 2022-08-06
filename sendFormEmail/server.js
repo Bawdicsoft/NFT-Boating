@@ -9,7 +9,12 @@ var cors = require("cors")
 
 const PORT = 8080
 
-app.use(cors())
+let corsOptions = {
+  origin: "https://nft-boating-nft-boating.vercel.app/",
+  optionsSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions))
 // Data parsing
 app.use(
   express.urlencoded({

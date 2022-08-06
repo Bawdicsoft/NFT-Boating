@@ -11,15 +11,6 @@ import image4 from "../../Assets/images/wedding.jpg"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../../DB/firebase-config"
 
-const product = {
-  name: "",
-  symbol: "",
-  totalSupply: "",
-  price: "",
-  walletAddress: "",
-  images: [],
-  description: "",
-}
 
 export default function Contract() {
   const { Contract } = useParams()

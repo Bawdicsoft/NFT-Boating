@@ -7,6 +7,7 @@ import { useContextAPI } from "../../../ContextAPI"
 import { doc, deleteDoc } from "firebase/firestore"
 import { db } from "../../../DB/firebase-config"
 import { useImmer } from "use-immer"
+import { Carousel } from "flowbite-react"
 import Map from "../../../Comp/Map/Map"
 
 export default function RequstSidePanel({ open, setOpen, state, setState }) {
@@ -237,12 +238,13 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                       ></img>
 
                       <p className="mb-2">Cover Image</p>
-                      <img
-                        src={state.request.coverImage}
-                        width="400"
-                        className="mb-4"
-                        alt=""
-                      ></img>
+                      <div className="h-56 mb-6 bg-slate-500 sm:h-64 xl:h-80 2xl:h-96 rounded-lg">
+                        <Carousel>
+                          {state.request.gallery?.map((img, index) => (
+                            <img key={index} src={img} alt="..." />
+                          ))}
+                        </Carousel>
+                      </div>
                       <Map address={state.request.location} />
                       <div className="pt-6">
                         {Boolean(statep.err !== "") && (

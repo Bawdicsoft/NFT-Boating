@@ -114,7 +114,7 @@ export default function CreateNew() {
       try {
         await setDoc(doc(db, "ContractInfo", _Contract), {
           featuredImage: State.request.featuredImage,
-          coverImage: State.request.coverImage,
+          gallery: State.request.gallery,
           name: State.request.name,
           year: State.request.year,
           make: State.request.make,
