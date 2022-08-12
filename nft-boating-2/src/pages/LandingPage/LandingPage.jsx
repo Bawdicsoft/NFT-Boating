@@ -12,27 +12,26 @@ import { Link } from "react-router-dom"
 
 const features = [
   {
-    name: "Purchase nft, Become Member",
+    name: "Become a Member by Purchasing an NFT",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "Purchasing the NFT membership entitles you to rent any boat for any day of your choice throughout the year.",
     icon: GlobeAltIcon,
   },
   {
-    name: "Choose your date, reserve your boat",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+    name: "Choose your date, Reserve your boat",
+    description: "select the date and get your yacht reserved for you.",
     icon: ScaleIcon,
   },
   {
-    name: "Grab your crew and have a great time out on the water!",
+    name: "Grab your crew and have a great time out on the Ocean!",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "Enjoy your holiday with our experienced crew and savor every moment of your leisure trip.",
     icon: LightningBoltIcon,
   },
   {
-    name: "You cant keep your NFT upto 10 years",
+    name: "You cant keep your NFT for upto 10 years",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "Change of plans? No problem. Your Membership remains valid for up to 10 years until you finally fulfill the plan.",
     icon: AnnotationIcon,
   },
 ]
@@ -64,16 +63,16 @@ export default function LandingPage() {
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                   <span className="block xl:inline">
-                    Comfort, luxury & decentralized
+                    Comfort, Luxury & Decentralized
                   </span>{" "}
-                  <span className="block text-indigo-600 xl:inline">
+                  {/* <span className="block text-indigo-600 xl:inline">
                     Boat Rental Experience
-                  </span>
+                  </span> */}
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure
-                  qui lorem cupidatat commodo. Elit sunt amet fugiat veniam
-                  occaecat fugiat aliqua.
+                  Enhance your boat rental experience with the use of innovative
+                  NFT technology. Hassle-free process to get membership and
+                  services of your choice.
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
@@ -112,11 +111,13 @@ export default function LandingPage() {
               How it works
             </h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              A better way to Rent a Boat
+              Easier Charters, Better Service
             </p>
             <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-              Lorem ipsum dolor sit amet consect adipisicing elit. Possimus
-              magnam voluptatum cupiditate veritatis in accusamus quisquam.
+              Own a boat membership instantly through a secure blockchain
+              transaction and a digital certificate of ownership. Making a truly
+              memorable boating holiday will require some preparations, allow us
+              to handle all your preparation needs.
             </p>
           </div>
 
@@ -144,7 +145,7 @@ export default function LandingPage() {
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            <span className="block">Ready to dive in?</span>
+            <span className="block">Ready to ride the waves?</span>
             <span className="block text-indigo-600">
               Become a Member today.
             </span>

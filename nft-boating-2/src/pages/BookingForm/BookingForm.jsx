@@ -174,10 +174,15 @@ export default function BookingForm() {
             <div className="md:col-span-1">
               <div className="px-4 sm:px-0">
                 <h3 className="text-lg font-medium leading-6 text-gray-900">
-                  Booking
+                  Book your trip
                 </h3>
                 <p className="mt-1 text-sm text-gray-600">
-                  Use a permanent address where you can receive mail.
+                  Provide details of your trips and choose food to be served so
+                  we can keep it ready upon your arrival. <br />
+                  <br />
+                  *Highlighted dates are already reseved.
+                  <br />
+                  **Circled dates are special days (e.g. Christmas)
                 </p>
               </div>
             </div>

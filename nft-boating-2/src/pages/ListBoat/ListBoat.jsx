@@ -351,9 +351,12 @@ export default function ListBoat() {
         <div className="mt-20 mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Become a Host </h1>
           <div className="max-w-3xl mx-auto text-center">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
-            ipsa commodi accusamus cupiditate blanditiis nihil voluptas
-            architecto numquam, omnis delectus?
+            Are you willing to profit from the lucrative business of renting
+            your boat?
+          </div>
+          <div className="max-w-3xl mx-auto text-center">
+            List your boat with us and get instantly connected to loads of
+            customers willing to rent...
           </div>
         </div>
       </header>
@@ -366,27 +369,28 @@ export default function ListBoat() {
                   Technical Specifications
                 </h2>
                 <p className="mt-4 text-gray-500">
-                  The walnut wood card tray is precision milled to perfectly fit
-                  a stack of Focus cards. The powder coated steel divider
-                  separates active cards from new ones, or can be used to
-                  archive important task lists.
+                  Provide as much details about your vessel as possible to help
+                  customers choose easily. Pictures add more charm to the
+                  offering so don't hesitate to share more angles of your ride.
+                  Customers will be able to see these specs on our listings once
+                  you're done.
                 </p>
 
                 <dl className="mt-8 grid grid-cols-1 gap-x-6 gap-y-7 lg:gap-x-8">
-                  <div className="border-t border-gray-200 pt-4">
+                  {/* <div className="border-t border-gray-200 pt-4">
                     <dt className="font-medium text-gray-900">Origin</dt>
                     <dd className="mt-2 text-sm text-gray-500">
                       Designed by Good Goods, Inc.
                     </dd>
-                  </div>
+                  </div> */}
 
                   <div className="border-t border-gray-200 pt-4">
                     <dt className="font-medium text-gray-900">
                       Considerations
                     </dt>
                     <dd className="mt-2 text-sm text-gray-500">
-                      Made from natural materials. Grain and color vary with
-                      each item.
+                      Make sure to share high resolution images so customers can
+                      get a better idea of what it looks like.
                     </dd>
                   </div>
                 </dl>

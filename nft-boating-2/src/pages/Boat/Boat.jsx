@@ -114,8 +114,7 @@ export default function Boat() {
           <div className="mt-4 lg:mt-0 lg:row-span-3">
             <h2 className="mb-1 font-bold">Buy MemberShip</h2>
             <p className="font-normal mb-3">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Architecto, maiores?{" "}
+              Don't wait any longer, become a member of your desired boat now!
             </p>
             <Link
               to={`/Contract/${Contract}/buy-nft`}

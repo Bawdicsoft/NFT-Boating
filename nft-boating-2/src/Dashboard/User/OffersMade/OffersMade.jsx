@@ -2,7 +2,12 @@ import { useEffect } from "react"
 import { useImmer } from "use-immer"
 import { useContextAPI } from "../../../ContextAPI"
 import { useWeb3React } from "@web3-react/core"
-import { formatEther } from "ethers/lib/utils"
+import {
+  formatEther,
+  formatUnits,
+  parseEther,
+  parseUnits,
+} from "ethers/lib/utils"
 
 export default function OffersMade() {
   const { ContractFactory } = useContextAPI()
@@ -52,7 +57,7 @@ export default function OffersMade() {
               const data = {
                 id: Offer.id.toString(),
                 userID: Offer.userID.toString(),
-                price: formatEther(Offer.Price.toString()),
+                price: formatUnits(Offer.Price.toString(), 6).toString(),
                 time: t.toString(),
                 offeredDate: Offer.offeredDate.toString(),
                 user: Offer.User.toString(),
@@ -94,11 +99,6 @@ export default function OffersMade() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Offers Made</h1>
-          <p className="max-w-2xl">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
-            ipsa commodi accusamus cupiditate blanditiis nihil voluptas
-            architecto numqquam, omnis delecctus ipsa adippisicing?
-          </p>
         </div>
       </header>
       <main>

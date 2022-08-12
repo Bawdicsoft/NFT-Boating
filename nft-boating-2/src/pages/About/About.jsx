@@ -7,27 +7,27 @@ import {
 
 const features = [
   {
-    name: "Competitive exchange rates",
+    name: "Competetive Pricing ",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "You will be able to purchase our services at the best available rates.",
     icon: GlobeAltIcon,
   },
   {
     name: "No hidden fees",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "NO EXTRA CHARGES whatsoever, apart from the prices mentioned on our website.",
     icon: ScaleIcon,
   },
   {
     name: "Transfers are instant",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "Transactions are lightning fast. You will become an instant owner of your NFT.",
     icon: LightningBoltIcon,
   },
   {
-    name: "Mobile notifications",
+    name: "Prompt Notifications",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+      "Notifications of transactions and amounts received are sent on mobile phone instantly whenever the transaction takes place..",
     icon: AnnotationIcon,
   },
 ]
@@ -40,9 +40,12 @@ export default function About() {
           <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             About Us
           </p>
-          <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-            Lorem ipsum dolor sit amet consect adipisicing elit. Possimus magnam
-            voluptatum cupiditate veritatis in accusamus quisquam.
+          <p className="mt-4 max-w-3xl text-xl text-gray-500 lg:mx-auto">
+            We are the first Web3.0 based boat rental across the world. Using
+            our years of experience in the business, we are the right choice to
+            delve deep into "uncharted seas". Our goal is to provide ease of
+            access to our clients and partners by eliminating hassles of payment
+            modes and choosing the desired date hands on at the time of booking.
           </p>
         </div>
 

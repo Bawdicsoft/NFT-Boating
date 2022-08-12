@@ -18,7 +18,7 @@ const navigation = [
   { name: "About", href: "/about", current: false },
 ]
 const userNavigation = [
-  { name: "NFT Collection", href: "/collected" },
+  { name: "Your NFTs (Memberships)", href: "/collected" },
   { name: "Booked Date", href: "/booked-date" },
   { name: "Offers Made", href: "/offers-made" },
 ]

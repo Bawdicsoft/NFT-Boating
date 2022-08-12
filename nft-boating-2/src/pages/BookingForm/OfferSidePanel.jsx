@@ -164,7 +164,7 @@ export default function OfferSidePanel({
                                   htmlFor="last-name"
                                   className="block text-sm font-medium text-gray-700 mb-1"
                                 >
-                                  Amount
+                                  Make your offer
                                 </label>
                                 <input
                                   type="text"

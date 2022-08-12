@@ -21,23 +21,31 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 module.exports = {
   solidity: {
-    version: "0.8.14",
-    settings: {
-      optimizer: {
-        enabled: true
-      }
-    }
+    compilers: [
+      {
+        version: "0.8.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.4.25",
+      },
+    ],
   },
   networks: {
     test: {
       url: process.env.URL,
-      accounts: [process.env.PVT_KEY]
+      accounts: [process.env.PVT_KEY],
     },
     localhost: {
-      url: "http://127.0.0.1:7545"
-    }
+      url: "http://127.0.0.1:7545",
+    },
   },
   etherscan: {
-    apiKey: process.env.API_KEY
-  }
+    apiKey: process.env.API_KEY,
+  },
 }

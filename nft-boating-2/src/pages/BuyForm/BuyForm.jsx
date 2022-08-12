@@ -156,9 +156,8 @@ export default function BuyForm() {
       <div className="mb-20 text-center">
         <h1 className="mb-1 font-bold text-5xl "> Buy MemberShips</h1>
         <div className="max-w-3xl mx-auto text-center">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque ipsa
-          commodi accusamus cupiditate blanditiis nihil voluptas architecto
-          numquam, omnis delectus?
+          Buy an NFT for membership of your desired vessel. Choose the date of
+          your trip and your ride will be waiting for you...
         </div>
       </div>
       <div className="mt-10 sm:mt-0">
@@ -169,10 +168,13 @@ export default function BuyForm() {
                 MemberShips
               </h3>
               <p className="mt-1 text-sm text-gray-600">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui,
-                hic ducimus! At, rerum expedita quisquam maxime ipsum distinctio
-                enim delectus ad illum accusantium ipsa, fugiat eum obcaecati
-                cupiditate nostrum iste.
+                Ownership of a member NFT entitles you to one chartered day on
+                your chosen boat throughout the year. You can reserve your slot
+                within 60 days from the date of selection and your ride will be
+                ready for you on that particular date. Memberships remain valid
+                for upto 10 years from the date of purchase so there's no risk
+                of lost dates or change of plans. Go ahead and become a
+                member...
               </p>
             </div>
           </div>

@@ -13,6 +13,7 @@ let corsOptions = {
   origin: [
     "https://nft-boating.vercel.app",
     "http://localhost:3010",
+    "http://localhost:3000",
   ],
   optionsSuccessStatus: 200,
 }

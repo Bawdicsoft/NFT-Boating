@@ -15,7 +15,12 @@ describe("nFTYacht", () => {
       await ethers.getSigners()
 
     const TetherToken = await ethers.getContractFactory("TetherToken")
-    tetherToken = await TetherToken.deploy()
+    tetherToken = await TetherToken.deploy(
+      "10000000000000000000000000",
+      "TetherToken",
+      "USDT",
+      6
+    )
     await tetherToken.deployed()
 
     const Deploy = await hre.ethers.getContractFactory("Deploy")
@@ -27,6 +32,10 @@ describe("nFTYacht", () => {
     await factory.deployed()
 
     await deploy.connect(owner).updateFactoryAddress(factory.address)
+
+    await tetherToken
+      .connect(owner)
+      .transfer(addr1.address, "100000000000000000")
   })
 
   it("addAddressToWhitelist:", async () => {
@@ -50,7 +59,27 @@ describe("nFTYacht", () => {
     contractDitals = await deploy
       .connect(owner)
       .contractDitals(allContractAddress[0])
-    // console.log("allContractAddress", contractDitals)
+    console.log("allContractAddress", contractDitals.price.toString())
+  })
+
+  it("specialDayAmount:", async () => {
+    const amount = await factory
+      .connect(owner)
+      .specialDayAmount(2022, 8, 15, allContractAddress[0])
+    console.log(amount, "specialDayAmount")
+  })
+
+  it("addSpecialDay:", async () => {
+    await factory
+      .connect(owner)
+      .addSpecialDay(2022, 8, 15, 100, allContractAddress[0])
+  })
+
+  it("specialDayAmount:", async () => {
+    const amount = await factory
+      .connect(owner)
+      .specialDayAmount(2022, 8, 15, allContractAddress[0])
+    console.log(amount, "specialDayAmount")
   })
 
   it("approve:", async () => {
@@ -59,24 +88,40 @@ describe("nFTYacht", () => {
       .approve(factory.address, contractDitals.price.toString())
   })
 
-  it("buyOwnership:", async () => {
+  it("buyOwnership owner:", async () => {
     await factory
       .connect(owner)
       .buyOwnership(1, contractDitals.price.toString(), allContractAddress[0])
   })
 
-  let userID
-  it("UserIDs:", async () => {
-    userID = await factory
+  it("approve:", async () => {
+    await tetherToken
+      .connect(addr1)
+      .approve(factory.address, contractDitals.price.toString())
+  })
+
+  it("buyOwnership addr1:", async () => {
+    await factory
+      .connect(addr1)
+      .buyOwnership(1, contractDitals.price.toString(), allContractAddress[0])
+  })
+
+  let ownerID
+  it("ownerIDs:", async () => {
+    ownerID = await factory
       .connect(owner)
       .UserIDs(allContractAddress[0], owner.address)
-    // console.log(userID.toString())
+    console.log(ownerID.toString())
+  })
+
+  it("approve:", async () => {
+    await tetherToken.connect(owner).approve(factory.address, 100)
   })
 
   it("bookDate:", async () => {
     await factory
       .connect(owner)
-      .bookDate(2022, 7, 30, allContractAddress[0], userID.toString())
+      .bookDate(2022, 8, 15, allContractAddress[0], ownerID.toString(), 100)
   })
 
   it("allBookedDates:", async () => {
@@ -87,10 +132,36 @@ describe("nFTYacht", () => {
     console.log(allBookedDates)
   })
 
+  let _offerPrice
+  it("_offerPrice:", async () => {
+    _offerPrice = await factory.connect(addr1)._offerPrice()
+  })
+  it("approve:", async () => {
+    await tetherToken
+      .connect(addr1)
+      .approve(factory.address, 100 + Number(_offerPrice.toString()))
+  })
+  it("offer:", async () => {
+    await factory
+      .connect(addr1)
+      .offer(
+        allContractAddress[0],
+        ownerID.toString(),
+        2,
+        100 + Number(_offerPrice.toString())
+      )
+  })
+
+  it("withdrewSpecialDayAmount:", async () => {
+    await factory
+      .connect(owner)
+      .withdrewSpecialDayAmount(2022, 8, 15, allContractAddress[0])
+  })
+
   it("cancelBooking:", async () => {
     await factory
       .connect(owner)
-      .cancelBooking(allContractAddress[0], userID.toString())
+      .cancelBooking(allContractAddress[0], ownerID.toString())
   })
 
   it("allBookedDates:", async () => {
