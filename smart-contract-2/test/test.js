@@ -118,7 +118,7 @@ describe("nFTYacht", () => {
     await tetherToken.connect(owner).approve(factory.address, 100)
   })
 
-  it("bookDate:", async () => {
+  it("bookDate owner:", async () => {
     await factory
       .connect(owner)
       .bookDate(2022, 8, 15, allContractAddress[0], ownerID.toString(), 100)

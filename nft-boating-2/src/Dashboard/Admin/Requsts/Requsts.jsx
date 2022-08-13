@@ -28,7 +28,7 @@ export default function Requsts() {
       const fetchData = async () => {
         if (1 > 0) {
           try {
-            const doc = await getDocs(collection(db, "Requst"))
+            const doc = await getDocs(collection(db, "Request"))
             const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
             console.log(data)
             setState((e) => {

@@ -20,8 +20,8 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
 
   const addToWhiteList = async () => {
     try {
-      await ContractDeploy.addAddressToWhitelist(state.request.walletAddress)
-      await deleteDoc(doc(db, "Requst", state.id))
+      await ContractDeploy.addAddressToWhitelist(state.request.account)
+      await deleteDoc(doc(db, "Request", state.id))
 
       const Mail = {
         fromName: "NFT Boating",
@@ -48,7 +48,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                 margin: auto;
               "
             >
-              <h1 style="text-align: center">NFT Boadting</h1>
+              <h1 style="text-align: center">NFT Boating</h1>
               <table style="width: 100%">
                 <tr>
                   <th>Confirmation</th>
@@ -66,7 +66,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                   <th>Link</th>
                 </tr>
                 <tr style="background-color: #eaeaea">
-                  <td><a href="http://localhost:3010/create-new">Please go and create your listning</a></td>
+                  <td><a href="http://localhost:3010/create-new">Please go and create your listening</a></td>
                 </tr>
               </table>
               <br />
@@ -95,14 +95,19 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
 
       if (e.reason === "execution reverted: !whitelist") {
         setStatep((e) => {
-          e.err = "Alredy Witelisted"
+          e.err = "Already Whitelisted"
+        })
+      }
+      if (e.reason === "execution reverted: !owner") {
+        setStatep((e) => {
+          e.err = "If you owner please change your account to Owner Account"
         })
       }
     }
   }
 
   const deleteMyDoc = async () => {
-    await deleteDoc(doc(db, "Requst", state.id))
+    await deleteDoc(doc(db, "Request", state.id))
 
     const Mail = {
       fromName: "NFT Boating",
@@ -226,13 +231,25 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                       <p className="mb-2">
                         Phone Number: {state.request.phone}
                       </p>
-                      <p className="mb-2">Location: {state.request.location}</p>
-                      <p className="mb-2">Year: {state.request.year}</p>
-                      <p className="mb-2">Make: {state.request.make}</p>
-                      <p className="mb-2">Model: {state.request.model}</p>
-                      <p className="mb-6">
-                        Detals: {state.request.description}
+                      <p className="mb-2">About host: {state.request.tellUs}</p>
+                      <p className="mb-2">year: {state.request.year}</p>
+                      <p className="mb-2">length: {state.request.length}</p>
+                      <p className="mb-2">make: {state.request.make}</p>
+                      <p className="mb-2">model: {state.request.model}</p>
+                      <p className="mb-2">capacity: {state.request.capacity}</p>
+                      <p className="mb-2">boatType: {state.request.boatType}</p>
+                      <p className="mb-2">sleeps: {state.request.sleeps}</p>
+                      <p className="mb-2">
+                        staterooms: {state.request.staterooms}
                       </p>
+                      <p className="mb-2">bedCount: {state.request.bedCount}</p>
+                      <p className="mb-2">
+                        amenities: {state.request.amenities}
+                      </p>
+                      <p className="mb-2">
+                        description: {state.request.description}
+                      </p>
+                      <p className="mb-2">amount: {state.request.amount}</p>
                       <br />
 
                       <p className="mb-2">Featured Image</p>
@@ -254,7 +271,7 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
                       <Map address={state.request.location} />
                       <div className="pt-6">
                         {Boolean(statep.err !== "") && (
-                          <p className="text-red text-center mb-2">
+                          <p className="text-red-800 text-center mb-2">
                             {statep.err}
                           </p>
                         )}

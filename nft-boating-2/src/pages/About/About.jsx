@@ -27,7 +27,7 @@ const features = [
   {
     name: "Prompt Notifications",
     description:
-      "Notifications of transactions and amounts received are sent on mobile phone instantly whenever the transaction takes place..",
+      "Notifications of transactions and amounts received are sent on mobile phone instantly whenever the transaction takes place.",
     icon: AnnotationIcon,
   },
 ]

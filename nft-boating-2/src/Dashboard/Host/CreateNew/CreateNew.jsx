@@ -8,10 +8,6 @@ import { useEffect } from "react"
 import axios from "axios"
 import { auth, db } from "./../../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
-import QRCode from "react-qr-code"
-import html2canvas from "html2canvas"
-import logo from "./../../../Assets/logo.png"
-import img1 from "./../../../Assets/img1.jpg"
 import {
   addDoc,
   collection,
@@ -33,9 +29,11 @@ export default function CreateNew() {
     haveRequest: null,
     executionReverted: false,
     request: {},
+    isWhiteListed: true,
+    isRightAccount: true,
   })
 
-  console.log(State.request)
+  console.log(State.isWhiteListed, State.isRightAccount)
 
   const {
     register,
@@ -43,7 +41,7 @@ export default function CreateNew() {
     formState: { errors },
   } = useForm()
 
-  const xyz = async () => {
+  const fetchUserData = async () => {
     const docRef = doc(db, "users", UserData.id)
     const docSnap = await getDoc(docRef)
 
@@ -72,7 +70,7 @@ export default function CreateNew() {
     if (UserData === undefined) {
       return
     } else {
-      xyz()
+      fetchUserData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -81,13 +79,28 @@ export default function CreateNew() {
     if (UserData === undefined) {
       return
     } else {
-      xyz()
+      fetchUserData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [UserData])
 
+  const isWhiteListed = async () => {
+    const tx = await ContractDeploy.whitelist(State.request.account)
+    console.log("isWhiteListed", tx.toString())
+
+    SetState((e) => {
+      e.isWhiteListed = tx.toString()
+      e.isRightAccount = Boolean(State.request.account === account)
+    })
+  }
+
+  useEffect(() => {
+    isWhiteListed()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account])
+
   const onSubmit = async (data) => {
-    console.log({ data })
+    console.log("State.request", State.request)
 
     SetState((draft) => {
       draft.SetBtnDisable = true
@@ -98,12 +111,12 @@ export default function CreateNew() {
         State.request.name,
         State.request.name.slice(0, 1),
         "365",
-        State.request.price,
-        account,
+        State.request.amount,
+        State.request.account,
         `ipfs://${State.request.IpfsHash}`
       )
     } catch (e) {
-      console.log(e.reason)
+      console.log(e)
       SetState((draft) => {
         draft.SetBtnDisable = false
         draft.executionReverted = true
@@ -112,20 +125,7 @@ export default function CreateNew() {
 
     ContractDeploy.on("deploy_", async (_Contract) => {
       try {
-        await setDoc(doc(db, "ContractInfo", _Contract), {
-          featuredImage: State.request.featuredImage,
-          gallery: State.request.gallery,
-          name: State.request.name,
-          year: State.request.year,
-          make: State.request.make,
-          model: State.request.model,
-          price: State.request.price,
-          location: State.request.location,
-          walletAddress: account,
-          email: UserData.email,
-          IpfsHash: State.request.IpfsHash,
-          description: State.request.description,
-        })
+        await setDoc(doc(db, "ContractInfo", _Contract), State.request)
       } catch (error) {
         console.error(error)
       }
@@ -217,139 +217,145 @@ export default function CreateNew() {
         <div className="mt-20 mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> List Your Boat </h1>
           <div className="max-w-3xl mx-auto text-center">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque
-            ipsa commodi accusamus cupiditate blanditiis nihil voluptas
-            architecto numquam, omnis delectus?
+            {!State.isWhiteListed ? (
+              <p>
+                your request is padding please Wat 1 or 2 business days after
+                your request is accepted you will get an email
+              </p>
+            ) : (
+              <>
+                {!State.isRightAccount ? (
+                  <p>please change your account to requested account</p>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
           </div>
         </div>
       </header>
       <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div>
-            <div className="md:grid md:grid-cols-3 md:gap-6">
-              <div>
-                <h2 className="text-1xl font-extrabold tracking-tight text-gray-900 sm:text-2xl">
-                  Technical Specifications
-                </h2>
-                <p className="mt-4 text-gray-500">
-                  The walnut wood card tray is precision milled to perfectly fit
-                  a stack of Focus cards. The powder coated steel divider
-                  separates active cards from new ones, or can be used to
-                  archive important task lists.
-                </p>
+        <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="mt-5 md:mt-0 md:col-span-2">
+            {State.haveRequest ? (
+              <>
+                {!State.isWhiteListed ? (
+                  <p>
+                    your request is padding please Wat 1 or 2 business days
+                    after your request is accepted you will get an email
+                  </p>
+                ) : (
+                  <>
+                    {!State.isRightAccount ? (
+                      <p>please change your account to requested account</p>
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                )}
 
-                <dl className="mt-8 grid grid-cols-1 gap-x-6 gap-y-7 lg:gap-x-8">
-                  <div className="border-t border-gray-200 pt-4">
-                    <dt className="font-medium text-gray-900">Origin</dt>
-                    <dd className="mt-2 text-sm text-gray-500">
-                      Designed by Good Goods, Inc.
-                    </dd>
-                  </div>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="shadow sm:rounded-md">
+                    <div className="px-4 py-5 bg-white sm:p-6">
+                      <img
+                        src={State.request.featuredImage}
+                        className="w-[300px] mb-6"
+                      />
 
-                  <div className="border-t border-gray-200 pt-4">
-                    <dt className="font-medium text-gray-900">
-                      Considerations
-                    </dt>
-                    <dd className="mt-2 text-sm text-gray-500">
-                      Made from natural materials. Grain and color vary with
-                      each item.
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-              <div className="mt-5 md:mt-0 md:col-span-2">
-                {State.haveRequest ? (
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="shadow sm:rounded-md">
-                      <div className="px-4 py-5 bg-white sm:p-6">
-                        <img
-                          src={State.request.featuredImage}
-                          className="w-[300px] mb-6"
-                        />
+                      <div className="grid grid-cols-6 gap-4">
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="last-name"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Name
+                          </label>
+                          <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                            {State.request.name}
+                          </p>
+                        </div>
 
-                        <div className="grid grid-cols-6 gap-4">
-                          <div className="col-span-6 sm:col-span-3">
-                            <label
-                              htmlFor="last-name"
-                              className="block text-sm font-medium text-gray-700 mb-2"
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="last-name"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Price (USDT)
+                          </label>
+                          <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                            {State.request.amount}
+                          </p>
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-6">
+                          <label
+                            htmlFor="last-name"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Owner Address
+                          </label>
+                          <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                            {State.request.account}
+                          </p>
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-6">
+                          {!active ? (
+                            <span
+                              onClick={connectWithMetaMask}
+                              className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                              Name
-                            </label>
-                            <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                              {State.request.name}
-                            </p>
-                          </div>
-
-                          <div className="col-span-6 sm:col-span-3">
-                            <label
-                              htmlFor="last-name"
-                              className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                              Price (USDT)
-                            </label>
-                            <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                              {State.request.price}
-                            </p>
-                          </div>
-
-                          <div className="col-span-6 sm:col-span-6">
-                            <label
-                              htmlFor="last-name"
-                              className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                              Owner Address
-                            </label>
-                            <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                              {account ? account : "Connect your Wallet"}
-                            </p>
-                          </div>
-
-                          <div className="col-span-6 sm:col-span-6">
-                            {!active ? (
-                              <span
-                                onClick={connectWithMetaMask}
-                                className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              Connect With MetaMask
+                            </span>
+                          ) : (
+                            <>
+                              {!State.isWhiteListed ? (
+                                <p>
+                                  your request is padding please Wat 1 or 2
+                                  business days after your request is accepted
+                                  you will get an email
+                                </p>
+                              ) : (
+                                <>
+                                  {!State.isRightAccount ? (
+                                    <p>
+                                      please change your account to requested
+                                      account
+                                    </p>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </>
+                              )}
+                              <button
+                                className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                type="submit"
+                                disabled={State.btnDisable}
                               >
-                                Connect With MetaMask
-                              </span>
-                            ) : (
-                              <>
-                                {State.executionReverted && (
-                                  <span className="text-red-500">
-                                    your request is not accepted yet. you will
-                                    receive an confirmation email
-                                  </span>
-                                )}
-                                <button
-                                  className="mt-4 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                  type="submit"
-                                  disabled={State.btnDisable}
-                                >
-                                  List your Boat
-                                </button>
-                              </>
-                            )}
-                          </div>
+                                List your Boat
+                              </button>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
-                  </form>
-                ) : (
-                  <div className="max-w-sm mx-auto text-center">
-                    <h1 className="text-2xl	">You did not submit any request</h1>
-                    <p className="mb-3">
-                      Please go Become a Host page and submit your request
-                    </p>
-                    <Link
-                      className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      to="/list-boat"
-                    >
-                      Become a Host
-                    </Link>
                   </div>
-                )}
+                </form>
+              </>
+            ) : (
+              <div className="max-w-sm mx-auto text-center">
+                <h1 className="text-2xl	">You did not submit any request</h1>
+                <p className="mb-3">
+                  Please go Become a Host page and submit your request
+                </p>
+                <Link
+                  className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  to="/list-boat"
+                >
+                  Become a Host
+                </Link>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </main>

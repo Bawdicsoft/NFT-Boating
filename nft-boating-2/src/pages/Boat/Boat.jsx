@@ -104,24 +104,65 @@ export default function Boat() {
             <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
               {State.request.name} USDT: {State.request.price}
             </h1>
-            <p>
-              Owner: {State.request.walletAddress.slice(0, 5)}...
-              {State.request.walletAddress.slice(-4)}
-            </p>
           </div>
 
           {/* Options */}
           <div className="mt-4 lg:mt-0 lg:row-span-3">
-            <h2 className="mb-1 font-bold">Buy MemberShip</h2>
-            <p className="font-normal mb-3">
-              Don't wait any longer, become a member of your desired boat now!
-            </p>
-            <Link
-              to={`/Contract/${Contract}/buy-nft`}
-              className="mb-5 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Buy MemberShip
-            </Link>
+            <div>
+              <h2 className="mb-1 font-bold">Buy MemberShip</h2>
+              <p className="font-normal mb-3">
+                Don't wait any longer, become a member of your desired boat now!
+              </p>
+              <Link
+                to={`/Contract/${Contract}/buy-nft`}
+                className="mb-5 cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Buy MemberShip
+              </Link>
+            </div>
+
+            <div>
+              <p>
+                <span className="text-base text-gray-900">year: </span>
+                {State.request.year}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">length: </span>
+                {State.request.length}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">make: </span>
+                {State.request.make}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">model: </span>
+                {State.request.model}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">capacity: </span>
+                {State.request.capacity}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">boatType: </span>
+                {State.request.boatType}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">sleeps: </span>
+                {State.request.sleeps}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">staterooms: </span>
+                {State.request.staterooms}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">bedCount: </span>
+                {State.request.bedCount}
+              </p>
+              <p>
+                <span className="text-base text-gray-900">amenities: </span>
+                {State.request.amenities}
+              </p>
+            </div>
           </div>
 
           <div className="py-10 lg:pt-6 lg:pb-16 lg:col-start-1 lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">

@@ -9,14 +9,14 @@ async function main() {
 
   const Factory = await hre.ethers.getContractFactory("Factory")
   const factory = await Factory.deploy(
-    "0x65C89088C691841D55263E74C7F5cD73Ae60186C",
+    "0xc8604af17cb5481ef010b67aa32d4621dc319247",
     deploy.address
   )
   await factory.deployed()
   console.log(factory.address)
 
-  // 0xf92e968F5922B78374Ab1a06E1eB7d7Aba7751C7
-  // 0x0C52a72317260B4495792FddF08740798d5c0826
+  // 0x6d9807cF73d57c23b1aBECA4aeF01f2300fE095f
+  // 0x4e623C7a27580D3BE7D309AEcb3A10Fe305a4445
 }
 
 main()

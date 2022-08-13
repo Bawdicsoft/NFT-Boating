@@ -17,6 +17,7 @@ import { async } from "@firebase/util"
 import Popup from "./Popup"
 import Map from "../../Comp/Map/Map"
 import DispatchContext from "../../DispatchContext"
+import { Injected } from "../../Comp/Wallets/Connectors"
 
 async function uploadImg({ name, fileName, file }) {
   return new Promise((resolve, reject) => {
@@ -50,7 +51,6 @@ async function uploadImg({ name, fileName, file }) {
 export default function ListBoat() {
   const appDispatch = useContext(DispatchContext)
   const { updateDocRequests, UserData } = useContextAPI()
-  const { account } = useWeb3React()
   const {
     register,
     handleSubmit,
@@ -73,6 +73,11 @@ export default function ListBoat() {
     },
   })
   console.log(state.gallery, "state.gallery")
+
+  const { activate, account, active } = useWeb3React()
+  const connectMetaMask = async () => {
+    await activate(Injected)
+  }
 
   const location = watch(["location"])
   useEffect(() => {
@@ -137,6 +142,8 @@ export default function ListBoat() {
   }
 
   const onSubmit = async (e) => {
+    console.table(e)
+
     if (state.markerMap.status === "OK") {
       setState((draft) => {
         draft.btnLoading = true
@@ -183,22 +190,30 @@ export default function ListBoat() {
             }
 
             const request = {
-              featuredImage: featuredImageURL,
-              gallery: gallery,
               name: e.name,
               phone: e.phone,
+              account: account,
+              tellUs: e.tellUs,
               year: e.year,
+              length: e.length,
               make: e.make,
               model: e.model,
-              price: e.price,
-              location: e.location,
-              walletAddress: account,
-              IpfsHash: response.data.IpfsHash,
+              capacity: e.capacity,
+              boatType: e.boatType,
+              sleeps: e.sleeps,
+              staterooms: e.staterooms,
+              bedCount: e.bedCount,
+              amenities: e.amenities,
               description: e.description,
+              location: e.location,
+              featuredImage: featuredImageURL,
+              gallery: gallery,
+              IpfsHash: response.data.IpfsHash,
+              amount: e.amount,
             }
 
             try {
-              await addDoc(collection(db, "Requst"), {
+              await addDoc(collection(db, "Request"), {
                 request,
               })
             } catch (error) {
@@ -223,13 +238,22 @@ export default function ListBoat() {
                 name: ${e.name} \n
                 phone: ${e.phone} \n
                 email: ${UserData.email} \n
+                account: ${account} \n
+                tellUs: ${e.tellUs} \n
                 year: ${e.year} \n
+                length: ${e.length} \n
                 make: ${e.make} \n
                 model: ${e.model} \n
-                price: ${e.price} \n
+                capacity: ${e.capacity} \n
+                boatType: ${e.boatType} \n
+                sleeps: ${e.sleeps} \n
+                staterooms: ${e.staterooms} \n
+                bedCount: ${e.bedCount} \n
+                amenities: ${e.amenities} \n
+                description: ${e.description} \n
                 location: ${e.location} \n
-                walletAddress: ${account} \n
-                description: ${e.description}`,
+                amount: ${e.amount}
+              `,
               html: `<!DOCTYPE html>
                 <html lang="en">
                   <head>
@@ -270,46 +294,88 @@ export default function ListBoat() {
                           <td>${UserData.email}</td>
                         </tr>
                         <tr>
-                          <th>Year</th>
-                        </tr>
-                        <tr style="background-color: #eaeaea">
-                          <td>${e.year}</td>
-                        </tr>
-                        <tr>
-                          <th>Make</th>
-                        </tr>
-                        <tr style="background-color: #eaeaea">
-                          <td>${e.make}</td>
-                        </tr>
-                        <tr>
-                          <th>Model</th>
-                        </tr>
-                        <tr style="background-color: #eaeaea">
-                          <td>${e.model}</td>
-                        </tr>
-                        <tr>
-                          <th>Price</th>
-                        </tr>
-                        <tr style="background-color: #eaeaea">
-                          <td>${e.price}</td>
-                        </tr>
-                        <tr>
-                          <th>Location</th>
-                        </tr>
-                        <tr style="background-color: #eaeaea">
-                          <td>${e.location}</td>
-                        </tr>
-                        <tr>
-                          <th>Wallet Address</th>
+                          <th>account</th>
                         </tr>
                         <tr style="background-color: #eaeaea">
                           <td>${account}</td>
                         </tr>
                         <tr>
-                          <th>Description</th>
+                          <th>About User</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.tellUs}</td>
+                        </tr>
+                        <tr>
+                          <th>year</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.year}</td>
+                        </tr>
+                        <tr>
+                          <th>length</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.length}</td>
+                        </tr>
+                        <tr>
+                          <th>make</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.make}</td>
+                        </tr>
+                        <tr>
+                          <th>model</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.model}</td>
+                        </tr>
+                        <tr>
+                          <th>capacity</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.capacity}</td>
+                        </tr>
+                        <tr>
+                          <th>boatType</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.boatType}</td>
+                        </tr>
+                        <tr>
+                          <th>sleeps</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.sleeps}</td>
+                        </tr>
+                        <tr>
+                          <th>staterooms</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.staterooms}</td>
+                        </tr>
+                        <tr>
+                          <th>bedCount</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.bedCount}</td>
+                        </tr>
+                        <tr>
+                          <th>amenities</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.amenities}</td>
+                        </tr>
+                        <tr>
+                          <th>description</th>
                         </tr>
                         <tr style="background-color: #eaeaea">
                           <td>${e.description}</td>
+                        </tr>
+                        <tr>
+                          <th>amount</th>
+                        </tr>
+                        <tr style="background-color: #eaeaea">
+                          <td>${e.amount}</td>
                         </tr>
                       </table>
                       <br />
@@ -400,22 +466,9 @@ export default function ListBoat() {
                   <div className="shadow sm:rounded-md">
                     <div className="px-4 py-5 bg-white sm:p-6">
                       <div className="grid grid-cols-6 gap-4">
-                        <div className="col-span-6 sm:col-span-3">
-                          <label
-                            htmlFor="name"
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                          >
-                            Name
-                          </label>
-                          <input
-                            type="text"
-                            id="name"
-                            placeholder="Name"
-                            {...register("name", {
-                              required: true,
-                            })}
-                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
-                          />
+                        <div className="col-span-6">
+                          <p>Personal Info</p>
+                          <hr className="mt-3" />
                         </div>
 
                         <div className="col-span-6 sm:col-span-3">
@@ -436,6 +489,68 @@ export default function ListBoat() {
                           />
                         </div>
 
+                        <div className="col-span-6 sm:col-span-6">
+                          <label
+                            htmlFor="account"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Owner Wallet Address
+                          </label>
+                          <p
+                            id="account"
+                            onClick={connectMetaMask}
+                            className="w-full py-2.5 px-3 border cursor-pointer mb-4 rounded-md"
+                          >
+                            {account ? (
+                              account
+                            ) : (
+                              <span className="text-red-600 cursor-pointer">
+                                Connect MetaMask
+                              </span>
+                            )}
+                          </p>
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-6">
+                          <label
+                            htmlFor="tellUs"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Tell us about your self.
+                          </label>
+                          <textarea
+                            placeholder="Tell us about your self."
+                            id="tellUs"
+                            {...register("tellUs", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-2 rounded-md h-28"
+                          />
+                        </div>
+
+                        <div className="col-span-6  mt-10">
+                          <p>Boat Specifications</p>
+                          <hr className="mt-3" />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Name
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            placeholder="Name"
+                            {...register("name", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                          />
+                        </div>
+
                         <div className="col-span-6 sm:col-span-3">
                           <label
                             htmlFor="year"
@@ -448,6 +563,24 @@ export default function ListBoat() {
                             id="year"
                             placeholder="Year"
                             {...register("year", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                          />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="length"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Length
+                          </label>
+                          <input
+                            type="text"
+                            id="length"
+                            placeholder="Length"
+                            {...register("length", {
                               required: true,
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
@@ -490,65 +623,141 @@ export default function ListBoat() {
                           />
                         </div>
 
-                        {/* <div className="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            htmlFor="last-name"
+                            htmlFor="capacity"
                             className="block text-sm font-medium text-gray-700 mb-2"
                           >
-                            Total Supply
+                            Capacity
                           </label>
                           <input
-                            type="number"
-                            placeholder="Total Supply"
-                            {...register("totalSupply", {
+                            type="text"
+                            id="capacity"
+                            placeholder="Capacity"
+                            {...register("capacity", {
                               required: true,
-                              maxLength: 365,
                             })}
                             className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
-                        </div> */}
+                        </div>
 
                         <div className="col-span-6 sm:col-span-3">
                           <label
-                            htmlFor="price"
+                            htmlFor="boatType"
                             className="block text-sm font-medium text-gray-700 mb-2"
                           >
-                            Price (USDT)
+                            Boat type
                           </label>
                           <input
-                            type="number"
-                            id="price"
-                            placeholder="Price (USDT)"
-                            {...register("price", {
+                            type="text"
+                            id="boatType"
+                            placeholder="Boat type"
+                            {...register("boatType", {
                               required: true,
-                              minLength: 1,
                             })}
-                            className="w-full py-2.5 px-3 border  rounded-md"
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
                           />
-                          <p className="mt-2 text-sm text-gray-500 mb-4">
-                            What you wanna charge in (USDT)
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="sleeps"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Sleeps
+                          </label>
+                          <input
+                            type="text"
+                            id="sleeps"
+                            placeholder="Sleeps"
+                            {...register("sleeps", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                          />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="staterooms"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Staterooms
+                          </label>
+                          <input
+                            type="text"
+                            id="staterooms"
+                            placeholder="Staterooms"
+                            {...register("staterooms", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                          />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="bedCount"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
+                            Bed count
+                          </label>
+                          <input
+                            type="text"
+                            id="bedCount"
+                            placeholder="Bed count"
+                            {...register("bedCount", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                          />
+                        </div>
+
+                        <div className="col-span-6 mt-10">
+                          <p>Boat Amenities / Description</p>
+                          <hr className="mt-3" />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-6">
+                          <label
+                            htmlFor="amenities"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Amenities
+                          </label>
+                          <textarea
+                            placeholder="Bathroom, Shower, GPS, etc"
+                            id="amenities"
+                            {...register("amenities", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-2 rounded-md h-28"
+                          />
+                          <p className="mb-4">
+                            please add amenities with a comma (,)
                           </p>
                         </div>
 
                         <div className="col-span-6 sm:col-span-6">
                           <label
-                            htmlFor="account"
+                            htmlFor="description"
                             className="block text-sm font-medium text-gray-700 mb-2"
                           >
-                            Owner Wallet Address
+                            Description
                           </label>
-                          <p
-                            id="account"
-                            className="w-full py-2.5 px-3 border  mb-4 rounded-md"
-                          >
-                            {account ? (
-                              account
-                            ) : (
-                              <span className="text-red-600">
-                                Connect MetaMask
-                              </span>
-                            )}
-                          </p>
+                          <textarea
+                            placeholder="Description"
+                            id="description"
+                            {...register("description", {
+                              required: true,
+                            })}
+                            className="w-full py-2.5 px-3 border mb-4 rounded-md h-60"
+                          />
+                        </div>
+
+                        <div className="col-span-6 mt-10">
+                          <p>Boat Location</p>
+                          <hr className="mt-3" />
                         </div>
 
                         <div className="col-span-6 ">
@@ -587,6 +796,11 @@ export default function ListBoat() {
                               </GoogleMapReact>
                             </div>
                           </div>
+                        </div>
+
+                        <div className="col-span-6  mt-10">
+                          <p>Boat Images</p>
+                          <hr className="mt-3" />
                         </div>
 
                         <div className="col-span-6 sm:col-span-6 mb-3">
@@ -715,20 +929,27 @@ export default function ListBoat() {
                           </div>
                         </div>
 
-                        <div className="col-span-6 sm:col-span-6">
+                        <div className="col-span-6  mt-10">
+                          <p>Pricing</p>
+                          <hr className="mt-3" />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3 mb-4">
                           <label
-                            htmlFor="description"
+                            htmlFor="amount"
                             className="block text-sm font-medium text-gray-700 mb-2"
                           >
-                            Description
+                            MemberShip Amount (USDT)
                           </label>
-                          <textarea
-                            placeholder="Description"
-                            id="description"
-                            {...register("description", {
+                          <input
+                            type="number"
+                            id="amount"
+                            placeholder="MemberShip Amount (USDT)"
+                            {...register("amount", {
                               required: true,
+                              minLength: 1,
                             })}
-                            className="w-full py-2.5 px-3 border mb-4 rounded-md h-60"
+                            className="w-full py-2.5 px-3 border  rounded-md"
                           />
                         </div>
 

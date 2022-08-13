@@ -108,6 +108,7 @@ contract Factory is Ownable {
     uint public _bookingBefore; // user can't book date Before (bookingBefore)date
     uint public _bookingAfter = 5260000; // user can't book date After  (bookingAfter)date
     uint public _cancelBefore;
+    uint public _maintenanceFee;
 
     struct _bookDates {
         uint _year;
@@ -125,7 +126,7 @@ contract Factory is Ownable {
     mapping(address => mapping(uint => mapping(uint => mapping(uint => bool)))) private _isSpecialDay;
     mapping(address => mapping(uint => mapping(uint => mapping(uint => uint)))) private _specialDayAmount;
     mapping(address => mapping(uint => mapping(uint => mapping(uint => uint)))) private _specialDayOwnerUSDT;
-    mapping(address => mapping(address => mapping(uint => mapping(uint => mapping(uint => uint))))) private _specialDayUSDT;
+    mapping(address => mapping(uint => mapping(uint => bool))) public _maintenanceFeePad;
 
     // update function
     function addSpecialDay(uint year_, uint month_, uint day_, uint amount_, address contract_) public {
@@ -149,6 +150,9 @@ contract Factory is Ownable {
     function updateCancelBefore(uint time_) public onlyOwner {
         _cancelBefore = time_;
     }
+    function updateMaintenanceFee(uint fee_) public onlyOwner {
+        _maintenanceFee = fee_;
+    }
 
     // view function
     function specialDayAmount(uint year_, uint month_, uint day_, address contract_) public view returns(uint) {
@@ -165,6 +169,8 @@ contract Factory is Ownable {
 
         ) public {
 
+        require(USDT.allowance(msg.sender, address(this)) <= USDT_, "!allowance");
+
         MYIERC721 IContract = MYIERC721(contract_);
         address __owner = IContract.ownerOf(id_);
 
@@ -180,6 +186,7 @@ contract Factory is Ownable {
 
         if (booking.isInserted(contract_, id_)) {
             require ( lnewDAte_ > newYear_, "Token Already Booked");
+            require (_maintenanceFeePad[contract_][_newYear][id_], "!maintenanceFeePad");
         }
 
         require(bookedTime_ != lnewDAte_, "Date Already Booked");
@@ -196,7 +203,6 @@ contract Factory is Ownable {
             USDT.transferFrom( msg.sender, address(this), USDT_);
 
             _specialDayOwnerUSDT[contract_][year_][month_][day_] = USDT_;
-            _specialDayUSDT[contract_][msg.sender][year_][month_][day_] = USDT_;
         }
 
         if (_newYear > lnewYear_) _newYear = lnewYear_;
@@ -220,11 +226,10 @@ contract Factory is Ownable {
 
         (uint _year, uint _month, uint _day) = DateTimeLibrary.timestampToDate(_DateAndTime);
 
-        if (_specialDayUSDT[contract_][msg.sender][_year][_month][_day] > 0) {
-            USDT.transfer( msg.sender, _specialDayUSDT[contract_][msg.sender][_year][_month][_day]);
+        if (_specialDayOwnerUSDT[contract_][_year][_month][_day] > 0) {
+            USDT.transfer( msg.sender, _specialDayOwnerUSDT[contract_][_year][_month][_day]);
 
             _specialDayOwnerUSDT[contract_][_year][_month][_day] = 0;
-            _specialDayUSDT[contract_][msg.sender][_year][_month][_day] = 0;
         }
 
         booking.remove(contract_, id_);
@@ -245,7 +250,26 @@ contract Factory is Ownable {
 
     }
 
+    function payMaintenanceFee(address contract_, uint id_, uint USDT_) public {
+
+        require (booking.getOwner(contract_, id_) == _msgSender(), "!Owner");
+        require(_maintenanceFee == USDT_, "!maintenanceFee");
+
+        ( ,,,,,, address contractOwner , ) = DeployHandler.contractDitals(contract_);
+
+        uint256 _ownerFee = USDT_.mul(ownerFee).div(100);
+        uint256 _boatFee = USDT_.sub(_ownerFee);
+
+        USDT.transferFrom( msg.sender, owner(), _ownerFee );
+        USDT.transferFrom( msg.sender, contractOwner, _boatFee );
+
+        _maintenanceFeePad[contract_][_newYear][id_] = true;
+
+    }
+
+
     function withdrewSpecialDayAmount(uint year_, uint month_, uint day_, address contract_) public {
+
         ( ,,,,,, address contractOwner , ) = DeployHandler.contractDitals(contract_);
         require(contractOwner == msg.sender, "!ContractOwner");
 
@@ -263,6 +287,7 @@ contract Factory is Ownable {
         USDT.transfer( contractOwner, _boatFee );
 
         _specialDayOwnerUSDT[contract_][year_][month_][day_] = 0;
+    
     }
 
 
