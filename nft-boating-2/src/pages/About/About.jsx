@@ -7,7 +7,7 @@ import {
 
 const features = [
   {
-    name: "Competetive Pricing ",
+    name: "Competitive Pricing",
     description:
       "You will be able to purchase our services at the best available rates.",
     icon: GlobeAltIcon,
@@ -19,7 +19,7 @@ const features = [
     icon: ScaleIcon,
   },
   {
-    name: "Transfers are instant",
+    name: "Transfers are in Tether Coin (USDT)",
     description:
       "Transactions are lightning fast. You will become an instant owner of your NFT.",
     icon: LightningBoltIcon,
@@ -27,7 +27,7 @@ const features = [
   {
     name: "Prompt Notifications",
     description:
-      "Notifications of transactions and amounts received are sent on mobile phone instantly whenever the transaction takes place.",
+      "Notifications of transactions and amounts received are sent on the mobile phone instantly whenever the transaction takes place.",
     icon: AnnotationIcon,
   },
 ]
@@ -41,11 +41,13 @@ export default function About() {
             About Us
           </p>
           <p className="mt-4 max-w-3xl text-xl text-gray-500 lg:mx-auto">
-            We are the first Web3.0 based boat rental across the world. Using
-            our years of experience in the business, we are the right choice to
-            delve deep into "uncharted seas". Our goal is to provide ease of
-            access to our clients and partners by eliminating hassles of payment
-            modes and choosing the desired date hands on at the time of booking.
+            Our team has over 15 years of experience in cryptography, and We are
+            the first Web3.0-based boat rental in the world. We believe in the
+            utility of the NFT, utility NFTs work in the same way as other NFTs.
+            They are cryptographically represented, and unique digital assets
+            stored on a blockchain. The immutability and transparency of
+            blockchain technology means that it is easy for NFT owners to prove
+            that an NFT is stored in their wallet and nobody else's.
           </p>
         </div>
 

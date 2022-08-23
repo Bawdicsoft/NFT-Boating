@@ -19,19 +19,19 @@ const features = [
   },
   {
     name: "Choose your date, Reserve your boat",
-    description: "select the date and get your yacht reserved for you.",
+    description: "Select the date, and get your yacht reserved for the day.",
     icon: ScaleIcon,
   },
   {
-    name: "Grab your crew and have a great time out on the Ocean!",
+    name: "Grab your bathing suit and have a great time out on the Ocean!",
     description:
-      "Enjoy your holiday with our experienced crew and savor every moment of your leisure trip.",
+      "Enjoy your holiday with our experienced crew and enjoy your time.",
     icon: LightningBoltIcon,
   },
   {
-    name: "You cant keep your NFT for upto 10 years",
+    name: "Your NFT is valid for 5 years, you can choose 1 day per year and you only pay once.",
     description:
-      "Change of plans? No problem. Your Membership remains valid for up to 10 years until you finally fulfill the plan.",
+      "Your Membership is valid for 5 years, it means that with the cost of only one rental day you can receive 4 more days for the remaining 4 years.",
     icon: AnnotationIcon,
   },
 ]
@@ -62,16 +62,14 @@ export default function LandingPage() {
             <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                  <span className="block xl:inline">
-                    Comfort, Luxury & Decentralized
-                  </span>{" "}
+                  <span className="block xl:inline">Decentralize Comfort</span>
                   {/* <span className="block text-indigo-600 xl:inline">
                     Boat Rental Experience
                   </span> */}
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                   Enhance your boat rental experience with the use of innovative
-                  NFT technology. Hassle-free process to get membership and
+                  NFT technology. The hassle-free process to get memberships and
                   services of your choice.
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
@@ -116,8 +114,7 @@ export default function LandingPage() {
             <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
               Own a boat membership instantly through a secure blockchain
               transaction and a digital certificate of ownership. Making a truly
-              memorable boating holiday will require some preparations, allow us
-              to handle all your preparation needs.
+              memorable boating experience.
             </p>
           </div>
 

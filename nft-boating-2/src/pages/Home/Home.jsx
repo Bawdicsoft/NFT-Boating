@@ -104,11 +104,11 @@ export default function Home() {
     <div className="bg-white">
       <div className="max-w-7xl px-10 mx-auto py-16 sm:py-24">
         <div className=" mb-20 text-center">
-          <h1 className="mb-3 font-bold text-5xl "> Our Fleet </h1>
+          <h1 className="mb-3 font-bold text-5xl ">Boats</h1>
           <div className="max-w-3xl mx-auto text-center">
             Presenting our fleet of sensational boats for you to choose from.
             Select one and get one step closer to fulfilling your long pending
-            voyage across the horizon. Services provided on each of our listed
+            voyager across the horizon. Services provided on each of our listed
             vessels can be customized to your choice so grab a boat and ride on…
           </div>
           <div className="max-w-3xl mx-auto text-center">Book Now!</div>

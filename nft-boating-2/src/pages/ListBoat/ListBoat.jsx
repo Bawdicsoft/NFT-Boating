@@ -421,8 +421,19 @@ export default function ListBoat() {
             your boat?
           </div>
           <div className="max-w-3xl mx-auto text-center">
-            List your boat with us and get instantly connected to loads of
+            List your boat with us and get instantly connected with plenty of
             customers willing to rent...
+          </div>
+          <div className="max-w-3xl mx-auto text-center">
+            This is not a regular rent for the day, if you post your boat with
+            us, it will be issue 365 NFT memberships related only to your boat,
+            you will choose the price for the day rent bit keep in mind the NFT
+            will be valid for 5 years, the owner of the NFT can book a day for 5
+            consecutive years.
+          </div>
+          <div className="max-w-3xl mx-auto text-center">
+            In addition, the NFT owner will pay you a boat maintenance fee per
+            year depending on the length of the boat.
           </div>
         </div>
       </header>
@@ -432,31 +443,22 @@ export default function ListBoat() {
             <div className="md:grid md:grid-cols-3 md:gap-6">
               <div>
                 <h2 className="text-1xl font-extrabold tracking-tight text-gray-900 sm:text-2xl">
-                  Technical Specifications
+                  Boat Specifications
                 </h2>
                 <p className="mt-4 text-gray-500">
-                  Provide as much details about your vessel as possible to help
-                  customers choose easily. Pictures add more charm to the
-                  offering so don't hesitate to share more angles of your ride.
-                  Customers will be able to see these specs on our listings once
-                  you're done.
+                  Provide details about your vessel to help customers choose
+                  easily. We encourage you to post pictures, it is very
+                  important for possible customers
                 </p>
 
                 <dl className="mt-8 grid grid-cols-1 gap-x-6 gap-y-7 lg:gap-x-8">
-                  {/* <div className="border-t border-gray-200 pt-4">
-                    <dt className="font-medium text-gray-900">Origin</dt>
-                    <dd className="mt-2 text-sm text-gray-500">
-                      Designed by Good Goods, Inc.
-                    </dd>
-                  </div> */}
-
                   <div className="border-t border-gray-200 pt-4">
                     <dt className="font-medium text-gray-900">
                       Considerations
                     </dt>
                     <dd className="mt-2 text-sm text-gray-500">
-                      Make sure to share high resolution images so customers can
-                      get a better idea of what it looks like.
+                      Make sure to share high-resolution images so customers can
+                      choose easily.
                     </dd>
                   </div>
                 </dl>
