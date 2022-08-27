@@ -1,12 +1,14 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import "./interfaces/MYIERC721.sol";
-import "./interfaces/IERC20.sol";
+import "./interfaces/INFTilityExchange.sol";
+import "./interfaces/IUSDT.sol";
 import "./DeployHandler/IDeploy.sol";
 
 import "./Contracts/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./library/BookingMap.sol";
 import "./library/UserMapping.sol";
@@ -29,8 +31,10 @@ contract Factory is Ownable {
     *   variables
     ***********************************************/
 
-    IERC20 public USDT;
+    IUSDT public USDT;
+    IERC20 public NFTilityToken;
     IDeploy private DeployHandler;
+    INFTilityExchange private ExchangeHandler;
     uint public ownerFee = 20; // 20%
 
     
@@ -38,8 +42,9 @@ contract Factory is Ownable {
     *   constructor
     ***********************************************/
 
-    constructor(address _USDT, address _DeployHandler) Ownable(msg.sender) {
-        USDT = IERC20(_USDT);
+    constructor(address _USDT, address _NFTilityToken, address _DeployHandler) Ownable(msg.sender) {
+        USDT = IUSDT(_USDT);
+        NFTilityToken = IERC20(_NFTilityToken);
         DeployHandler = IDeploy(_DeployHandler);
     }
 
@@ -55,6 +60,10 @@ contract Factory is Ownable {
 
     event mint(uint token, address user);
 
+    enum Tokens {
+        USDT,
+        NFTilityToken
+    }
 
     function buyOwnership (
 
