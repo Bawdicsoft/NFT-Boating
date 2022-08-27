@@ -65,13 +65,7 @@ contract Factory is Ownable {
         NFTilityToken
     }
 
-    function buyOwnership (
-
-        uint256 tOwnership_,
-        uint256 USDT_,
-        address contract_
-
-        ) public {
+    function buyOwnership ( uint256 tOwnership_, Tokens token_, uint256 value_, address contract_ ) public {
 
         require ( tOwnership_ > 0, "!tOwnership");
 
@@ -83,16 +77,45 @@ contract Factory is Ownable {
             "!Total Supply"
         );
 
-        require ( 
-            (contractPrice.mul(tOwnership_)) == USDT_, 
-            "!Not suffecient USDT"
-        );
         
-        uint256 _ownerFee = USDT_.mul(ownerFee).div(100);
-        uint256 _boatFee = USDT_.sub(_ownerFee);
 
-        USDT.transferFrom( msg.sender, owner(), _ownerFee );
-        USDT.transferFrom( msg.sender, contractOwner, _boatFee );
+        if (token_ == Tokens.USDT) {
+            
+            require ( 
+                (contractPrice.mul(tOwnership_)) == value_, 
+                "!inSufficient USDT"
+            );
+
+            require (
+                (USDT.allowance(msg.sender, address(this))) >= value_, 
+                "!inSufficient USDT allowance"
+            );
+
+            uint256 _ownerFee = value_.mul(ownerFee).div(100);
+            uint256 _boatFee = value_.sub(_ownerFee);
+
+            USDT.transferFrom( msg.sender, owner(), _ownerFee );
+            USDT.transferFrom( msg.sender, contractOwner, _boatFee );
+
+        }
+
+        if (token_ == Tokens.NFTilityToken) {
+
+            contractPrice = ExchangeHandler.priceCalculator(contractPrice);
+
+            require ( 
+                (contractPrice.mul(tOwnership_)) == value_, 
+                "!inSufficient NFTilityToken"
+            );
+
+            uint256 _ownerFee = value_.mul(ownerFee).div(100);
+            uint256 _boatFee = value_.sub(_ownerFee);
+
+            NFTilityToken.transferFrom( msg.sender, owner(), _ownerFee );
+            NFTilityToken.transferFrom( msg.sender, contractOwner, _boatFee );
+
+        }
+
 
         MYIERC721 IContract = MYIERC721(contract_);
 
@@ -135,6 +158,7 @@ contract Factory is Ownable {
     mapping(address => mapping(uint => mapping(uint => mapping(uint => bool)))) private _isSpecialDay;
     mapping(address => mapping(uint => mapping(uint => mapping(uint => uint)))) private _specialDayAmount;
     mapping(address => mapping(uint => mapping(uint => mapping(uint => uint)))) private _specialDayOwnerUSDT;
+    mapping(address => mapping(uint => mapping(uint => mapping(uint => uint)))) private _specialDayOwnerNFTilityToken;
     mapping(address => mapping(uint => mapping(uint => bool))) public _maintenanceFeePad;
 
     // update function
@@ -174,11 +198,9 @@ contract Factory is Ownable {
     // public function
     function bookDate(
 
-        uint year_, uint month_, uint day_, address contract_, uint id_, uint USDT_
+        uint year_, uint month_, uint day_, address contract_, uint id_, Tokens token_, uint256 value_
 
         ) public {
-
-        require(USDT.allowance(msg.sender, address(this)) <= USDT_, "!allowance");
 
         MYIERC721 IContract = MYIERC721(contract_);
         address __owner = IContract.ownerOf(id_);
@@ -207,11 +229,33 @@ contract Factory is Ownable {
         uint lnewYear_ = DateTimeLibrary.timestampFromDate(year_.add(1), 12, 31);
 
         if (_isSpecialDay[contract_][year_][month_][day_]) {
-            require(_specialDayAmount[contract_][year_][month_][day_] == USDT_, "SpecialDay");
 
-            USDT.transferFrom( msg.sender, address(this), USDT_);
+            if (token_ == Tokens.USDT) {
+            
+                require(USDT.allowance(msg.sender, address(this)) <= value_, "!allowance");
+                require(_specialDayAmount[contract_][year_][month_][day_] == value_, "SpecialDay");
 
-            _specialDayOwnerUSDT[contract_][year_][month_][day_] = USDT_;
+                USDT.transferFrom( msg.sender, address(this), value_ );
+
+                _specialDayOwnerUSDT[contract_][year_][month_][day_] = value_;
+
+            }
+
+            if (token_ == Tokens.NFTilityToken) {
+
+                uint specialDayAmount_ = ExchangeHandler.priceCalculator(_specialDayAmount[contract_][year_][month_][day_]);
+
+                require ( 
+                    (specialDayAmount_) == value_, 
+                    "!inSufficient NFTilityToken"
+                );
+
+                NFTilityToken.transferFrom( msg.sender, address(this), value_ );
+
+                _specialDayOwnerNFTilityToken[contract_][year_][month_][day_] = value_;
+
+            }
+
         }
 
         if (_newYear > lnewYear_) _newYear = lnewYear_;
@@ -225,6 +269,8 @@ contract Factory is Ownable {
 
     }
 
+
+
     function cancelBooking(address contract_, uint id_) public {
 
         require (booking.isInserted(contract_, id_), "!Booked");
@@ -236,9 +282,15 @@ contract Factory is Ownable {
         (uint _year, uint _month, uint _day) = DateTimeLibrary.timestampToDate(_DateAndTime);
 
         if (_specialDayOwnerUSDT[contract_][_year][_month][_day] > 0) {
-            USDT.transfer( msg.sender, _specialDayOwnerUSDT[contract_][_year][_month][_day]);
 
+            USDT.transfer( msg.sender, _specialDayOwnerUSDT[contract_][_year][_month][_day]);
             _specialDayOwnerUSDT[contract_][_year][_month][_day] = 0;
+        }
+
+        if (_specialDayOwnerNFTilityToken[contract_][_year][_month][_day] > 0) {
+
+            NFTilityToken.transfer( msg.sender, _specialDayOwnerNFTilityToken[contract_][_year][_month][_day]);
+            _specialDayOwnerNFTilityToken[contract_][_year][_month][_day] = 0;
         }
 
         booking.remove(contract_, id_);
@@ -259,18 +311,37 @@ contract Factory is Ownable {
 
     }
 
-    function payMaintenanceFee(address contract_, uint id_, uint USDT_) public {
+
+    function payMaintenanceFee(address contract_, uint id_, Tokens token_, uint256 value_) public {
 
         require (booking.getOwner(contract_, id_) == _msgSender(), "!Owner");
-        require(_maintenanceFee == USDT_, "!maintenanceFee");
 
         ( ,,,,,, address contractOwner , ) = DeployHandler.contractDitals(contract_);
 
-        uint256 _ownerFee = USDT_.mul(ownerFee).div(100);
-        uint256 _boatFee = USDT_.sub(_ownerFee);
+        if (token_ == Tokens.USDT) {
+            
+            require(_maintenanceFee == value_, "!maintenanceFee");
+            
+            uint256 _ownerFee = value_.mul(ownerFee).div(100);
+            uint256 _boatFee = value_.sub(_ownerFee);
 
-        USDT.transferFrom( msg.sender, owner(), _ownerFee );
-        USDT.transferFrom( msg.sender, contractOwner, _boatFee );
+            USDT.transferFrom( msg.sender, owner(), _ownerFee );
+            USDT.transferFrom( msg.sender, contractOwner, _boatFee );
+            
+        }
+
+        if (token_ == Tokens.NFTilityToken) {
+            
+            uint mFee_ = ExchangeHandler.priceCalculator(_maintenanceFee);
+            require(mFee_ == value_, "!maintenanceFee");
+
+            uint256 _ownerFee = value_.mul(ownerFee).div(100);
+            uint256 _boatFee = value_.sub(_ownerFee);
+
+            NFTilityToken.transferFrom( msg.sender, owner(), _ownerFee );
+            NFTilityToken.transferFrom( msg.sender, contractOwner, _boatFee );
+
+        }
 
         _maintenanceFeePad[contract_][_newYear][id_] = true;
 
@@ -285,17 +356,33 @@ contract Factory is Ownable {
         (, uint _DateAndTime ,) = booking.getTime(contract_, _bookDateID[contract_][year_][month_][day_]);
         require (_DateAndTime < (block.timestamp.sub(_cancelBefore)), "Cant withdrew Amount Now");
 
-        require(_specialDayOwnerUSDT[contract_][year_][month_][day_] > 0, "!Amount");
+        if ( _specialDayOwnerUSDT[contract_][year_][month_][day_] > 0 ) {
+        
+            uint USDT_ = _specialDayOwnerUSDT[contract_][year_][month_][day_];
 
-        uint USDT_ = _specialDayOwnerUSDT[contract_][year_][month_][day_];
+            uint256 _ownerFee = USDT_.mul(ownerFee).div(100);
+            uint256 _boatFee = USDT_.sub(_ownerFee);
 
-        uint256 _ownerFee = USDT_.mul(ownerFee).div(100);
-        uint256 _boatFee = USDT_.sub(_ownerFee);
+            USDT.transfer( owner(), _ownerFee );
+            USDT.transfer( contractOwner, _boatFee );
 
-        USDT.transfer( owner(), _ownerFee );
-        USDT.transfer( contractOwner, _boatFee );
+            _specialDayOwnerUSDT[contract_][year_][month_][day_] = 0;
+            
+        } else if ( _specialDayOwnerNFTilityToken[contract_][year_][month_][day_] > 0 ) {
 
-        _specialDayOwnerUSDT[contract_][year_][month_][day_] = 0;
+            uint NNT_ = _specialDayOwnerNFTilityToken[contract_][year_][month_][day_];
+
+            uint256 _ownerFee = NNT_.mul(ownerFee).div(100);
+            uint256 _boatFee = NNT_.sub(_ownerFee);
+
+            NFTilityToken.transfer( owner(), _ownerFee );
+            NFTilityToken.transfer( contractOwner, _boatFee );
+
+            _specialDayOwnerNFTilityToken[contract_][year_][month_][day_] = 0;
+
+        } else {
+            revert("!Amount");
+        }
     
     }
 
@@ -311,6 +398,7 @@ contract Factory is Ownable {
     struct offer_ {
         uint id;
         uint userID;
+        Tokens tName;
         uint Price;
         uint Time;
         uint offeredDate;
@@ -348,7 +436,7 @@ contract Factory is Ownable {
         return _userAllOffers[contract_][user_];
     }
 
-    function offer(address contract_, uint id_, uint userID_, uint256 USDT_ ) public {
+    function offer(address contract_, uint id_, uint userID_, Tokens token_, uint256 value_ ) public {
 
         require(!_offerdID[contract_][id_], "offerdID");
 
@@ -367,16 +455,40 @@ contract Factory is Ownable {
 
         (uint year_, uint month_, uint day_) = DateTimeLibrary.timestampToDate(_bookedTime);
 
-        if (_isSpecialDay[contract_][year_][month_][day_]) {
-            require((_specialDayAmount[contract_][year_][month_][day_] + _offerPrice) <= USDT_, "SpecialDay");
-            USDT.transferFrom( _msgSender, address(this), USDT_);
-        } else {
-            require ( _offerPrice <= USDT_, "!OfferPrice");
-            USDT.transferFrom( _msgSender, address(this), USDT_);
+        if (token_ == Tokens.USDT) {
+            
+            if (_isSpecialDay[contract_][year_][month_][day_]) {
+                require((_specialDayAmount[contract_][year_][month_][day_] + _offerPrice) <= value_, "SpecialDay");
+                USDT.transferFrom( _msgSender, address(this), value_);
+            } else {
+                require ( _offerPrice <= value_, "!OfferPrice");
+                USDT.transferFrom( _msgSender, address(this), value_);
+            }
+
+            _offers[contract_][id_] = 
+                offer_(id_, userID_, token_, value_, (_bookedTime.sub(_acceptOfferBefore)),  _bookedTime, _msgSender, contract_);
+
         }
 
-        _offers[contract_][id_] = 
-            offer_(id_, userID_, USDT_, (_bookedTime.sub(_acceptOfferBefore)),  _bookedTime, _msgSender, contract_);
+        if (token_ == Tokens.NFTilityToken) {
+
+            if (_isSpecialDay[contract_][year_][month_][day_]) {
+
+                uint _NNT = ExchangeHandler.priceCalculator(_specialDayAmount[contract_][year_][month_][day_] + _offerPrice);
+
+                require(_NNT <= value_, "SpecialDay");
+                NFTilityToken.transferFrom( _msgSender, address(this), value_);
+            } else {
+                require ( _offerPrice <= value_, "!OfferPrice");
+                NFTilityToken.transferFrom( _msgSender, address(this), value_);
+            }
+
+            _offers[contract_][id_] = 
+                offer_(id_, userID_, token_, value_, (_bookedTime.sub(_acceptOfferBefore)),  _bookedTime, _msgSender, contract_);
+
+        }
+
+        
         _indexOfuserAllOffers[contract_][id_] = _userAllOffers[contract_][_msgSender].length;
         _userAllOffers[contract_][_msgSender].push(id_);
         _offerdID[contract_][id_] = true;
@@ -392,7 +504,14 @@ contract Factory is Ownable {
         address _msgSender = _msgSender();
         require(_offers[contract_][id_].User == _msgSender, "!User");
 
-        USDT.transfer( _msgSender, _offers[contract_][id_].Price);
+
+        if (_offers[contract_][id_].tName == Tokens.USDT) {
+            USDT.transfer( _msgSender, _offers[contract_][id_].Price );
+        }
+        if (_offers[contract_][id_].tName == Tokens.NFTilityToken) {
+            NFTilityToken.transfer( _msgSender, _offers[contract_][id_].Price );
+        }
+
 
         uint index = _indexOfuserAllOffers[contract_][id_];
         uint lastIndex = _userAllOffers[contract_][_msgSender].length - 1;
@@ -428,8 +547,16 @@ contract Factory is Ownable {
         uint256 _ownerFee = _offers[contract_][id_].Price.mul(ownerFee).div(100);
         uint256 _boatFee = _offers[contract_][id_].Price.sub(_ownerFee);
 
-        USDT.transfer(owner(), _ownerFee);
-        USDT.transfer(_msgSender(), _boatFee);
+
+        if (_offers[contract_][id_].tName == Tokens.USDT) {
+            USDT.transfer(owner(), _ownerFee);
+            USDT.transfer(_msgSender(), _boatFee);
+        }
+        if (_offers[contract_][id_].tName == Tokens.NFTilityToken) {
+            NFTilityToken.transfer(owner(), _ownerFee);
+            NFTilityToken.transfer(_msgSender(), _boatFee);
+        }
+
 
         delete _offerdID[contract_][id_];
         delete _offers[contract_][id_];
