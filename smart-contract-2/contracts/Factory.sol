@@ -42,9 +42,10 @@ contract Factory is Ownable {
     *   constructor
     ***********************************************/
 
-    constructor(address _USDT, address _NFTilityToken, address _DeployHandler) Ownable(msg.sender) {
+    constructor(address _USDT, address _NFTilityToken, address _ExchangeHandler, address _DeployHandler) Ownable(msg.sender) {
         USDT = IUSDT(_USDT);
         NFTilityToken = IERC20(_NFTilityToken);
+        ExchangeHandler = INFTilityExchange(_ExchangeHandler);
         DeployHandler = IDeploy(_DeployHandler);
     }
 
@@ -201,23 +202,29 @@ contract Factory is Ownable {
         uint year_, uint month_, uint day_, address contract_, uint id_, Tokens token_, uint256 value_
 
         ) public {
-
+        
+        uint id__ = id_;
+        uint day__ = day_;
+        uint month__ = month_;
+        uint year__ = year_;
+        address contract__ = contract_;
+        uint amountValue_ = value_;
         MYIERC721 IContract = MYIERC721(contract_);
-        address __owner = IContract.ownerOf(id_);
+        address __owner = IContract.ownerOf(id__);
 
         require(
             _msgSender() == __owner || IContract.isApprovedForAll(__owner, _msgSender()),
             "ERC721: approve caller is not owner nor approved for all"
         );
 
-        require ( DateTimeLibrary.isValidDate(year_, month_, day_), "inValid Date");
-        uint lnewDAte_ = DateTimeLibrary.timestampFromDate(year_, month_, day_);
+        require ( DateTimeLibrary.isValidDate(year__, month__, day__), "inValid Date");
+        uint lnewDAte_ = DateTimeLibrary.timestampFromDate(year__, month__, day__);
 
-        (, uint bookedTime_, uint newYear_) = booking.getTime(contract_, id_);
+        (, uint bookedTime_, uint newYear_) = booking.getTime(contract__, id__);
 
-        if (booking.isInserted(contract_, id_)) {
+        if (booking.isInserted(contract__, id__)) {
             require ( lnewDAte_ > newYear_, "Token Already Booked");
-            require (_maintenanceFeePad[contract_][_newYear][id_], "!maintenanceFeePad");
+            require (_maintenanceFeePad[contract__][_newYear][id__], "!maintenanceFeePad");
         }
 
         require(bookedTime_ != lnewDAte_, "Date Already Booked");
@@ -226,49 +233,48 @@ contract Factory is Ownable {
         require ( (_blockTimestamp + _bookingBefore) < lnewDAte_, "!booking Before");
         require ( (_blockTimestamp + _bookingAfter ) > lnewDAte_, "!booking After");
 
-        uint lnewYear_ = DateTimeLibrary.timestampFromDate(year_.add(1), 12, 31);
+        uint lnewYear_ = DateTimeLibrary.timestampFromDate((year__ + 1), 12, 31);
 
-        if (_isSpecialDay[contract_][year_][month_][day_]) {
+        if (_isSpecialDay[contract__][year__][month__][day__]) {
+            if ( token_ == Tokens.USDT ) {
 
-            if (token_ == Tokens.USDT) {
-            
-                require(USDT.allowance(msg.sender, address(this)) <= value_, "!allowance");
-                require(_specialDayAmount[contract_][year_][month_][day_] == value_, "SpecialDay");
+                require(USDT.allowance(msg.sender, address(this)) <= amountValue_, "!allowance");
+                require(_specialDayAmount[contract__][year__][month__][day__] == amountValue_, "!specialDayAmount");
 
-                USDT.transferFrom( msg.sender, address(this), value_ );
+                USDT.transferFrom( msg.sender, address(this), amountValue_ );
 
-                _specialDayOwnerUSDT[contract_][year_][month_][day_] = value_;
+                _specialDayOwnerUSDT[contract__][year__][month__][day__] = amountValue_;
 
             }
 
-            if (token_ == Tokens.NFTilityToken) {
+            if ( token_ == Tokens.NFTilityToken ) {
 
-                uint specialDayAmount_ = ExchangeHandler.priceCalculator(_specialDayAmount[contract_][year_][month_][day_]);
+                uint specialDayAmount__ = _specialDayAmount[contract__][year__][month__][day__];
+                specialDayAmount__ = ExchangeHandler.priceCalculator(specialDayAmount__);
 
                 require ( 
-                    (specialDayAmount_) == value_, 
+                    (specialDayAmount__) == amountValue_, 
                     "!inSufficient NFTilityToken"
                 );
 
-                NFTilityToken.transferFrom( msg.sender, address(this), value_ );
+                NFTilityToken.transferFrom( msg.sender, address(this), amountValue_ );
 
-                _specialDayOwnerNFTilityToken[contract_][year_][month_][day_] = value_;
-
+                _specialDayOwnerNFTilityToken[contract__][year__][month__][day__] = amountValue_;
+            
             }
-
         }
 
+
         if (_newYear > lnewYear_) _newYear = lnewYear_;
-        _indexOfBookedDates[contract_][id_] = _allBookedDates[contract_][newYear_].length;
-        _allBookedDates[contract_][newYear_].push(_bookDates(year_, month_, day_));
-        _bookDateID[contract_][year_][month_][day_] = id_;
+        _indexOfBookedDates[contract__][id__] = _allBookedDates[contract__][newYear_].length;
+        _allBookedDates[contract__][newYear_].push(_bookDates(year__, month__, day__));
+        _bookDateID[contract__][year__][month__][day__] = id__;
 
-        booking.set(contract_, id_, _msgSender(), _blockTimestamp, lnewDAte_, lnewYear_);
+        booking.set(contract__, id__, _msgSender(), _blockTimestamp, lnewDAte_, lnewYear_);
 
-        emit booked(id_, _msgSender());
+        emit booked(id__, _msgSender());
 
     }
-
 
 
     function cancelBooking(address contract_, uint id_) public {
@@ -474,7 +480,8 @@ contract Factory is Ownable {
 
             if (_isSpecialDay[contract_][year_][month_][day_]) {
 
-                uint _NNT = ExchangeHandler.priceCalculator(_specialDayAmount[contract_][year_][month_][day_] + _offerPrice);
+                uint _NNT = _specialDayAmount[contract_][year_][month_][day_] + _offerPrice;
+                _NNT = ExchangeHandler.priceCalculator(_NNT);
 
                 require(_NNT <= value_, "SpecialDay");
                 NFTilityToken.transferFrom( _msgSender, address(this), value_);
