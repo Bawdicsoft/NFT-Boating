@@ -20,6 +20,11 @@ body {
   background-color: rgba(13, 152, 252, 0.874) !important;
   color: rgba(255, 255, 255, 0.874) !important;
 }
+.specialDay:not(.-selectedStart):not(.-selectedBetween):not(.-selectedEnd):not(.-selected) {
+  border: 2px solid rgba(13, 252, 113, 0.874) !important;
+  background-color: rgba(13, 252, 113, 0.874) !important;
+  color: rgba(255, 255, 255, 0.874) !important;
+}
 
 #root {
   min-height: 100vh;

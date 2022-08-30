@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useImmer } from "use-immer"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
@@ -11,8 +11,14 @@ import { auth, signInWithGoogle } from "../../DB/firebase-config"
 
 export default function BuyForm() {
   const { Contract } = useParams()
-  const { ContractDeploy, ContractUSDT, ContractFactory, FactoryAddress } =
-    useContextAPI()
+  const {
+    ContractDeploy,
+    ContractUSDT,
+    ContractFactory,
+    FactoryAddress,
+    ContractNFTilityToken,
+    ContractNFTilityExchange,
+  } = useContextAPI()
   const { account, active } = useWeb3React()
   const navigate = useNavigate()
   const [user, loading, error] = useAuthState(auth)
@@ -26,13 +32,13 @@ export default function BuyForm() {
   } = useForm()
 
   const [State, SetState] = useImmer({
-    isLoading: true,
     id: 0,
     name: "Name",
     symbol: "X",
     tSupply: 0.0,
     tOwnership: 0.0,
-    price: 0.0,
+    priceUSDT: 0.0,
+    priceNNT: 0.0,
     owner: "0x0000000000000000000000000000000000000000",
     baseURI: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 
@@ -43,20 +49,32 @@ export default function BuyForm() {
 
   useEffect(() => {
     const run = async () => {
-      try {
-        const ContractInfo = await ContractDeploy.contractDitals(Contract)
-        console.log(">>>>>>>")
-        console.log({ ContractInfo })
+      if (active) {
+        let ContractInfo
+        try {
+          ContractInfo = await ContractDeploy.contractDitals(Contract)
+        } catch (e) {
+          console.error(e)
+        }
 
-        // uint id, string memory name, string memory symbol, uint tSupply,
-        // uint tOwnership, uint price, address owner, string memory baseURI
+        let ExchangeRate
+        try {
+          ExchangeRate =
+            await ContractNFTilityExchange.priceCalculatorUSDTtoNNT(
+              ContractInfo.price.toString()
+            )
+        } catch (e) {
+          console.error(e)
+        }
 
         const id = ContractInfo.id.toString()
         const name = ContractInfo.name.toString()
         const symbol = ContractInfo.symbol.toString()
         const tSupply = ContractInfo.tSupply.toString()
         const tOwnership = ContractInfo.tOwnership.toString()
-        const price = formatUnits(ContractInfo.price.toString(), 6)
+        const priceUSDT = formatUnits(ContractInfo.price.toString(), 6)
+
+        const priceNNT = formatUnits(ExchangeRate.toString(), 18)
         const owner = ContractInfo.owner.toString()
         const baseURI = ContractInfo.baseURI.toString()
 
@@ -66,23 +84,21 @@ export default function BuyForm() {
           draft.symbol = symbol
           draft.tSupply = tSupply
           draft.tOwnership = tOwnership
-          draft.price = price
+          draft.priceUSDT = priceUSDT
+          draft.priceNNT = priceNNT
           draft.owner = owner
           draft.baseURI = baseURI
-
-          draft.isLoading = false
         })
-      } catch (e) {
-        console.log(e)
       }
     }
     run()
-  }, [Contract])
+  }, [Contract, account])
 
-  useEffect(() => {
-    if (active) {
-      const run = async () => {
-        console.log(account)
+  const selectedToken = async (Token) => {
+    if (Token === "USDT") {
+      console.log(Token)
+
+      if (active) {
         try {
           const userBalance = await ContractUSDT.balanceOf(account)
 
@@ -93,11 +109,27 @@ export default function BuyForm() {
           console.log(e)
         }
       }
-      run()
+    } else if (Token === "NNT") {
+      console.log(Token)
+
+      if (active) {
+        try {
+          const userBalance = await ContractNFTilityToken.balanceOf(account)
+
+          SetState((draft) => {
+            draft.userBalance = formatUnits(userBalance.toString(), 18)
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
     }
-  }, [active])
+  }
 
   const totalMint = watch("totalMint")
+  const selectToken = watch("selectToken")
+
+  useMemo(() => selectedToken(selectToken), [selectToken, account])
 
   const [state, setSate] = useState(true)
 
@@ -106,17 +138,33 @@ export default function BuyForm() {
       SetState((draft) => {
         draft.approveIsLoading = true
       })
-      const value = totalMint * State.price
-      try {
-        const tx = await ContractUSDT.approve(
-          FactoryAddress,
-          parseUnits(value.toString(), 6)
-        )
-        await tx.wait()
-        setSate(false)
-      } catch (e) {
-        console.error(e)
+
+      if (selectToken === "USDT") {
+        const value = totalMint * State.priceUSDT
+        try {
+          const tx = await ContractUSDT.approve(
+            FactoryAddress,
+            parseUnits(value.toString(), 6)
+          )
+          await tx.wait()
+          setSate(false)
+        } catch (e) {
+          console.error(e)
+        }
+      } else if (selectToken === "NNT") {
+        const value = totalMint * State.priceNNT
+        try {
+          const tx = await ContractNFTilityToken.approve(
+            FactoryAddress,
+            parseUnits(value.toString(), 18)
+          )
+          await tx.wait()
+          setSate(false)
+        } catch (e) {
+          console.error(e)
+        }
       }
+
       SetState((draft) => {
         draft.approveIsLoading = false
       })
@@ -124,32 +172,51 @@ export default function BuyForm() {
   }
 
   const onSubmit = async (data) => {
+    console.log(data)
     SetState((draft) => {
       draft.confirmIsLoading = true
     })
 
-    const value = totalMint * State.price
-    console.log("Submit", totalMint, value)
+    if (selectToken === "USDT") {
+      const value = totalMint * State.priceUSDT
 
-    try {
-      const tx = await ContractFactory.buyOwnership(
-        totalMint,
-        parseUnits(value.toString(), 6),
-        Contract
-      )
+      try {
+        const tx = await ContractFactory.buyOwnership(
+          totalMint,
+          0,
+          parseUnits(value.toString(), 6),
+          Contract
+        )
 
-      await tx.wait()
+        await tx.wait()
 
-      navigate(`/collected`)
-    } catch (e) {
-      console.error(e)
+        navigate(`/collected`)
+      } catch (e) {
+        console.error(e)
+      }
+    } else if (selectToken === "NNT") {
+      const value = totalMint * State.priceNNT
+
+      try {
+        const tx = await ContractFactory.buyOwnership(
+          totalMint,
+          1,
+          parseUnits(value.toString(), 18),
+          Contract
+        )
+
+        await tx.wait()
+
+        navigate(`/collected`)
+      } catch (e) {
+        console.error(e)
+      }
     }
 
     SetState((draft) => {
       draft.confirmIsLoading = true
     })
   }
-  console.log(errors)
 
   return (
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -179,10 +246,7 @@ export default function BuyForm() {
             </div>
           </div>
           <div className="mt-5 md:mt-0 md:col-span-2">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className={State.isLoading ? "animate-pulse" : ""}
-            >
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="shadow overflow-hidden sm:rounded-md">
                 <div className="px-4 py-5 bg-white sm:p-6">
                   <div className="grid grid-cols-6 gap-4">
@@ -211,24 +275,45 @@ export default function BuyForm() {
 
                     <div className="col-span-6 sm:col-span-3">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Your USDT Balance
+                        Your {selectToken} Balance
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
                         {State.userBalance}
                       </p>
                     </div>
 
-                    <div></div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Chose token:
+                      </label>
+                      <select
+                        className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                        {...register("selectToken", { required: true })}
+                      >
+                        <option value="USDT">USDT ( TetherToken )</option>
+                        <option value="NNT">NNT ( NFTility Token )</option>
+                      </select>
+                    </div>
 
-                    <div className="col-span-6 sm:col-span-6">
+                    <div className="col-span-6 sm:col-span-3">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Total Price of 1 Token in USDT:
-                        <span> {State.price}</span>
+                        <span>
+                          {selectToken === "USDT"
+                            ? State.priceUSDT
+                            : State.priceNNT}
+                        </span>
                       </label>
                       <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                        USDT :{" "}
+                        {selectToken} :{" "}
                         <span>
-                          {State.price ? totalMint * State.price : 0.0}
+                          {selectToken === "USDT"
+                            ? State.priceUSDT
+                              ? totalMint * State.priceUSDT
+                              : 0.0
+                            : State.priceNNT
+                            ? totalMint * State.priceNNT
+                            : 0.0}
                         </span>
                       </p>
                     </div>

@@ -102,7 +102,7 @@ contract Factory is Ownable {
 
         if (token_ == Tokens.NFTilityToken) {
 
-            contractPrice = ExchangeHandler.priceCalculator(contractPrice);
+            contractPrice = ExchangeHandler.priceCalculatorUSDTtoNNT(contractPrice);
 
             require ( 
                 (contractPrice.mul(tOwnership_)) == value_, 
@@ -143,19 +143,20 @@ contract Factory is Ownable {
     uint public _cancelBefore;
     uint public _maintenanceFee;
 
-    struct _bookDates {
+    struct date {
         uint _year;
         uint _month;
         uint _day;
     }
 
     mapping(address => mapping(uint => uint)) public _indexOfBookedDates;
-    mapping(address => mapping(uint => _bookDates[])) private _allBookedDates;
+    mapping(address => mapping(uint => date[])) private _allBookedDates;
     mapping(address => mapping(uint => mapping ( uint => mapping ( uint => uint )))) public _bookDateID;
 
     event booked(uint token, address user);
     event _cancelBooking(address _Contract, uint id, uint year, uint month, uint day);
 
+    mapping(address => date[]) private _specialDays;
     mapping(address => mapping(uint => mapping(uint => mapping(uint => bool)))) private _isSpecialDay;
     mapping(address => mapping(uint => mapping(uint => mapping(uint => uint)))) private _specialDayAmount;
     mapping(address => mapping(uint => mapping(uint => mapping(uint => uint)))) private _specialDayOwnerUSDT;
@@ -171,6 +172,7 @@ contract Factory is Ownable {
         if (_isSpecialDay[contract_][year_][month_][day_]) {
             _specialDayAmount[contract_][year_][month_][day_] = amount_;
         } else {
+            _specialDays[contract_].push( date(year_, month_, day_) );
             _isSpecialDay[contract_][year_][month_][day_] = true;
             _specialDayAmount[contract_][year_][month_][day_] = amount_;
         }
@@ -189,10 +191,13 @@ contract Factory is Ownable {
     }
 
     // view function
+    function specialDays(address contract_) public view returns(date[] memory) {
+        return _specialDays[contract_];
+    }
     function specialDayAmount(uint year_, uint month_, uint day_, address contract_) public view returns(uint) {
         return _specialDayAmount[contract_][year_][month_][day_];
     }
-    function allBookedDates(address contract_, uint newYear_) public view returns(_bookDates[] memory) {
+    function allBookedDates(address contract_, uint newYear_) public view returns(date[] memory) {
         return _allBookedDates[contract_][newYear_];
     }
 
@@ -250,7 +255,7 @@ contract Factory is Ownable {
             if ( token_ == Tokens.NFTilityToken ) {
 
                 uint specialDayAmount__ = _specialDayAmount[contract__][year__][month__][day__];
-                specialDayAmount__ = ExchangeHandler.priceCalculator(specialDayAmount__);
+                specialDayAmount__ = ExchangeHandler.priceCalculatorUSDTtoNNT(specialDayAmount__);
 
                 require ( 
                     (specialDayAmount__) == amountValue_, 
@@ -267,7 +272,7 @@ contract Factory is Ownable {
 
         if (_newYear > lnewYear_) _newYear = lnewYear_;
         _indexOfBookedDates[contract__][id__] = _allBookedDates[contract__][newYear_].length;
-        _allBookedDates[contract__][newYear_].push(_bookDates(year__, month__, day__));
+        _allBookedDates[contract__][newYear_].push(date(year__, month__, day__));
         _bookDateID[contract__][year__][month__][day__] = id__;
 
         booking.set(contract__, id__, _msgSender(), _blockTimestamp, lnewDAte_, lnewYear_);
@@ -310,7 +315,7 @@ contract Factory is Ownable {
 
         delete _indexOfBookedDates[contract_][id_];
 
-        _allBookedDates[contract_][_newYear][index] = _bookDates( year, month, day );
+        _allBookedDates[contract_][_newYear][index] = date( year, month, day );
         _allBookedDates[contract_][_newYear].pop();
 
         emit _cancelBooking(contract_, id_, _year, _month, _day);
@@ -338,7 +343,7 @@ contract Factory is Ownable {
 
         if (token_ == Tokens.NFTilityToken) {
             
-            uint mFee_ = ExchangeHandler.priceCalculator(_maintenanceFee);
+            uint mFee_ = ExchangeHandler.priceCalculatorUSDTtoNNT(_maintenanceFee);
             require(mFee_ == value_, "!maintenanceFee");
 
             uint256 _ownerFee = value_.mul(ownerFee).div(100);
@@ -481,7 +486,7 @@ contract Factory is Ownable {
             if (_isSpecialDay[contract_][year_][month_][day_]) {
 
                 uint _NNT = _specialDayAmount[contract_][year_][month_][day_] + _offerPrice;
-                _NNT = ExchangeHandler.priceCalculator(_NNT);
+                _NNT = ExchangeHandler.priceCalculatorUSDTtoNNT(_NNT);
 
                 require(_NNT <= value_, "SpecialDay");
                 NFTilityToken.transferFrom( _msgSender, address(this), value_);

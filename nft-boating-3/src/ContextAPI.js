@@ -1,8 +1,13 @@
 import { useContext, useEffect, createContext, useState } from "react"
 import { ethers } from "ethers"
-import { Deploy, Factory, NFTYacht, USDT } from "./ABIs/ABIs"
-import { Injected } from "./Comp/Wallets/Connectors"
-import { useWeb3React } from "@web3-react/core"
+import {
+  Deploy,
+  Factory,
+  NFTYacht,
+  USDT,
+  NFTilityToken,
+  NFTilityExchange,
+} from "./ABIs/ABIs"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth, db } from "./DB/firebase-config"
 import {
@@ -22,12 +27,13 @@ export const useContextAPI = () => {
 }
 
 export const ContextProvider = ({ children }) => {
-  const { activate, account, active } = useWeb3React()
-  const [user, loading, error] = useAuthState(auth)
+  const [user, loading] = useAuthState(auth)
 
-  const DeployAddress = "0xf92e968F5922B78374Ab1a06E1eB7d7Aba7751C7"
-  const FactoryAddress = "0x0C52a72317260B4495792FddF08740798d5c0826"
-  const USDTAddress = "0x65C89088C691841D55263E74C7F5cD73Ae60186C"
+  const DeployAddress = "0x3f816b313e005E5bBB7EADeC234eB1EA669adcf1"
+  const FactoryAddress = "0xFcd2030Ff1EBeD9f25e743EAdD5e1d73176690a5"
+  const USDTAddress = "0x305007FF14723C49Dd383C7A4B048DBFc68EC8c4"
+  const NFTilityTokenAddress = "0x4F1dD51C625E9c36CB71c8bB77C375a0100767B2"
+  const NFTilityExchangeAddress = "0x5b761c98D5fdbc4ADE93B328e923E5d02B9E5468"
 
   let provider
   if (typeof window.ethereum !== "undefined") {
@@ -37,28 +43,16 @@ export const ContextProvider = ({ children }) => {
   const ContractDeploy = new ethers.Contract(DeployAddress, Deploy, provider)
   const ContractFactory = new ethers.Contract(FactoryAddress, Factory, provider)
   const ContractUSDT = new ethers.Contract(USDTAddress, USDT, provider)
-
-  var wsProvider = new ethers.providers.JsonRpcProvider(
-    "wss://rinkeby.infura.io/ws/v3/461d35d8280c4ee78f25da15fdcc48c1",
-    "rinkeby"
+  const ContractNFTilityToken = new ethers.Contract(
+    NFTilityTokenAddress,
+    NFTilityToken,
+    provider
   )
-  console.log()
-  const wsp = new ethers.providers.WebSocketProvider([
-    "wss://rinkeby.infura.io/ws/v3/461d35d8280c4ee78f25da15fdcc48c1"["rinkeby"],
-  ])
-  console.log(wsp)
-  const readContractFactory = new ethers.Contract(FactoryAddress, Factory, wsp)
-
-  // useEffect(() => {
-  //   if (isconnected) {
-  //     const conToMetamask = async () => {
-  //       await activate(Injected)
-  //     }
-  //     conToMetamask()
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
-  // console.log(isconnected, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>isconnected")
+  const ContractNFTilityExchange = new ethers.Contract(
+    NFTilityExchangeAddress,
+    NFTilityExchange,
+    provider
+  )
 
   const [UserData, setUserData] = useState()
 
@@ -71,7 +65,6 @@ export const ContextProvider = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading])
-  console.log(error)
 
   const fetchUser = async () => {
     try {
@@ -100,7 +93,8 @@ export const ContextProvider = ({ children }) => {
     ContractUSDT,
     ContractDeploy,
     ContractFactory,
-    readContractFactory,
+    ContractNFTilityToken,
+    ContractNFTilityExchange,
     NFTYacht,
     provider,
     FactoryAddress,

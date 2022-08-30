@@ -12,10 +12,12 @@ interface INFTilityExchange {
 
     function price() external view returns(uint);
 
-    function priceCalculator(uint USDT_) external view returns(uint);
-
     function NFTilityToken() external view returns(address);
 
     function USDT() external view returns(address);
+
+    function priceCalculatorUSDTtoNNT(uint USDT_) external view returns(uint NNT_);
+
+    function priceCalculatorNNTtoUSDT(uint NNT_) external view returns(uint USDT_);
 
 }

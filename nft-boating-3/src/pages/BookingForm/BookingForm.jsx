@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css"
 import DatePicker from "@amir04lm26/react-modern-calendar-date-picker"
@@ -13,13 +13,21 @@ import { useImmer } from "use-immer"
 import StateContext from "../../StateContext"
 import DispatchContext from "../../DispatchContext"
 import Popup from "./Popup"
+import { formatUnits, parseUnits } from "ethers/lib/utils"
 
 export default function BookingForm() {
   const navigate = useNavigate()
   const appState = useContext(StateContext)
 
   const { Contract, id } = useParams()
-  const { ContractFactory, UserData } = useContextAPI()
+  const {
+    ContractUSDT,
+    ContractFactory,
+    ContractNFTilityToken,
+    ContractNFTilityExchange,
+    UserData,
+  } = useContextAPI()
+
   const { account, active } = useWeb3React()
 
   // handle Side Panel
@@ -33,13 +41,46 @@ export default function BookingForm() {
     minimumDate: {},
     maximumDate: {},
     disabledDays: [],
+    specialDays: [],
+    customColorDays: [],
+    specialDayAmountUSDT: "00",
+    specialDayAmountNNT: "00",
+    showPrice: false,
     dateError: null,
   })
-  console.log("food", state.food)
 
   // Date Picker
   const [selectedDay, setSelectedDay] = useState(null)
-  const [disabledDays, setDisabledDays] = useState([])
+
+  const computeSpecialDays = async () => {
+    for (let i = 0; i < state.specialDays.length; i++) {
+      if (state.specialDays[i].day === selectedDay.day) {
+        const specialDayAmountUSDT = await ContractFactory.specialDayAmount(
+          selectedDay.year,
+          selectedDay.month,
+          selectedDay.day,
+          Contract
+        )
+        const specialDayAmountNNT =
+          await ContractNFTilityExchange.priceCalculatorUSDTtoNNT(
+            specialDayAmountUSDT.toString()
+          )
+
+        setState((draft) => {
+          draft.specialDayAmountUSDT = formatUnits(
+            specialDayAmountUSDT.toString(),
+            6
+          )
+          draft.specialDayAmountNNT = formatUnits(
+            specialDayAmountNNT.toString(),
+            18
+          )
+          draft.showPrice = true
+        })
+      }
+    }
+  }
+  useMemo(() => computeSpecialDays(), [selectedDay])
 
   const date = new Date().toISOString().split("T")[0]
   const minimumDate = {
@@ -60,15 +101,14 @@ export default function BookingForm() {
   const [offerSideNav, setOfferSideNav] = useState(false)
 
   const handleDisabledSelect = async (disabledDay) => {
-    for (let i = 0; i < disabledDays.length; i++) {
-      if (disabledDays[i].day === disabledDay.day) {
+    for (let i = 0; i < state.disabledDays.length; i++) {
+      if (state.disabledDays[i].day === disabledDay.day) {
         await ContractFactory._bookDateID(
           Contract,
           disabledDay.year,
           disabledDay.month,
           disabledDay.day
         ).then((res) => {
-          // setGetBookDateID(res.toString())
           setDateError(disabledDay)
           setOfferSideNav(true)
         })
@@ -76,7 +116,7 @@ export default function BookingForm() {
     }
   }
 
-  const fachContractInfo = async () => {
+  const fetchContactInfo = async () => {
     const docRef = doc(db, "ContractInfo", Contract)
     const docSnap = await getDoc(docRef)
 
@@ -92,24 +132,53 @@ export default function BookingForm() {
   }
 
   async function afterUseEffect() {
-    setDisabledDays([])
+    setState((draft) => {
+      draft.disabledDays = []
+      draft.specialDays = []
+      draft.customColorDays = []
+    })
 
     let newYear = await ContractFactory._newYear()
     let allBookedDates = await ContractFactory.allBookedDates(
       Contract,
       newYear.toString()
     )
+    let specialDays = await ContractFactory.specialDays(Contract)
+    console.log(specialDays, "specialDays")
 
     if (Boolean(allBookedDates.length)) {
       for (let i = 0; i < allBookedDates.length; i++) {
-        setDisabledDays((prev) =>
-          prev.concat({
+        setState((draft) => {
+          draft.disabledDays.push({
+            year: Number(allBookedDates[i]._year.toString()),
+            month: Number(allBookedDates[i]._month.toString()),
+            day: Number(allBookedDates[i]._day.toString()),
+          })
+          draft.customColorDays.push({
             year: Number(allBookedDates[i]._year.toString()),
             month: Number(allBookedDates[i]._month.toString()),
             day: Number(allBookedDates[i]._day.toString()),
             className: "disableDay",
           })
-        )
+        })
+      }
+    }
+
+    if (Boolean(specialDays.length)) {
+      for (let i = 0; i < specialDays.length; i++) {
+        setState((draft) => {
+          draft.specialDays.push({
+            year: Number(specialDays[i]._year.toString()),
+            month: Number(specialDays[i]._month.toString()),
+            day: Number(specialDays[i]._day.toString()),
+          })
+          draft.customColorDays.push({
+            year: Number(specialDays[i]._year.toString()),
+            month: Number(specialDays[i]._month.toString()),
+            day: Number(specialDays[i]._day.toString()),
+            className: "specialDay",
+          })
+        })
       }
     }
   }
@@ -119,7 +188,7 @@ export default function BookingForm() {
       return
     } else {
       afterUseEffect()
-      fachContractInfo()
+      fetchContactInfo()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, Contract])
@@ -128,8 +197,17 @@ export default function BookingForm() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm()
+
+  const selectToken = watch("selectToken")
+  console.log(selectToken)
+
+  const selectedToken = () => {
+    // create button and check if user select USDT & NNT basd on that check if they have balnce or not and if they have aprove or not
+  }
+  useMemo(() => selectedToken(), [selectToken])
 
   const [openPopup, setOpenPopup] = useState(false)
 
@@ -205,9 +283,9 @@ export default function BookingForm() {
                           onChange={setSelectedDay}
                           inputPlaceholder="Select a day"
                           className=""
-                          disabledDays={disabledDays} // here we pass them
+                          disabledDays={state.disabledDays} // here we pass them
                           onDisabledDayError={handleDisabledSelect} // handle error
-                          customDaysClassName={disabledDays}
+                          customDaysClassName={state.customColorDays}
                           shouldHighlightWeekends
                         />
                       </div>
@@ -227,15 +305,35 @@ export default function BookingForm() {
                             ? `$${appState.food.total} total`
                             : "Chose Your Food"}
                         </p>
-                        {/* <input
-                          type="text"
-                          value={appState.food[0]}
-                          placeholder="Chose Your Food"
-                          {...register("food", {})}
-                          className="w-full py-2.5 px-3 border mb-4 rounded-md"
-                        /> */}
                       </div>
+                      {state.showPrice && (
+                        <>
+                          <div className="col-span-6 sm:col-span-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Chose token:
+                            </label>
+                            <select
+                              className="w-full py-2.5 px-3 border mb-4 rounded-md"
+                              {...register("selectToken", { required: true })}
+                            >
+                              <option value="USDT">USDT ( TetherToken )</option>
+                              <option value="NNT">
+                                NNT ( NFTility Token )
+                              </option>
+                            </select>
+                          </div>
 
+                          <div className="col-span-6 sm:col-span-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Total Price of 1 Token in USDT:
+                              <span>{state.specialDayAmountUSDT}</span>
+                            </label>
+                            <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                              <span>{state.specialDayAmountUSDT}</span>
+                            </p>
+                          </div>
+                        </>
+                      )}
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="last-name"

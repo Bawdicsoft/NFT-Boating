@@ -1,13 +1,11 @@
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useState } from "react"
 import { Disclosure, Menu, Transition } from "@headlessui/react"
-import { BellIcon, MenuIcon, CashIcon, XIcon } from "@heroicons/react/outline"
+import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline"
 import { Link, useNavigate } from "react-router-dom"
-import { auth, db, logout, signInWithGoogle } from "../../DB/firebase-config"
+import { auth, logout, signInWithGoogle } from "../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
 import WalletSide from "./WalletSide"
 import logo from "../../Assets/logo.png"
-import { useImmer } from "use-immer"
-import { collection, getDocs } from "firebase/firestore"
 import { useWeb3React } from "@web3-react/core"
 import { useContextAPI } from "../../ContextAPI"
 
@@ -40,9 +38,8 @@ function classNames(...classes) {
 export default function Header() {
   const { UserData } = useContextAPI()
 
-  console.log({ UserData })
   const { active, account } = useWeb3React()
-  const [user, loading, error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
   const navigate = useNavigate()
 
   const [open, setOpen] = useState(false)
@@ -50,40 +47,6 @@ export default function Header() {
     await logout()
     navigate(`/`)
   }
-
-  const [state, setState] = useImmer({
-    role: "user",
-    requstLength: null,
-  })
-
-  useEffect(() => {
-    if (loading) {
-      return
-    } else {
-      setState((e) => {
-        e.role = UserData?.role
-      })
-
-      const fetchData = async () => {
-        if (1 > 0) {
-          try {
-            const doc = await getDocs(collection(db, "Requst"))
-            const data = doc.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-            console.log(">>>>>>>>>>>")
-            console.log("data", data.length)
-            setState((e) => {
-              e.requstLength = data.length
-            })
-          } catch (error) {
-            console.log(error)
-          }
-        }
-      }
-      fetchData()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
-  console.log(error)
 
   return (
     <>
