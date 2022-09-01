@@ -26,6 +26,7 @@ export default function BookingForm() {
     ContractNFTilityToken,
     ContractNFTilityExchange,
     UserData,
+    FactoryAddress,
   } = useContextAPI()
 
   const { account, active } = useWeb3React()
@@ -38,8 +39,10 @@ export default function BookingForm() {
     food: [],
     ContractInfo: { email: "" },
     selectedDay: null,
+    approveIsLoading: false,
     minimumDate: {},
     maximumDate: {},
+    userBalance: "00",
     disabledDays: [],
     specialDays: [],
     customColorDays: [],
@@ -66,6 +69,8 @@ export default function BookingForm() {
             specialDayAmountUSDT.toString()
           )
 
+        const userBalance = await ContractUSDT.balanceOf(account)
+
         setState((draft) => {
           draft.specialDayAmountUSDT = formatUnits(
             specialDayAmountUSDT.toString(),
@@ -75,6 +80,7 @@ export default function BookingForm() {
             specialDayAmountNNT.toString(),
             18
           )
+          draft.userBalance = formatUnits(userBalance.toString(), 6)
           draft.showPrice = true
         })
       }
@@ -202,17 +208,103 @@ export default function BookingForm() {
   } = useForm()
 
   const selectToken = watch("selectToken")
-  console.log(selectToken)
 
-  const selectedToken = () => {
-    // create button and check if user select USDT & NNT basd on that check if they have balnce or not and if they have aprove or not
+  const selectedToken = async (Token) => {
+    if (Token === "USDT") {
+      console.log(Token)
+
+      if (active) {
+        try {
+          const userBalance = await ContractUSDT.balanceOf(account)
+
+          setState((draft) => {
+            draft.userBalance = formatUnits(userBalance.toString(), 6)
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    } else if (Token === "NNT") {
+      console.log(Token)
+
+      if (active) {
+        try {
+          const userBalance = await ContractNFTilityToken.balanceOf(account)
+
+          setState((draft) => {
+            draft.userBalance = formatUnits(userBalance.toString(), 18)
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    }
   }
-  useMemo(() => selectedToken(), [selectToken])
+  useMemo(() => selectedToken(selectToken), [selectToken])
+
+  const handleApprove = async () => {
+    console.log(parseUnits(state.specialDayAmountNNT.toString(), 18))
+
+    if (state) {
+      setState((draft) => {
+        draft.approveIsLoading = true
+      })
+
+      if (selectToken === "USDT") {
+        try {
+          const tx = await ContractUSDT.approve(
+            FactoryAddress,
+            parseUnits(state.specialDayAmountUSDT.toString(), 6)
+          )
+          await tx.wait()
+          setState((draft) => {
+            draft.approveIsLoading = false
+          })
+        } catch (e) {
+          console.error(e)
+        }
+      } else if (selectToken === "NNT") {
+        try {
+          const tx = await ContractNFTilityToken.approve(
+            FactoryAddress,
+            parseUnits(state.specialDayAmountNNT.toString(), 18)
+          )
+          await tx.wait()
+          setState((draft) => {
+            draft.approveIsLoading = false
+          })
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
+      setState((draft) => {
+        draft.approveIsLoading = false
+      })
+    }
+  }
 
   const [openPopup, setOpenPopup] = useState(false)
 
   const onSubmit = async (data) => {
+    let NO = "0"
+    let Amount = "0"
+
+    if (state.showPrice) {
+      if (selectToken === "USDT") {
+        NO = "0"
+        Amount = parseUnits(state.specialDayAmountUSDT.toString(), 6).toString()
+      } else if (selectToken === "NNT") {
+        NO = "1"
+        Amount = parseUnits(state.specialDayAmountNNT.toString(), 18).toString()
+      }
+    }
+
+    console.log(Amount)
+
     const formData = {
+      selectedToken: NO,
+      specialDayAmount: Amount,
       year: selectedDay.year,
       month: selectedDay.month,
       day: selectedDay.day,
@@ -221,8 +313,12 @@ export default function BookingForm() {
       data,
       OwnerEmail: state.ContractInfo.email,
       userEmail: UserData.email,
-      food: appState.food.array,
-      total: appState.food.total,
+      food: Boolean(appState.food.array == !undefined)
+        ? appState.food.array
+        : 0,
+      total: Boolean(appState.food.total == !undefined)
+        ? appState.food.array
+        : 0,
     }
 
     setState((e) => {
@@ -308,6 +404,13 @@ export default function BookingForm() {
                       </div>
                       {state.showPrice && (
                         <>
+                          <div className="col-span-6">
+                            <p>
+                              This Date is spacial if you want to book this date
+                              you have to pay more.
+                            </p>
+                          </div>
+
                           <div className="col-span-6 sm:col-span-3">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Chose token:
@@ -325,11 +428,23 @@ export default function BookingForm() {
 
                           <div className="col-span-6 sm:col-span-3">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Total Price of 1 Token in USDT:
-                              <span>{state.specialDayAmountUSDT}</span>
+                              Total Price in {selectToken}
                             </label>
                             <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
-                              <span>{state.specialDayAmountUSDT}</span>
+                              <span>
+                                {selectToken === "NNT"
+                                  ? state.specialDayAmountNNT
+                                  : state.specialDayAmountUSDT}
+                              </span>
+                            </p>
+                          </div>
+
+                          <div className="col-span-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Your balance in {selectToken}
+                            </label>
+                            <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                              <span>{state.userBalance}</span>
                             </p>
                           </div>
                         </>
@@ -385,6 +500,15 @@ export default function BookingForm() {
                       </div>
 
                       <div className="col-span-6 sm:col-span-6">
+                        {state.showPrice && (
+                          <span
+                            onClick={handleApprove}
+                            className="courses-pointer mb-4 text-center cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          >
+                            Approve
+                          </span>
+                        )}
+
                         <input
                           className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                           type="submit"

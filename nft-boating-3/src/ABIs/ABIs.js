@@ -640,6 +640,30 @@ export const Factory = [
         name: "_Contract",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "_id",
+        type: "uint256",
+      },
+    ],
+    name: "BookedIsInserted",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_Contract",
+        type: "address",
+      },
     ],
     name: "BookedUserIDs",
     outputs: [
@@ -1366,6 +1390,74 @@ export const Factory = [
       },
     ],
     name: "specialDayAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "contract_",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "year_",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "month_",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "day_",
+        type: "uint256",
+      },
+    ],
+    name: "specialDayOwnerNFTilityToken",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "contract_",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "year_",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "month_",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "day_",
+        type: "uint256",
+      },
+    ],
+    name: "specialDayOwnerUSDT",
     outputs: [
       {
         internalType: "uint256",

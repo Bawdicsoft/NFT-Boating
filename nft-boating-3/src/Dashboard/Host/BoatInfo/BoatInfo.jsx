@@ -8,6 +8,8 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore"
 import { auth, db } from "../../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
 import BookedDatesSidePanel from "./BookedDatesSidePanel"
+import UpdateContract from "./UpdateContract"
+import WithdrewAmount from "./WithdrewAmount"
 
 export default function BoatInfo() {
   const { Contract } = useParams()
@@ -86,13 +88,45 @@ export default function BoatInfo() {
     setOpen(true)
   }
 
+  const [openUpdateContract, setOpenUpdateContract] = useState(false)
+  const [openWithdrewSpecialDayAmount, setOpenWithdrewSpecialDayAmount] =
+    useState(false)
+
   return (
     <>
+      <UpdateContract
+        open={openUpdateContract}
+        setOpen={setOpenUpdateContract}
+        Contract={Contract}
+      />
+      <WithdrewAmount
+        open={openWithdrewSpecialDayAmount}
+        setOpen={setOpenWithdrewSpecialDayAmount}
+        Contract={Contract}
+      />
       <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <h1 className="text-3xl font-bold text-gray-900">
             {State.boat.name} USDT: {State.boat.price}
           </h1>
+          <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+            <div className="inline-flex rounded-md shadow">
+              <span
+                onClick={() => setOpenUpdateContract(true)}
+                className="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white hover:bg-indigo-700"
+              >
+                Update Contract
+              </span>
+            </div>
+            <div className="ml-4 inline-flex rounded-md shadow">
+              <span
+                onClick={() => setOpenWithdrewSpecialDayAmount(true)}
+                className=" cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white hover:bg-indigo-700"
+              >
+                Withdrew Amount
+              </span>
+            </div>
+          </div>
         </div>
       </header>
       <main>

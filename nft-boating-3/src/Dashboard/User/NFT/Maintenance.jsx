@@ -4,102 +4,51 @@ import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
 import { useForm } from "react-hook-form"
 import { useWeb3React } from "@web3-react/core"
-import { useContextAPI } from "../../ContextAPI"
-import { useNavigate } from "react-router-dom"
-
+import { useContextAPI } from "../../../ContextAPI"
 import { useImmer } from "use-immer"
-import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils"
+import { formatUnits, parseUnits } from "ethers/lib/utils"
 
-export default function OfferSidePanel({
-  open,
-  setOpen,
-  errordate,
-  id,
-  Contract,
-}) {
-  const navigate = useNavigate()
-  const { account, active } = useWeb3React()
+export default function Maintenance({ open, setOpen, Contract, id }) {
+  const { account, active, activate } = useWeb3React()
   const {
-    ContractFactory,
-    FactoryAddress,
     ContractUSDT,
+    FactoryAddress,
+    ContractFactory,
     ContractNFTilityToken,
     ContractNFTilityExchange,
   } = useContextAPI()
 
+  const [button, setButton] = useState(true)
   const [state, setState] = useImmer({
-    bookedID: null,
     userBalance: "00",
-    offerPriceUSDT: "00",
-    offerPriceNNT: "00",
-    isSpecialDay: false,
-    specialDayAmountUSDT: "00",
-    specialDayAmountNNT: "00",
+    maintenanceFeeUSDT: "00",
+    maintenanceFeeNNT: "00",
+    approveIsLoading: false,
   })
 
-  useEffect(() => {
+  const fetch = async () => {
+    const maintenanceFeeUSDT = await ContractFactory._maintenanceFee()
+    console.log(formatUnits(maintenanceFeeUSDT.toString(), 6))
+    setState((draft) => {
+      draft.maintenanceFeeUSDT = formatUnits(maintenanceFeeUSDT.toString(), 6)
+    })
+
+    const maintenanceFeeNNT =
+      await ContractNFTilityExchange.priceCalculatorUSDTtoNNT(
+        maintenanceFeeUSDT.toString()
+      )
+    console.log(formatUnits(maintenanceFeeNNT.toString(), 18))
+    setState((draft) => {
+      draft.maintenanceFeeNNT = formatUnits(maintenanceFeeNNT.toString(), 18)
+    })
+  }
+
+  useMemo(() => {
     if (active) {
-      const run = async () => {
-        try {
-          const BookDateID = await ContractFactory._bookDateID(
-            Contract,
-            errordate.year,
-            errordate.month,
-            errordate.day
-          )
-
-          setState((e) => {
-            e.bookedID = BookDateID.toString()
-          })
-        } catch (e) {
-          console.log(e)
-        }
-
-        try {
-          const offerPrice = await ContractFactory._offerPrice()
-
-          const ExchangeRate =
-            await ContractNFTilityExchange.priceCalculatorUSDTtoNNT(
-              offerPrice.toString()
-            )
-
-          setState((e) => {
-            e.offerPriceUSDT = formatUnits(offerPrice.toString(), 6)
-            e.offerPriceNNT = formatUnits(ExchangeRate.toString(), 18)
-          })
-        } catch (e) {
-          console.log(e)
-        }
-
-        const specialDayAmount = await ContractFactory.specialDayAmount(
-          errordate.year,
-          errordate.month,
-          errordate.day,
-          Contract
-        )
-
-        if (specialDayAmount.toString() > 0) {
-          const priceCalculatorUSDTtoNNT =
-            await ContractNFTilityExchange.priceCalculatorUSDTtoNNT(
-              specialDayAmount.toString()
-            )
-
-          console.log(formatUnits(priceCalculatorUSDTtoNNT.toString(), 18))
-
-          setState((e) => {
-            e.specialDayAmountUSDT = formatUnits(specialDayAmount.toString(), 6)
-            e.specialDayAmountNNT = formatUnits(
-              priceCalculatorUSDTtoNNT.toString(),
-              18
-            )
-            e.isSpecialDay = true
-          })
-        }
-      }
-      run()
+      fetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active])
+  }, [account])
 
   const {
     register,
@@ -108,7 +57,6 @@ export default function OfferSidePanel({
     formState: { errors },
   } = useForm()
 
-  const amount = watch("amount")
   const selectToken = watch("selectToken")
 
   const selectedToken = async (Token) => {
@@ -145,39 +93,37 @@ export default function OfferSidePanel({
   useMemo(() => selectedToken(selectToken), [selectToken])
 
   const Submit = async (data) => {
-    let offerAmount
-    let NO
+    console.log(data)
     if (selectToken === "USDT") {
-      NO = 0
-      offerAmount = parseUnits(data.amount.toString(), 6).toString()
+      try {
+        const tx = await ContractFactory.payMaintenanceFee(
+          Contract,
+          id,
+          0,
+          parseUnits(state.maintenanceFeeUSDT.toString(), 6).toString()
+        )
+        await tx.wait()
+        setOpen(false)
+      } catch (e) {
+        console.error(e)
+      }
     } else if (selectToken === "NNT") {
-      NO = 1
-      offerAmount = parseUnits(data.amount.toString(), 18).toString()
-    }
-
-    try {
-      console.log(Contract, state.bookedID, id, parseEther(data.amount))
-      const tx = await ContractFactory.offer(
-        Contract,
-        state.bookedID,
-        id,
-        NO,
-        offerAmount
-      )
-      await tx.wait()
-      setOpen(false)
-      navigate(`/collected`)
-    } catch (e) {
-      console.error(e)
+      try {
+        const tx = await ContractFactory.payMaintenanceFee(
+          Contract,
+          id,
+          1,
+          parseUnits(state.maintenanceFeeUSDT.toString(), 18).toString()
+        )
+        await tx.wait()
+        setOpen(false)
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
-  console.log(errors)
-
-  const [button, setButton] = useState(true)
 
   const handleApprove = async () => {
-    console.log(parseUnits(amount.toString(), 18))
-
     if (state) {
       setState((draft) => {
         draft.approveIsLoading = true
@@ -187,7 +133,7 @@ export default function OfferSidePanel({
         try {
           const tx = await ContractUSDT.approve(
             FactoryAddress,
-            parseUnits(amount.toString(), 6)
+            parseUnits(state.maintenanceFeeUSDT.toString(), 6)
           )
           await tx.wait()
           setState((draft) => {
@@ -200,7 +146,7 @@ export default function OfferSidePanel({
         try {
           const tx = await ContractNFTilityToken.approve(
             FactoryAddress,
-            parseUnits(amount.toString(), 18)
+            parseUnits(state.maintenanceFeeNNT.toString(), 18)
           )
           await tx.wait()
           setState((draft) => {
@@ -270,16 +216,11 @@ export default function OfferSidePanel({
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <Dialog.Title className="text-lg font-medium text-gray-900">
-                        {errordate.day}-{errordate.month}-{errordate.year}
+                        Panel title
                       </Dialog.Title>
-                      <p className="text-red-900">
-                        This date is already booked , You can still book this
-                        Date by offering more then 300 USDT ,
-                        {state.isSpecialDay &&
-                          `and this is a spacial day so you have to pay ${state.specialDayAmountUSDT} USDT more`}
-                      </p>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                      {/* Replace with your content */}
                       <form onSubmit={handleSubmit(Submit)}>
                         <div className="shadow sm:rounded-md">
                           <div className="px-4 py-5 bg-white sm:p-6">
@@ -307,49 +248,22 @@ export default function OfferSidePanel({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                   Your balance in {selectToken}
                                 </label>
-                                <p className="w-full py-2.5 px-3 border mb-4 rounded-md">
+                                <p className="w-full py-2.5 px-3 border mb-2 rounded-md">
                                   <span>{state.userBalance}</span>
                                 </p>
                               </div>
 
                               <div className="col-span-6">
-                                <label
-                                  htmlFor="last-name"
-                                  className="block text-sm font-medium text-gray-700 mb-1"
-                                >
-                                  Make your offer grater then{" "}
-                                  {state.isSpecialDay ? (
-                                    <>
-                                      {selectToken == "USDT"
-                                        ? `${state.offerPriceUSDT} USDT and ${
-                                            state.specialDayAmountUSDT
-                                          } USDT for special day amount. Total: ${
-                                            Number(state.offerPriceUSDT) +
-                                            Number(state.specialDayAmountUSDT)
-                                          }`
-                                        : `${state.offerPriceNNT} NNT and ${
-                                            state.specialDayAmountNNT
-                                          } NNT for special day amount. Total: ${
-                                            Number(state.offerPriceNNT) +
-                                            Number(state.specialDayAmountNNT)
-                                          }`}
-                                    </>
-                                  ) : (
-                                    <>
-                                      {selectToken == "USDT"
-                                        ? `${state.offerPriceUSDT} USDT`
-                                        : `${state.offerPriceNNT} NNT`}
-                                    </>
-                                  )}
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Maintenance Fee {selectToken}
                                 </label>
-                                <input
-                                  type="text"
-                                  placeholder="amount"
-                                  className="w-full py-2.5 px-3 border mb-2 rounded-md"
-                                  {...register("amount", {
-                                    required: true,
-                                  })}
-                                />
+                                <p className="w-full py-2.5 px-3 border mb-2 rounded-md">
+                                  <span>
+                                    {selectToken == "USDT"
+                                      ? state.maintenanceFeeUSDT
+                                      : state.maintenanceFeeNNT}
+                                  </span>
+                                </p>
                               </div>
 
                               <div className="col-span-6 sm:col-span-3">
@@ -368,7 +282,7 @@ export default function OfferSidePanel({
                               <div className="col-span-6 sm:col-span-3">
                                 <button
                                   className={
-                                    "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
+                                    "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + // (button
                                     (button
                                       ? "bg-gray-600 opacity-50 cursor-not-allowed"
                                       : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")
@@ -382,6 +296,7 @@ export default function OfferSidePanel({
                           </div>
                         </div>
                       </form>
+                      {/* /End replace */}
                     </div>
                   </div>
                 </Dialog.Panel>

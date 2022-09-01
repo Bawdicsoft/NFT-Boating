@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useImmer } from "use-immer"
 import { useParams, Link } from "react-router-dom"
 import axios from "axios"
@@ -9,6 +9,7 @@ import { useWeb3React } from "@web3-react/core"
 import { db } from "../../../DB/firebase-config"
 import { doc, getDoc } from "firebase/firestore"
 import { Injected } from "../../../Comp/Wallets/Connectors"
+import Maintenance from "./Maintenance"
 
 export default function NFT() {
   const { Contract, id } = useParams()
@@ -29,6 +30,7 @@ export default function NFT() {
       bookedDate: "",
     },
     offer: [],
+    isInserted: false,
   })
 
   console.log({ state })
@@ -49,17 +51,6 @@ export default function NFT() {
       draft.contract.name = name
       draft.contract.symbol = symbol
     })
-
-    // const getBaseURL = baseURI.split("//").pop()
-    // console.log({ getBaseURL })
-    // const ipfsRes = await axios.get(
-    //   `https://gateway.pinata.cloud/ipfs/${getBaseURL}/`
-    // )
-    // console.log(ipfsRes.data.image)
-    // setState((draft) => {
-    //   draft.imageSrc = ipfsRes.data.image
-    //   draft.imageAlt = `${name} (${symbol})`
-    // })
 
     const ownerOf = await ContractNFTYacht.ownerOf(id)
     const BookedDate = await ContractFactory.BookedDate(Contract, id)
@@ -97,7 +88,29 @@ export default function NFT() {
         draft.offer.push(data)
       })
     }
+
+    const BookedIsInserted = await ContractFactory.BookedIsInserted(
+      Contract,
+      id
+    )
+    console.log(BookedIsInserted)
+
+    if (BookedIsInserted) {
+      const _newYear = await ContractFactory._newYear()
+      const maintenanceFeePad = await ContractFactory._maintenanceFeePad(
+        Contract,
+        _newYear,
+        id
+      )
+      if (!maintenanceFeePad) {
+        setState((draft) => {
+          draft.isInserted = true
+        })
+      }
+    }
   }
+  const [maintenanceOpen, setMaintenanceOpen] = useState(true)
+
   useEffect(() => {
     if (active) {
       fetch()
@@ -308,12 +321,30 @@ export default function NFT() {
                       <>
                         {state.contract.isOwner && !state.contract.isBooked && (
                           <>
-                            <Link
-                              to={`/Contract/${Contract}/Booking-form/${id}`}
-                              className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                              Book Now
-                            </Link>
+                            {state.isInserted ? (
+                              <>
+                                <button
+                                  onClick={() => setMaintenanceOpen(true)}
+                                  className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                  Pay Maintenance Fee
+                                </button>
+
+                                <Maintenance
+                                  Contract={Contract}
+                                  id={id}
+                                  open={maintenanceOpen}
+                                  setOpen={setMaintenanceOpen}
+                                />
+                              </>
+                            ) : (
+                              <Link
+                                to={`/Contract/${Contract}/Booking-form/${id}`}
+                                className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
+                                Book Now
+                              </Link>
+                            )}
                           </>
                         )}
                         {state.contract.isOwner && state.contract.isBooked && (

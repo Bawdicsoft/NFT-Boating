@@ -20,35 +20,37 @@ export default function Popup({ open, setOpen, state }) {
   const navigate = useNavigate()
   const { ContractFactory, UserData, ContractUSDT } = useContextAPI()
 
-  //   const formData = {
-  //     year: selectedDay.year,
-  //     month: selectedDay.month,
-  //     day: selectedDay.day,
-  //     Contract,
-  //     id,
-  //     data,
-  //     OwnerEmail: state.ContractInfo.email,
-  //     userEmail: UserData.email,
-  //     food: appState.food.array,
-  //     total: appState.food.total,
-  //   }
-
   const submit = async () => {
+    let data = {
+      year: state.formData.year,
+      month: state.formData.month,
+      day: state.formData.day,
+      Contract: state.formData.Contract,
+      id: state.formData.id,
+      selectedToken: state.formData.selectedToken,
+      specialDayAmount: state.formData.specialDayAmount,
+    }
+    console.log(data, "data")
+
     try {
       const tx = await ContractFactory.bookDate(
         state.formData.year,
         state.formData.month,
         state.formData.day,
         state.formData.Contract,
-        state.formData.id
+        state.formData.id,
+        state.formData.selectedToken,
+        state.formData.specialDayAmount
       )
       await tx.wait()
     } catch (e) {
       console.error(e)
     }
 
+    console.log(state.formData)
+
     try {
-      const amount = state.formData.total + 400
+      const amount = Number(state.formData?.total) + 400
       const tx = await ContractUSDT.transfer(
         "0x344A0e306cdD004508b19C51Ec5c646500acd2f6",
         parseUnits(amount.toString(), 6)
@@ -59,15 +61,17 @@ export default function Popup({ open, setOpen, state }) {
     }
 
     let foodHtmlList = ""
-    for (let i = 0; i < appState.food.array.length; i++) {
-      const element = appState.food.array[i]
-      for (const key in element) {
-        foodHtmlList += `<tr>
+    if (appState.food.array == !undefined) {
+      for (let i = 0; i < appState.food.array.length; i++) {
+        const element = appState.food.array[i]
+        for (const key in element) {
+          foodHtmlList += `<tr>
             <th>${key}</th>
           </tr>
           <tr style="background-color: #eaeaea">
             <td>${element[key]}</td>
           </tr>`
+        }
       }
     }
 

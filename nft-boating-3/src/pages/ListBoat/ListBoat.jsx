@@ -1,21 +1,18 @@
+import { useContext, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useImmer } from "use-immer"
 import QRCode from "react-qr-code"
 import logo from "./../../Assets/logo.png"
 import { collection, addDoc } from "firebase/firestore"
+import { Link, navigate, useNavigate } from "react-router-dom"
 import axios from "axios"
-// import { useNavigate } from "react-router-dom"
 import { useWeb3React } from "@web3-react/core"
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { db, storage } from "../../DB/firebase-config"
 import { useContextAPI } from "../../ContextAPI"
 import html2canvas from "html2canvas"
 import GoogleMapReact from "google-map-react"
-import { useContext, useEffect, useState } from "react"
 import { Carousel } from "flowbite-react"
-import { async } from "@firebase/util"
-import Popup from "./Popup"
-import Map from "../../Comp/Map/Map"
 import DispatchContext from "../../DispatchContext"
 import { Injected } from "../../Comp/Wallets/Connectors"
 
@@ -49,6 +46,8 @@ async function uploadImg({ name, fileName, file }) {
 }
 
 export default function ListBoat() {
+  const navigate = useNavigate()
+
   const appDispatch = useContext(DispatchContext)
   const { updateDocRequests, UserData } = useContextAPI()
   const {
@@ -80,7 +79,7 @@ export default function ListBoat() {
   }
 
   const location = watch(["location"])
-  useEffect(() => {
+  useMemo(() => {
     const runMap = async () => {
       if (state.markerMap.address !== location[0] && location[0] !== "") {
         try {
@@ -106,7 +105,7 @@ export default function ListBoat() {
   }, [location])
 
   const featuredImage = watch(["featuredImage"])
-  useEffect(() => {
+  useMemo(() => {
     if (featuredImage[0] !== undefined) {
       if (featuredImage[0].length > 0) {
         const reader = new FileReader()
@@ -394,9 +393,7 @@ export default function ListBoat() {
             )
             console.log(res.data)
 
-            setState((e) => {
-              e.btnLoading = false
-            })
+            navigate(`/create-new`)
           })
           .catch((error) => {
             console.error(error)
@@ -410,6 +407,27 @@ export default function ListBoat() {
     }
   }
   console.log(errors)
+
+  if (UserData?.request != undefined) {
+    return (
+      <div className="CreateNew min-h-full">
+        <header className="bg-white">
+          <div className="mt-20 mb-20 text-center">
+            <h1 className="mb-6 font-bold text-3xl">
+              You already request for a boat listing please check user nav and
+              click create new
+            </h1>
+            <Link
+              className="text-center w-[300px] m-auto  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-600  hover:bg-indigo-700 cursor-pointer"
+              to="/create-new"
+            >
+              create new
+            </Link>
+          </div>
+        </header>
+      </div>
+    )
+  }
 
   return (
     <div className="CreateNew min-h-full">

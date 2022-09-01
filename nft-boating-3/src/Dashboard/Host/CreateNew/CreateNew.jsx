@@ -85,11 +85,11 @@ export default function CreateNew() {
   }, [UserData])
 
   const isWhiteListed = async () => {
-    const tx = await ContractDeploy.whitelist(State.request.account)
-    console.log("isWhiteListed", tx.toString())
+    const whitelist = await ContractDeploy.whitelist(State.request.account)
+    console.log("isWhiteListed", whitelist)
 
     SetState((e) => {
-      e.isWhiteListed = tx.toString()
+      e.isWhiteListed = whitelist
       e.isRightAccount = Boolean(State.request.account === account)
     })
   }
@@ -216,22 +216,6 @@ export default function CreateNew() {
       <header className="bg-white">
         <div className="mt-20 mb-20 text-center">
           <h1 className="mb-1 font-bold text-5xl "> List Your Boat </h1>
-          <div className="max-w-3xl mx-auto text-center">
-            {!State.isWhiteListed ? (
-              <p>
-                your request is padding please Wat 1 or 2 business days after
-                your request is accepted you will get an email
-              </p>
-            ) : (
-              <>
-                {!State.isRightAccount ? (
-                  <p>please change your account to requested account</p>
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
-          </div>
         </div>
       </header>
       <main>
@@ -239,21 +223,6 @@ export default function CreateNew() {
           <div className="mt-5 md:mt-0 md:col-span-2">
             {State.haveRequest ? (
               <>
-                {!State.isWhiteListed ? (
-                  <p>
-                    your request is padding please Wat 1 or 2 business days
-                    after your request is accepted you will get an email
-                  </p>
-                ) : (
-                  <>
-                    {!State.isRightAccount ? (
-                      <p>please change your account to requested account</p>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                )}
-
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="shadow sm:rounded-md">
                     <div className="px-4 py-5 bg-white sm:p-6">
@@ -320,20 +289,19 @@ export default function CreateNew() {
                                   {!State.isRightAccount ? (
                                     <p>
                                       please change your account to requested
-                                      account
+                                      account {State.request.account}
                                     </p>
                                   ) : (
-                                    <></>
+                                    <button
+                                      className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                      type="submit"
+                                      disabled={State.btnDisable}
+                                    >
+                                      List your Boat
+                                    </button>
                                   )}
                                 </>
                               )}
-                              <button
-                                className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                type="submit"
-                                disabled={State.btnDisable}
-                              >
-                                List your Boat
-                              </button>
                             </>
                           )}
                         </div>

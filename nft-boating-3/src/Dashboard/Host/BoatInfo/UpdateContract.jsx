@@ -2,9 +2,46 @@
 import { Fragment, useState } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
+import { useForm } from "react-hook-form"
+import { useContextAPI } from "../../../ContextAPI"
+import { parseUnits } from "ethers/lib/utils"
+import UpdatePrice from "./UpdatePrice"
 
-export default function UpdateContract() {
-  const [open, setOpen] = useState(true)
+export default function UpdateContract({ open, setOpen, Contract }) {
+  const { ContractFactory } = useContextAPI()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+
+  const Submit = async (data) => {
+    try {
+      const tx = await ContractFactory.addSpecialDay(
+        data.Year,
+        data.Month,
+        data.Day,
+        parseUnits(data.Amount.toString(), 6).toString(),
+        Contract
+      )
+      await tx.wait()
+      setOpen(false)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  const handleUpdatePrice = async (data) => {
+    try {
+      const tx = await ContractFactory.updatePrice(
+        Contract,
+        parseUnits(data.Amount.toString(), 6).toString()
+      )
+      await tx.wait()
+      setOpen(false)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -57,19 +94,84 @@ export default function UpdateContract() {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <Dialog.Title className="text-lg font-medium text-gray-900">
-                        {" "}
-                        Panel title{" "}
+                        Update Contract
                       </Dialog.Title>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                      {/* Replace with your content */}
-                      <div className="absolute inset-0 px-4 sm:px-6">
-                        <div
-                          className="h-full border-2 border-dashed border-gray-200"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      {/* /End replace */}
+                      <form onSubmit={handleSubmit(Submit)}>
+                        <div className="shadow sm:rounded-md">
+                          <div className="px-4 py-5 bg-white sm:p-6">
+                            <h2 className="py-2">Add Special Day</h2>
+                            <div className="grid grid-cols-6 gap-4">
+                              <div className="col-span-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Year:
+                                </label>
+                                <input
+                                  className="w-full py-2.5 px-3 border mb-2 rounded-md"
+                                  type="text"
+                                  placeholder="Year"
+                                  {...register("Year", {
+                                    required: true,
+                                  })}
+                                />
+                              </div>
+
+                              <div className="col-span-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Month:
+                                </label>
+                                <input
+                                  className="w-full py-2.5 px-3 border mb-2 rounded-md"
+                                  type="text"
+                                  placeholder="Month"
+                                  {...register("Month", {
+                                    required: true,
+                                  })}
+                                />
+                              </div>
+
+                              <div className="col-span-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Day:
+                                </label>
+                                <input
+                                  className="w-full py-2.5 px-3 border mb-2 rounded-md"
+                                  type="text"
+                                  placeholder="Day"
+                                  {...register("Day", {
+                                    required: true,
+                                  })}
+                                />
+                              </div>
+
+                              <div className="col-span-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Amount:
+                                </label>
+                                <input
+                                  className="w-full py-2.5 px-3 border mb-2 rounded-md"
+                                  type="text"
+                                  placeholder="Amount"
+                                  {...register("Amount", {
+                                    required: true,
+                                  })}
+                                />
+                              </div>
+
+                              <div className="col-span-6">
+                                <button
+                                  className="text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-600  hover:bg-indigo-700 cursor-pointer"
+                                  type="submit"
+                                >
+                                  Confirm
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                      <UpdatePrice Contract={Contract} setOpen={setOpen} />
                     </div>
                   </div>
                 </Dialog.Panel>

@@ -22,19 +22,6 @@ export default function Boats() {
   useEffect(() => {
     if (active) {
       const run = async () => {
-        await axios({
-          url: `https://gateway.pinata.cloud/ipfs/QmZbBsJho23qXZo5XG8NqPeZBpRUj6Kcf9KqeFU4GA64wS/`,
-          method: "get",
-        })
-          .then((response) => {
-            SetState((draft) => {
-              draft.image = response.data.image
-            })
-          })
-          .then((err) => {
-            console.log(err)
-          })
-
         let addresses
         try {
           addresses = await ContractFactory.UserAllContractAddress(account)
@@ -69,6 +56,16 @@ export default function Boats() {
             SetState((draft) => {
               draft.userNFT = addresses.length
               draft.data.push(data)
+            })
+
+            const getBaseURL = contractData.baseURI.split("//").pop()
+            console.log({ getBaseURL })
+            const ipfsRes = await axios.get(
+              `https://gateway.pinata.cloud/ipfs/${getBaseURL}/`
+            )
+
+            SetState((draft) => {
+              draft.image = ipfsRes.data.image
             })
           }
         } else {

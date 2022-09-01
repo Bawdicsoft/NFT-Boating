@@ -141,7 +141,7 @@ contract Factory is Ownable {
     uint public _bookingBefore; // user can't book date Before (bookingBefore)date
     uint public _bookingAfter = 5260000; // user can't book date After  (bookingAfter)date
     uint public _cancelBefore;
-    uint public _maintenanceFee;
+    uint public _maintenanceFee = 300000000;
 
     struct date {
         uint _year;
@@ -200,6 +200,12 @@ contract Factory is Ownable {
     function allBookedDates(address contract_, uint newYear_) public view returns(date[] memory) {
         return _allBookedDates[contract_][newYear_];
     }
+    function specialDayOwnerUSDT(address contract_, uint year_, uint month_, uint day_) public view returns(uint) {
+        return _specialDayOwnerUSDT[contract_][year_][month_][day_];
+    }
+    function specialDayOwnerNFTilityToken(address contract_, uint year_, uint month_, uint day_) public view returns(uint) {
+        return _specialDayOwnerNFTilityToken[contract_][year_][month_][day_];
+    }
 
     // public function
     function bookDate(
@@ -229,7 +235,9 @@ contract Factory is Ownable {
 
         if (booking.isInserted(contract__, id__)) {
             require ( lnewDAte_ > newYear_, "Token Already Booked");
-            require (_maintenanceFeePad[contract__][_newYear][id__], "!maintenanceFeePad");
+            if (_maintenanceFee > 0) {
+                require (_maintenanceFeePad[contract__][_newYear][id__], "!maintenanceFeePad");
+            }
         }
 
         require(bookedTime_ != lnewDAte_, "Date Already Booked");
@@ -325,13 +333,16 @@ contract Factory is Ownable {
 
     function payMaintenanceFee(address contract_, uint id_, Tokens token_, uint256 value_) public {
 
+        require (booking.isInserted(contract_, id_), "!Booked");
         require (booking.getOwner(contract_, id_) == _msgSender(), "!Owner");
+        require (!_maintenanceFeePad[contract_][_newYear][id_], "Maintenance Fee paid");
 
         ( ,,,,,, address contractOwner , ) = DeployHandler.contractDitals(contract_);
 
         if (token_ == Tokens.USDT) {
             
             require(_maintenanceFee == value_, "!maintenanceFee");
+            require(USDT.allowance(msg.sender, address(this)) <= value_, "!allowance");
             
             uint256 _ownerFee = value_.mul(ownerFee).div(100);
             uint256 _boatFee = value_.sub(_ownerFee);
@@ -611,6 +622,10 @@ contract Factory is Ownable {
         uint[] memory _userIds
         ) {
         (_userIds ,) = booking.getKeys(_Contract);
+    }
+    
+    function BookedIsInserted(address _Contract, uint _id) public view returns ( bool ) {
+        return booking.isInserted(_Contract, _id);
     }
 
 
