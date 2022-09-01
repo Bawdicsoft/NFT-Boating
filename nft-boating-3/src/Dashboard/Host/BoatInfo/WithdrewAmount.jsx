@@ -1,10 +1,8 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useMemo, useState } from "react"
+import { Fragment, useMemo } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { useContextAPI } from "../../../ContextAPI"
 import { XIcon } from "@heroicons/react/outline"
-import { useForm } from "react-hook-form"
-import { parseUnits } from "ethers/lib/utils"
 import { useImmer } from "use-immer"
 
 export default function WithdrewAmount({ open, setOpen, Contract }) {
@@ -31,23 +29,25 @@ export default function WithdrewAmount({ open, setOpen, Contract }) {
           element._month,
           element._day
         )
-      if (specialDayOwnerUSDT != 0 && specialDayOwnerNFTilityToken != 0) {
+      if (specialDayOwnerUSDT !== 0 && specialDayOwnerNFTilityToken !== 0) {
         setState((draft) => {
           draft.specialDays.push(element)
         })
       }
     }
   }
-  useMemo(() => fetchData(), [])
+  useMemo(() => {
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const Withdrew = async (date) => {
-    const withdrewSpecialDayAmount =
-      await ContractFactory.withdrewSpecialDayAmount(
-        date.year,
-        date.month,
-        date.day,
-        Contract
-      )
+    await ContractFactory.withdrewSpecialDayAmount(
+      date.year,
+      date.month,
+      date.day,
+      Contract
+    )
   }
 
   return (

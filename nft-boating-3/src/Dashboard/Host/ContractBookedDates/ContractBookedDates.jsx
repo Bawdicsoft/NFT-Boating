@@ -1,8 +1,5 @@
-import { Fragment, useEffect, useState } from "react"
-import { Disclosure, Menu, Transition } from "@headlessui/react"
-import { BellIcon, MenuIcon, CashIcon, XIcon } from "@heroicons/react/outline"
-import { Link, useNavigate } from "react-router-dom"
-import { auth, db, logout, signInWithGoogle } from "../../../DB/firebase-config"
+import { useEffect, useState } from "react"
+import { auth, db } from "../../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useImmer } from "use-immer"
 import { collection, getDocs } from "firebase/firestore"
@@ -10,7 +7,6 @@ import BookedDatesSidePanel from "./BookedDatesSidePanel"
 
 export default function ContractBookedDates() {
   const [user, loading, error] = useAuthState(auth)
-  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
   const [state, setState] = useImmer({
@@ -75,7 +71,9 @@ export default function ContractBookedDates() {
       <div className="OffersReceived min-h-full">
         <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-gray-900">All Booked Dates</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              All Booked Dates
+            </h1>
           </div>
         </header>
         <main>

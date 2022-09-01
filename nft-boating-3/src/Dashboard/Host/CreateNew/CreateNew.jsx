@@ -6,20 +6,11 @@ import { Link, useNavigate } from "react-router-dom"
 import { Injected } from "./../../../Comp/Wallets/Connectors"
 import { useEffect } from "react"
 import axios from "axios"
-import { auth, db } from "./../../../DB/firebase-config"
-import { useAuthState } from "react-firebase-hooks/auth"
-import {
-  addDoc,
-  collection,
-  deleteField,
-  doc,
-  getDoc,
-  setDoc,
-} from "firebase/firestore"
+import { db } from "./../../../DB/firebase-config"
+import { deleteField, doc, getDoc, setDoc } from "firebase/firestore"
 
 export default function CreateNew() {
   const { account, active, activate } = useWeb3React()
-  const [user, error] = useAuthState(auth)
   const { ContractDeploy, UserData, updateDocRequests, fetchUser } =
     useContextAPI()
   const navigate = useNavigate()
@@ -36,7 +27,6 @@ export default function CreateNew() {
   console.log(State.isWhiteListed, State.isRightAccount)
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm()
@@ -228,6 +218,7 @@ export default function CreateNew() {
                     <div className="px-4 py-5 bg-white sm:p-6">
                       <img
                         src={State.request.featuredImage}
+                        alt=""
                         className="w-[300px] mb-6"
                       />
 

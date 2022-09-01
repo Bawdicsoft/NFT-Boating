@@ -142,7 +142,10 @@ export default function OfferSidePanel({
       }
     }
   }
-  useMemo(() => selectedToken(selectToken), [selectToken])
+  useMemo(() => {
+    selectedToken(selectToken)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectToken])
 
   const Submit = async (data) => {
     let offerAmount
@@ -320,7 +323,7 @@ export default function OfferSidePanel({
                                   Make your offer grater then{" "}
                                   {state.isSpecialDay ? (
                                     <>
-                                      {selectToken == "USDT"
+                                      {selectToken === "USDT"
                                         ? `${state.offerPriceUSDT} USDT and ${
                                             state.specialDayAmountUSDT
                                           } USDT for special day amount. Total: ${
@@ -336,7 +339,7 @@ export default function OfferSidePanel({
                                     </>
                                   ) : (
                                     <>
-                                      {selectToken == "USDT"
+                                      {selectToken === "USDT"
                                         ? `${state.offerPriceUSDT} USDT`
                                         : `${state.offerPriceNNT} NNT`}
                                     </>

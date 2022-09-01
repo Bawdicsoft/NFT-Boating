@@ -4,11 +4,7 @@ import { parseUnits } from "ethers/lib/utils"
 
 export default function UpdatePrice({ Contract, setOpen }) {
   const { ContractDeploy } = useContextAPI()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit } = useForm()
 
   const handleUpdatePrice = async (data) => {
     try {

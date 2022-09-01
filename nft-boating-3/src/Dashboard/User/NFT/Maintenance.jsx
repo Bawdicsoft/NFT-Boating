@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useEffect, useMemo, useState } from "react"
+import { Fragment, useMemo, useState } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
 import { useForm } from "react-hook-form"
@@ -9,7 +9,7 @@ import { useImmer } from "use-immer"
 import { formatUnits, parseUnits } from "ethers/lib/utils"
 
 export default function Maintenance({ open, setOpen, Contract, id }) {
-  const { account, active, activate } = useWeb3React()
+  const { account, active } = useWeb3React()
   const {
     ContractUSDT,
     FactoryAddress,
@@ -50,12 +50,7 @@ export default function Maintenance({ open, setOpen, Contract, id }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit, watch } = useForm()
 
   const selectToken = watch("selectToken")
 
@@ -90,7 +85,10 @@ export default function Maintenance({ open, setOpen, Contract, id }) {
       }
     }
   }
-  useMemo(() => selectedToken(selectToken), [selectToken])
+  useMemo(() => {
+    selectedToken(selectToken)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectToken])
 
   const Submit = async (data) => {
     console.log(data)
@@ -259,7 +257,7 @@ export default function Maintenance({ open, setOpen, Contract, id }) {
                                 </label>
                                 <p className="w-full py-2.5 px-3 border mb-2 rounded-md">
                                   <span>
-                                    {selectToken == "USDT"
+                                    {selectToken === "USDT"
                                       ? state.maintenanceFeeUSDT
                                       : state.maintenanceFeeNNT}
                                   </span>

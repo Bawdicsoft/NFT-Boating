@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react"
+import { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
 import { useForm } from "react-hook-form"
@@ -9,11 +9,7 @@ import UpdatePrice from "./UpdatePrice"
 
 export default function UpdateContract({ open, setOpen, Contract }) {
   const { ContractFactory } = useContextAPI()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit } = useForm()
 
   const Submit = async (data) => {
     try {
@@ -23,18 +19,6 @@ export default function UpdateContract({ open, setOpen, Contract }) {
         data.Day,
         parseUnits(data.Amount.toString(), 6).toString(),
         Contract
-      )
-      await tx.wait()
-      setOpen(false)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  const handleUpdatePrice = async (data) => {
-    try {
-      const tx = await ContractFactory.updatePrice(
-        Contract,
-        parseUnits(data.Amount.toString(), 6).toString()
       )
       await tx.wait()
       setOpen(false)

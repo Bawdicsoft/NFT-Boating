@@ -2,10 +2,6 @@
 import { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
-import { useContextAPI } from "../../../ContextAPI"
-import { doc, deleteDoc } from "firebase/firestore"
-import { db } from "../../../DB/firebase-config"
-import { useImmer } from "use-immer"
 
 export default function BookedDatesSidePanel({
   open,
@@ -13,45 +9,6 @@ export default function BookedDatesSidePanel({
   state,
   setState,
 }) {
-  const { ContractDeploy } = useContextAPI()
-
-  const [statep, setStatep] = useImmer({
-    err: "",
-  })
-
-  console.log("state", state.data.date.day)
-
-  // const addToWhiteList = async () => {
-  //   try {
-  //     await ContractDeploy.addAddressToWhitelist(state.viewData.walletAddress)
-  //     await deleteDoc(doc(db, "Requst", state.id))
-  //     setState((e) => {
-  //       if (state.index > -1) {
-  //         e.requsts.splice(state.index, 1)
-  //       }
-  //     })
-  //     setOpen(false)
-  //   } catch (e) {
-  //     console.log(e.reason)
-  //     if (e.reason === "execution reverted: !whitelist") {
-  //       console.log(">>>>>>>>>>>")
-  //       setStatep((e) => {
-  //         e.err = "Alredy Witelisted"
-  //       })
-  //     }
-  //   }
-  // }
-
-  // const deleteMyDoc = async () => {
-  //   await deleteDoc(doc(db, "Requst", state.id))
-  //   setState((e) => {
-  //     if (state.index > -1) {
-  //       e.requsts.splice(state.index, 1)
-  //     }
-  //   })
-  //   setOpen(false)
-  // }
-
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>

@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { ethers } from "ethers"
-import { useContextAPI } from "../../../ContextAPI"
 import { useImmer } from "use-immer"
-import { Link, useNavigate } from "react-router-dom"
 import { collection, doc, getDoc, getDocs } from "firebase/firestore"
-import { auth, db } from "../../../DB/firebase-config"
-import { useAuthState } from "react-firebase-hooks/auth"
+import { db } from "../../../DB/firebase-config"
 import BookedDatesSidePanel from "./BookedDatesSidePanel"
 import UpdateContract from "./UpdateContract"
 import WithdrewAmount from "./WithdrewAmount"
@@ -78,6 +74,7 @@ export default function BoatInfo() {
       }
     }
     run()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Contract])
 
   const hendleView = (data) => {
@@ -140,7 +137,7 @@ export default function BoatInfo() {
           >
             <img
               src={State.boat.featuredImage}
-              // alt={product.images[0].alt}
+              alt=""
               className="w-screen h-96 bg-slate-500 object-center object-cover rounded-lg"
             />
           </div>

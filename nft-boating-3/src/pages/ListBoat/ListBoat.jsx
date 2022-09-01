@@ -1,10 +1,10 @@
-import { useContext, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useImmer } from "use-immer"
 import QRCode from "react-qr-code"
 import logo from "./../../Assets/logo.png"
 import { collection, addDoc } from "firebase/firestore"
-import { Link, navigate, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useWeb3React } from "@web3-react/core"
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
@@ -13,7 +13,6 @@ import { useContextAPI } from "../../ContextAPI"
 import html2canvas from "html2canvas"
 import GoogleMapReact from "google-map-react"
 import { Carousel } from "flowbite-react"
-import DispatchContext from "../../DispatchContext"
 import { Injected } from "../../Comp/Wallets/Connectors"
 
 async function uploadImg({ name, fileName, file }) {
@@ -48,7 +47,6 @@ async function uploadImg({ name, fileName, file }) {
 export default function ListBoat() {
   const navigate = useNavigate()
 
-  const appDispatch = useContext(DispatchContext)
   const { updateDocRequests, UserData } = useContextAPI()
   const {
     register,
@@ -73,7 +71,7 @@ export default function ListBoat() {
   })
   console.log(state.gallery, "state.gallery")
 
-  const { activate, account, active } = useWeb3React()
+  const { activate, account } = useWeb3React()
   const connectMetaMask = async () => {
     await activate(Injected)
   }
@@ -102,6 +100,7 @@ export default function ListBoat() {
       }
     }
     runMap()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location])
 
   const featuredImage = watch(["featuredImage"])
@@ -117,6 +116,7 @@ export default function ListBoat() {
         reader.readAsDataURL(featuredImage[0][0])
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [featuredImage])
 
   const [images, setImages] = useState([])
@@ -408,7 +408,7 @@ export default function ListBoat() {
   }
   console.log(errors)
 
-  if (UserData?.request != undefined) {
+  if (UserData?.request !== undefined) {
     return (
       <div className="CreateNew min-h-full">
         <header className="bg-white">
@@ -858,9 +858,13 @@ export default function ListBoat() {
                                   id="HTML-IMG"
                                   className="mt-4 relative h-[300px] w-[300px]"
                                 >
-                                  <img src={state.featuredImageData} />
+                                  <img src={state.featuredImageData} alt="" />
                                   <div className="absolute bottom-1 w-full justify-center flex ">
-                                    <img src={logo} className="w-[180px]" />
+                                    <img
+                                      src={logo}
+                                      className="w-[180px]"
+                                      alt=""
+                                    />
                                     <div className="px-1 py-1 bg-white">
                                       <QRCode value={"Hello"} size={70} />
                                     </div>
