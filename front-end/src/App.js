@@ -33,6 +33,7 @@ import DispatchContext from "./DispatchContext"
 import { useImmerReducer } from "use-immer"
 import HeaderBanner from "./Comp/HeaderBanner/HeaderBanner"
 import AddFood from "./Dashboard/Admin/AddFood/AddFood"
+import UpdateContract from './Dashboard/Admin/UpdateContract/UpdateContract'
 
 export default function App() {
   const initialState = {
@@ -91,6 +92,7 @@ export default function App() {
               <Route path="/Boats" element={<Boats />} />
               <Route path="/nft" element={<NFT />} />
               <Route path="/add-food" element={<AddFood />} />
+              <Route path="/update-contract" element={<UpdateContract />} />
             </Routes>
           </DispatchContext.Provider>
         </StateContext.Provider>

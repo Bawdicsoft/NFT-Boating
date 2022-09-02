@@ -29,6 +29,7 @@ const adminNavigation = [
   { name: "Requsts", href: "/requsts" },
   { name: "Booked Dates", href: "/booked-dates" },
   { name: "Add Food", href: "/add-food" },
+  { name: "Update Contract", href: "/update-contract" },
 ]
 
 function classNames(...classes) {
