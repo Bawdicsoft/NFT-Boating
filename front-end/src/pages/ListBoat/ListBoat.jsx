@@ -432,7 +432,7 @@ export default function ListBoat() {
   return (
     <div className="CreateNew min-h-full">
       <header className="bg-white">
-        <div className="mt-20 mb-20 text-center">
+        <div className="mt-20 mb-20 px-3 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Become a Host </h1>
           <div className="max-w-3xl mx-auto text-center">
             Are you willing to profit from the lucrative business of renting
@@ -456,7 +456,7 @@ export default function ListBoat() {
         </div>
       </header>
       <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="max-w-7xl py-6 px-3 sm:px-6 lg:px-8">
           <div>
             <div className="md:grid md:grid-cols-3 md:gap-6">
               <div>

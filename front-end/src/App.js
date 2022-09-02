@@ -59,7 +59,7 @@ export default function App() {
           <DispatchContext.Provider value={dispatch}>
             <Routes>
               {/* Pages Routes */}
-              <Route path="/home" element={<Home />} />
+              <Route path="/listed-boats" element={<Home />} />
               <Route path="/" element={<LandingPage />} />
               <Route
                 path="/Add-Whitelist-Address"
@@ -88,7 +88,7 @@ export default function App() {
               <Route path="/offers-received" element={<OffersReceived />} />
               <Route path="/booked-date" element={<BookedDate />} />
               <Route path="/offers-made" element={<OffersMade />} />
-              <Route path="/collected" element={<Collected />} />
+              <Route path="/your-nfts" element={<Collected />} />
               <Route path="/Boats" element={<Boats />} />
               <Route path="/nft" element={<NFT />} />
               <Route path="/add-food" element={<AddFood />} />

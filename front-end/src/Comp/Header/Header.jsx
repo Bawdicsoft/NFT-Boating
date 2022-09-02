@@ -11,12 +11,12 @@ import { useContextAPI } from "../../ContextAPI"
 
 const navigation = [
   { name: "Home", href: "/", current: false },
-  { name: "Boats", href: "/home", current: false },
+  { name: "Boats", href: "/listed-boats", current: false },
   { name: "List Your Boat", href: "/list-boat" },
   { name: "About", href: "/about", current: false },
 ]
 const userNavigation = [
-  { name: "Your NFTs (Memberships)", href: "/collected" },
+  { name: "Your NFTs (Memberships)", href: "/your-nfts" },
   { name: "Booked Date", href: "/booked-date" },
   { name: "Offers Made", href: "/offers-made" },
 ]
