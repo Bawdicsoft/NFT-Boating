@@ -21,7 +21,6 @@ import {
 } from "firebase/firestore"
 
 export const ContextAPI = createContext()
-
 export const useContextAPI = () => {
   return useContext(ContextAPI)
 }

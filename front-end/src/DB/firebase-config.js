@@ -17,7 +17,7 @@ import { getStorage } from "firebase/storage"
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBmi0XxvTAAIK7ufLoEabe5PgJj3okOvs4",
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: "nft-yacht.firebaseapp.com",
   projectId: "nft-yacht",
   storageBucket: "nft-yacht.appspot.com",
@@ -25,7 +25,6 @@ const firebaseConfig = {
   appId: "1:755723829636:web:7ed9d98fce9f146ba01dd1",
   measurementId: "G-2QKMN1F2XR",
 }
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)

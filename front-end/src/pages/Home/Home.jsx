@@ -78,9 +78,8 @@ export default function Home() {
       console.log(">>>>>>", querySnapshot)
       querySnapshot.forEach(async (doc) => {
         const res = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${
-            doc.data().location
-          }&key=AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k`
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${doc.data().location
+          }&key=${process.env.REACT_APP_MAPKEY}`
         )
 
         const location = {
