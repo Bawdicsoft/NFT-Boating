@@ -7,11 +7,9 @@ export default function UpdateBookingBefore({ Contract, setOpen }) {
   const { register, handleSubmit } = useForm()
 
   const handleUpdatePrice = async (data) => {
-    // console.log("data", new Date(data.Date).valueOf());
+    var hoursInUnix = data.Time * 3600;
     try {
-      const tx = await ContractFactory.updateBookingBefore(
-        new Date(data.Date).valueOf()
-      )
+      const tx = await ContractFactory.updateBookingBefore(hoursInUnix)
       await tx.wait()
       setOpen(false)
     } catch (e) {
@@ -27,13 +25,13 @@ export default function UpdateBookingBefore({ Contract, setOpen }) {
           <div className="grid grid-cols-6 gap-4">
             <div className="col-span-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Date:
+                Time in Hours:
               </label>
               <input
                 className="w-full py-2.5 px-3 border mb-2 rounded-md"
-                type="date"
-                placeholder="Date"
-                {...register("Date", {
+                type="number"
+                placeholder="Time in Hours"
+                {...register("Time", {
                   required: true,
                 })}
               />
