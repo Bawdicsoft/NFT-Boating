@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useRef, useState } from "react"
+import { Fragment, useContext, useMemo, useRef, useState } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { ExclamationIcon } from "@heroicons/react/outline"
 import DispatchContext from "../../DispatchContext"
@@ -9,16 +9,24 @@ import { doc, setDoc } from "firebase/firestore"
 import { useContextAPI } from "../../ContextAPI"
 import { useNavigate } from "react-router-dom"
 import StateContext from "../../StateContext"
-import { parseUnits } from "ethers/lib/utils"
+import { formatUnits, parseUnits } from "ethers/lib/utils"
+import { useForm } from "react-hook-form"
+import { useImmer } from "use-immer"
+import { useWeb3React } from "@web3-react/core"
 
 export default function Popup({ open, setOpen, state }) {
-  const cancelButtonRef = useRef(null)
+  const ConformButtonRef = useRef(null)
   const appDispatch = useContext(DispatchContext)
   const appState = useContext(StateContext)
-  console.log(appState.food.array)
+  console.log(appState.food.total)
 
   const navigate = useNavigate()
-  const { ContractFactory, UserData, ContractUSDT } = useContextAPI()
+  const {
+    ContractFactory,
+    ContractUSDT,
+    ContractNFTilityToken,
+    ContractNFTilityExchange,
+  } = useContextAPI()
 
   const submit = async () => {
     let data = {
@@ -50,11 +58,18 @@ export default function Popup({ open, setOpen, state }) {
     console.log(state.formData)
 
     try {
-      const amount = Number(state.formData?.total) + 400
-      const tx = await ContractUSDT.transfer(
-        "0x344A0e306cdD004508b19C51Ec5c646500acd2f6",
-        parseUnits(amount.toString(), 6)
-      )
+      let tx
+      if (innerState.selectToken === "USDT") {
+        tx = await ContractUSDT.transfer(
+          "0x344A0e306cdD004508b19C51Ec5c646500acd2f6",
+          parseUnits(innerState.totalFee.toString(), 6)
+        )
+      } else if (innerState.selectToken === "NNT") {
+        tx = await ContractNFTilityToken.transfer(
+          "0x344A0e306cdD004508b19C51Ec5c646500acd2f6",
+          parseUnits(innerState.totalFee.toString(), 18)
+        )
+      }
       await tx.wait()
     } catch (e) {
       console.error(e)
@@ -89,7 +104,7 @@ export default function Popup({ open, setOpen, state }) {
         mobileNumber: ${state.formData.data.mobileNumber},
         persons: ${state.formData.data.persons},
         food: ${JSON.stringify(state.formData.food)},
-        total: ${state.formData.total},
+        total: ${appState.food.total},
         note: ${state.formData.data.note},`,
       html: `<!DOCTYPE html>
       <html lang="en">
@@ -149,7 +164,7 @@ export default function Popup({ open, setOpen, state }) {
                 <th>Total Food Amount</th>
               </tr>
               <tr style="background-color: #eaeaea">
-                <td>${state.formData.total}</td>
+                <td>${appState.food.total}</td>
               </tr>
               <br />
               <tr>
@@ -191,7 +206,7 @@ export default function Popup({ open, setOpen, state }) {
         mobileNumber: state.formData.data.mobileNumber,
         persons: state.formData.data.persons,
         food: state.formData.food,
-        total: state.formData.total,
+        total: appState.food.total,
         note: state.formData.data.note,
       })
     } catch (error) {
@@ -215,7 +230,7 @@ export default function Popup({ open, setOpen, state }) {
         mobileNumber: state.formData.data.mobileNumber,
         persons: state.formData.data.persons,
         food: state.formData.food,
-        total: state.formData.total,
+        total: appState.food.total,
         note: state.formData.data.note,
       })
     } catch (error) {
@@ -227,12 +242,128 @@ export default function Popup({ open, setOpen, state }) {
     navigate(`/contract/${state.formData.Contract}/nft/${state.formData.id}`)
   }
 
+  const [innerState, setInnerState] = useImmer({
+    userBalance: "00",
+    foodTotal: "00",
+    fuelTotal: "00",
+    captainFee: "00",
+    totalFee: "00",
+    selectToken: "USDT",
+  })
+
+  const { register, watch } = useForm()
+
+  const { account, active } = useWeb3React()
+
+  const selectToken = watch("selectToken")
+
+  const selectedToken = async (Token) => {
+    if (Token === "USDT") {
+      console.log("innerState.fuelTotalUSDT", innerState)
+
+      if (active) {
+        try {
+          const userBalance = await ContractUSDT.balanceOf(account)
+
+          let totalFee
+          if (Number(appState.food.total) > 0) {
+            totalFee = Number(appState.food.total) + 400
+          } else {
+            totalFee = 400
+          }
+
+          setInnerState((draft) => {
+            draft.fuelTotal = "200"
+            draft.captainFee = "200"
+            draft.foodTotal = appState.food.total
+            draft.userBalance = formatUnits(userBalance.toString(), 6)
+            draft.totalFee = totalFee
+            draft.selectToken = "USDT"
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    } else if (Token === "NNT") {
+      console.log(Token)
+
+      if (active) {
+        try {
+          const userBalance = await ContractNFTilityToken.balanceOf(account)
+          console.log(userBalance)
+
+          const ExchangeRatePrice = await ContractNFTilityExchange.price()
+
+          let foodTotal
+          if (Number(appState.food.total) > 0) {
+            foodTotal =
+              Number(appState.food.total) * Number(ExchangeRatePrice.toString())
+          } else {
+            foodTotal = 0
+          }
+
+          const fuelTotal =
+            Number(innerState.fuelTotal) * Number(ExchangeRatePrice.toString())
+
+          const captainFee =
+            Number(innerState.captainFee) * Number(ExchangeRatePrice.toString())
+
+          const totalFee = foodTotal + fuelTotal + captainFee
+
+          setInnerState((draft) => {
+            draft.userBalance = formatUnits(userBalance.toString(), 18)
+            draft.foodTotal = foodTotal
+            draft.fuelTotal = fuelTotal
+            draft.captainFee = captainFee
+            draft.totalFee = totalFee
+            draft.selectToken = "NNT"
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    }
+  }
+  useMemo(() => {
+    selectedToken(selectToken)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectToken])
+
+  const calculateUSDT = async () => {
+    console.log("hello from calculateUSDT")
+    if (active) {
+      const userBalance = await ContractUSDT.balanceOf(account)
+      console.log(userBalance)
+
+      let totalFee
+      if (Number(appState.food.total) > 0) {
+        totalFee = Number(appState.food.total) + 400
+      } else {
+        totalFee = 400
+      }
+
+      setInnerState((draft) => {
+        draft.fuelTotal = "200"
+        draft.captainFee = "200"
+        draft.foodTotal = appState.food.total
+        draft.userBalance = formatUnits(userBalance.toString(), 6)
+        draft.totalFee = totalFee
+        draft.selectToken = "USDT"
+      })
+    }
+  }
+
+  useMemo(() => {
+    calculateUSDT()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account, appState.food.total])
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
-        initialFocus={cancelButtonRef}
+        initialFocus={ConformButtonRef}
         onClose={setOpen}
       >
         <Transition.Child
@@ -258,27 +389,82 @@ export default function Popup({ open, setOpen, state }) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+              <Dialog.Panel className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[350px] sm:w-full">
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-lg leading-6 font-medium text-gray-900"
-                      >
-                        Booking Receipt
-                      </Dialog.Title>
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-500 mb-2">
-                          food total: ${state.formData.total}
-                        </p>
-                        <p className="text-sm text-gray-500 mb-2">
-                          Fuel total: $200
-                        </p>
-                        <p className="text-sm text-gray-500 mb-2">
-                          Captian fee: $200
-                        </p>
-                      </div>
+                  <div className="text-center">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg text-center leading-6 font-medium text-gray-900"
+                    >
+                      Booking Receipt
+                    </Dialog.Title>
+                    <hr className="border border-dashed border-gray-700 mt-4" />
+                    <div className="mt-2">
+                      <form>
+                        {innerState.foodTotal > 0 && (
+                          <div className="grid grid-cols-2">
+                            <p className="text-sm font-medium text-left text-gray-700 mb-2">
+                              food total :
+                            </p>
+                            <p className="text-sm font-medium text-right text-gray-700 mb-2">
+                              {innerState.foodTotal} {innerState.selectToken}
+                            </p>
+                          </div>
+                        )}
+                        <div className="grid grid-cols-2">
+                          <p className="text-sm font-medium text-left text-gray-700 mb-2">
+                            Fuel total :
+                          </p>
+                          <p className="text-sm font-medium text-right text-gray-700 mb-2">
+                            {innerState.fuelTotal} {innerState.selectToken}
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-2">
+                          <p className="text-sm font-medium text-left text-gray-700 mb-2">
+                            Captain fee :
+                          </p>
+                          <p className="text-sm font-medium text-right text-gray-700 mb-2">
+                            {innerState.captainFee} {innerState.selectToken}
+                          </p>
+                        </div>
+                        <hr className="border border-dashed border-gray-700 mt-1" />
+                        <div className="grid grid-cols-2">
+                          <p className="text-sm font-medium text-left text-gray-700 my-2">
+                            Total :
+                          </p>
+                          <p className="text-sm font-medium text-right text-gray-700 my-2">
+                            {innerState.totalFee} {innerState.selectToken}
+                          </p>
+                        </div>
+                        <hr className="border border-dashed border-gray-700" />
+
+                        <div className="grid grid-cols-6 gap-2 text-left mt-4">
+                          <div className="col-span-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Chose token :
+                            </label>
+                            <select
+                              className="w-full py-2 px-2 border rounded-md"
+                              defaultValue="USDT"
+                              {...register("selectToken", {
+                                required: true,
+                              })}
+                            >
+                              <option value="USDT">USDT ( TetherToken )</option>
+                              <option value="NNT">NNT ( NFTilityToken )</option>
+                            </select>
+                          </div>
+
+                          <div className="col-span-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Your balance in {innerState.selectToken}
+                            </label>
+                            <p className="w-full py-2 px-2 border mb-2 rounded-md">
+                              <span>{innerState.userBalance}</span>
+                            </p>
+                          </div>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -288,13 +474,12 @@ export default function Popup({ open, setOpen, state }) {
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={submit}
                   >
-                    Conform
+                    2 | Conform
                   </button>
                   <button
                     type="button"
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => setOpen(false)}
-                    ref={cancelButtonRef}
                   >
                     Cancel
                   </button>

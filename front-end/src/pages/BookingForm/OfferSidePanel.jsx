@@ -169,7 +169,7 @@ export default function OfferSidePanel({
       )
       await tx.wait()
       setOpen(false)
-      navigate(`/collected`)
+      navigate(`/offers-made`)
     } catch (e) {
       console.error(e)
     }

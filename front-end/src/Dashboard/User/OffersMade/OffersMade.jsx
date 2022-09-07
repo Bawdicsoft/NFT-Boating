@@ -54,10 +54,20 @@ export default function OffersMade() {
 
               console.log("t.toString()", t.toString())
 
+              let price
+              if (Offer.tName === 0) {
+                price = formatUnits(Offer.Price.toString(), 6).toString()
+                console.log(price)
+              } else if (Offer.tName === 1) {
+                price = formatUnits(Offer.Price.toString(), 18).toString()
+                console.log(price)
+              }
+
               const data = {
                 id: Offer.id.toString(),
                 userID: Offer.userID.toString(),
-                price: formatUnits(Offer.Price.toString(), 6).toString(),
+                tName: Offer.tName,
+                price: price,
                 time: t.toString(),
                 offeredDate: Offer.offeredDate.toString(),
                 user: Offer.User.toString(),
@@ -138,19 +148,14 @@ export default function OffersMade() {
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                USDT: {item.price}
+                                {item.tName === 0 ? "USDT" : "NNT"}:{" "}
+                                {item.price}
                               </p>
-                              {/* <p className="text-gray-600 whitespace-no-wrap">
-                                USD
-                              </p> */}
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">
                                 {item.time}
                               </p>
-                              {/* <p className="text-gray-600 whitespace-no-wrap">
-                                Due in 3 days
-                              </p> */}
                             </td>
                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                               <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">

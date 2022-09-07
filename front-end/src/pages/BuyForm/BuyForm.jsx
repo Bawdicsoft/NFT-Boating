@@ -190,7 +190,7 @@ export default function BuyForm() {
 
         await tx.wait()
 
-        navigate(`/collected`)
+        navigate(`/offers-made`)
       } catch (e) {
         console.error(e)
       }
@@ -207,7 +207,7 @@ export default function BuyForm() {
 
         await tx.wait()
 
-        navigate(`/collected`)
+        navigate(`/your-nfts`)
       } catch (e) {
         console.error(e)
       }
@@ -297,7 +297,7 @@ export default function BuyForm() {
 
                     <div className="col-span-6 sm:col-span-3">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Total Price of 1 Token in USDT:
+                        Total Price of 1 Token in {selectToken}:
                         <span>
                           {selectToken === "USDT"
                             ? State.priceUSDT
