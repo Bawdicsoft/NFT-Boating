@@ -1,3 +1,4 @@
+import React, { Suspense } from "react"
 import { Route, Routes } from "react-router-dom"
 
 // Comp
@@ -5,35 +6,54 @@ import Header from "./Comp/Header/Header"
 import Footer from "./Comp/Footer/Footer"
 
 // Pages
-import Home from "./pages/Home/Home"
-import BuyForm from "./pages/BuyForm/BuyForm"
-import BookingForm from "./pages/BookingForm/BookingForm"
-import Boat from "./pages/Boat/Boat"
-import ListBoat from "./pages/ListBoat/ListBoat"
-import AddWhitelistAddress from "./pages/AddWhitelistAddress/AddWhitelistAddress"
-import About from "./pages/About/About"
+/* eslint-disable import/first */
+import LandingPage from "./pages/LandingPage/LandingPage"
+const Home = React.lazy(() => import("./pages/Home/Home"))
+const BuyForm = React.lazy(() => import("./pages/BuyForm/BuyForm"))
+const BookingForm = React.lazy(() => import("./pages/BookingForm/BookingForm"))
+const Boat = React.lazy(() => import("./pages/Boat/Boat"))
+const ListBoat = React.lazy(() => import("./pages/ListBoat/ListBoat"))
+const AddWhitelistAddress = React.lazy(() =>
+  import("./pages/ListBoat/ListBoat")
+)
+const About = React.lazy(() => import("./pages/About/About"))
 
 // Dashboard
-import CreateNew from "./Dashboard/Host/CreateNew/CreateNew"
-import OffersReceived from "./Dashboard/User/OffersReceived/OffersReceived"
-import OffersMade from "./Dashboard/User/OffersMade/OffersMade"
-import BookedDate from "./Dashboard/User/BookedDate/BookedDate"
-import Collected from "./Dashboard/User/Collected/Collected"
-import Boats from "./Dashboard/Host/Boats/Boats"
-import NFT from "./Dashboard/User/NFT/NFT"
-import BookedDates from "./Dashboard/Admin/BookedDates/BookedDates"
-import Requsts from "./Dashboard/Admin/Requsts/Requsts"
-import AllUsers from "./Dashboard/Admin/AllUsers/AllUsers"
-import ContractBookedDates from "./Dashboard/Host/ContractBookedDates/ContractBookedDates"
-import BoatInfo from "./Dashboard/Host/BoatInfo/BoatInfo"
-import LandingPage from "./pages/LandingPage/LandingPage"
+const CreateNew = React.lazy(() =>
+  import("./Dashboard/Host/CreateNew/CreateNew")
+)
+const OffersReceived = React.lazy(() =>
+  import("./Dashboard/User/OffersReceived/OffersReceived")
+)
+const OffersMade = React.lazy(() =>
+  import("./Dashboard/User/OffersMade/OffersMade")
+)
+const BookedDate = React.lazy(() =>
+  import("./Dashboard/User/BookedDate/BookedDate")
+)
+const Collected = React.lazy(() =>
+  import("./Dashboard/User/Collected/Collected")
+)
+const Boats = React.lazy(() => import("./Dashboard/Host/Boats/Boats"))
+const NFT = React.lazy(() => import("./Dashboard/User/NFT/NFT"))
+const BookedDates = React.lazy(() =>
+  import("./Dashboard/Admin/BookedDates/BookedDates")
+)
+const Requsts = React.lazy(() => import("./Dashboard/Admin/Requsts/Requsts"))
+const AllUsers = React.lazy(() => import("./Dashboard/Admin/AllUsers/AllUsers"))
+const ContractBookedDates = React.lazy(() =>
+  import("./Dashboard/Host/ContractBookedDates/ContractBookedDates")
+)
+const BoatInfo = React.lazy(() => import("./Dashboard/Host/BoatInfo/BoatInfo"))
+const AddFood = React.lazy(() => import("./Dashboard/Admin/AddFood/AddFood"))
+const UpdateContract = React.lazy(() =>
+  import("./Dashboard/Admin/UpdateContract/UpdateContract")
+)
 
 import StateContext from "./StateContext"
 import DispatchContext from "./DispatchContext"
 import { useImmerReducer } from "use-immer"
 import HeaderBanner from "./Comp/HeaderBanner/HeaderBanner"
-import AddFood from "./Dashboard/Admin/AddFood/AddFood"
-import UpdateContract from './Dashboard/Admin/UpdateContract/UpdateContract'
 
 export default function App() {
   const initialState = {
@@ -59,17 +79,46 @@ export default function App() {
           <DispatchContext.Provider value={dispatch}>
             <Routes>
               {/* Pages Routes */}
-              <Route path="/listed-boats" element={<Home />} />
               <Route path="/" element={<LandingPage />} />
               <Route
-                path="/Add-Whitelist-Address"
-                element={<AddWhitelistAddress />}
+                path="/listed-boats"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <Home />
+                  </Suspense>
+                }
               />
-              <Route path="/Boat/:Contract" element={<Boat />} />
-              <Route path="/Contract/:Contract/buy-nft" element={<BuyForm />} />
+              <Route
+                path="/Add-Whitelist-Address"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <AddWhitelistAddress />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/Boat/:Contract"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <Boat />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/Contract/:Contract/buy-nft"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <BuyForm />
+                  </Suspense>
+                }
+              />
               <Route
                 path="/Contract/:Contract/Booking-form/:id"
-                element={<BookingForm />}
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <BookingForm />
+                  </Suspense>
+                }
               />
               <Route path="/BoatInfo/:Contract" element={<BoatInfo />} />
               <Route
@@ -77,22 +126,120 @@ export default function App() {
                 element={<ContractBookedDates />}
               />
               <Route path="/create-new" element={<CreateNew />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/list-boat" element={<ListBoat />} />
-              <Route path="/requsts" element={<Requsts />} />
-              <Route path="/booked-dates" element={<BookedDates />} />
-              <Route path="/all-users" element={<AllUsers />} />
+              <Route
+                path="/about"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <About />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/list-boat"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <ListBoat />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/requsts"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <Requsts />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/booked-dates"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <BookedDates />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/all-users"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <AllUsers />
+                  </Suspense>
+                }
+              />
 
               {/* Dashboard Routes */}
-              <Route path="/Contract/:Contract/nft/:id" element={<NFT />} />
-              <Route path="/offers-received" element={<OffersReceived />} />
-              <Route path="/booked-date" element={<BookedDate />} />
-              <Route path="/offers-made" element={<OffersMade />} />
-              <Route path="/your-nfts" element={<Collected />} />
-              <Route path="/Boats" element={<Boats />} />
-              <Route path="/nft" element={<NFT />} />
-              <Route path="/add-food" element={<AddFood />} />
-              <Route path="/update-contract" element={<UpdateContract />} />
+              <Route
+                path="/Contract/:Contract/nft/:id"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <NFT />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/offers-received"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <OffersReceived />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/booked-date"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <BookedDate />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/offers-made"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <OffersMade />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/your-nfts"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <Collected />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/Boats"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <Boats />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/nft"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <NFT />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/add-food"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <AddFood />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/update-contract"
+                element={
+                  <Suspense fallback={<div>Loading</div>}>
+                    <UpdateContract />
+                  </Suspense>
+                }
+              />
             </Routes>
           </DispatchContext.Provider>
         </StateContext.Provider>

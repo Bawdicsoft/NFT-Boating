@@ -2,9 +2,10 @@ import {
   BadgeCheckIcon,
   ClockIcon,
   CalendarIcon,
-  UserGroupIcon
+  UserGroupIcon,
 } from "@heroicons/react/outline"
 import { Link } from "react-router-dom"
+import heroImg from "./../../Assets/8763487326873785.webp"
 
 const features = [
   {
@@ -51,7 +52,9 @@ export default function LandingPage() {
             <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                  <span className="block xl:inline text-center">Decentralize Comfort</span>
+                  <span className="block xl:inline text-center">
+                    Decentralize Comfort
+                  </span>
                   {/* <span className="block text-indigo-600 xl:inline">
                     Boat Rental Experience
                   </span> */}
@@ -86,7 +89,7 @@ export default function LandingPage() {
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <img
             className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-            src="https://firebasestorage.googleapis.com/v0/b/nft-yacht.appspot.com/o/assets%2Falina-kacharho-86wR5GZJZdQ-unsplash.jpg?alt=media&token=f5ee2c66-9e74-49ea-809c-2be5429bbc93"
+            src={heroImg}
             alt=""
           />
         </div>

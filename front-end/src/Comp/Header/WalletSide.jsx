@@ -132,7 +132,7 @@ export default function WalletSide({ open, setOpen }) {
                           </div>
 
                           {/* coinbase */}
-                          <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
+                          {/* <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
                             <div className="flex  justify-between items-center">
                               <div className="flex text-sm items-center">
                                 <div className="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -150,10 +150,10 @@ export default function WalletSide({ open, setOpen }) {
                                 connect
                               </button>
                             </div>
-                          </div>
+                          </div> */}
 
                           {/* connectwallet */}
-                          <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
+                          {/* <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
                             <div className="flex  justify-between items-center">
                               <div className="flex text-sm items-center">
                                 <div className="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -171,7 +171,7 @@ export default function WalletSide({ open, setOpen }) {
                                 connect
                               </button>
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       ) : (
                         <>

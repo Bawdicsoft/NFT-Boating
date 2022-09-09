@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { auth, logout, signInWithGoogle } from "../../DB/firebase-config"
 import { useAuthState } from "react-firebase-hooks/auth"
 import WalletSide from "./WalletSide"
-import logo from "../../Assets/logo.png"
+import logo from "../../Assets/logo.webp"
 import { useWeb3React } from "@web3-react/core"
 import { useContextAPI } from "../../ContextAPI"
 
