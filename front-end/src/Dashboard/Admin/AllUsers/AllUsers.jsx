@@ -1,14 +1,11 @@
-import { Fragment, useEffect, useState } from "react"
-import { Disclosure, Menu, Transition } from "@headlessui/react"
-import { BellIcon, MenuIcon, CashIcon, XIcon } from "@heroicons/react/outline"
-import { Link, useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useImmer } from "use-immer"
 import { collection, getDocs } from "firebase/firestore"
 import { auth, db } from "../../../DB/firebase-config"
 
 export default function AllUsers() {
-  const [user, loading, error] = useAuthState(auth)
+  const [user, loading] = useAuthState(auth)
 
   const [state, setState] = useImmer({
     users: [],

@@ -1,13 +1,12 @@
 import { useForm } from "react-hook-form"
 import { useContextAPI } from "../../../ContextAPI"
-import { parseUnits } from "ethers/lib/utils"
 
 export default function UpdateBookingBefore({ Contract, setOpen }) {
   const { ContractFactory } = useContextAPI()
   const { register, handleSubmit } = useForm()
 
   const handleUpdatePrice = async (data) => {
-    var hoursInUnix = data.Time * 3600;
+    var hoursInUnix = data.Time * 3600
     try {
       const tx = await ContractFactory.updateBookingBefore(hoursInUnix)
       await tx.wait()

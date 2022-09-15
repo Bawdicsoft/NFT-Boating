@@ -1,13 +1,12 @@
 import { useForm } from "react-hook-form"
 import { useContextAPI } from "../../../ContextAPI"
-import { parseUnits } from "ethers/lib/utils"
 
 export default function UpdateCancelBefore({ Contract, setOpen }) {
   const { ContractFactory } = useContextAPI()
   const { register, handleSubmit } = useForm()
 
   const handleUpdatePrice = async (data) => {
-    var hoursInUnix = data.Time * 3600;
+    var hoursInUnix = data.Time * 3600
     try {
       const tx = await ContractFactory.updateCancelBefore(hoursInUnix)
       await tx.wait()
