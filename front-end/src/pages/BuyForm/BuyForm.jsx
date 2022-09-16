@@ -21,15 +21,10 @@ export default function BuyForm() {
   } = useContextAPI()
   const { account, active } = useWeb3React()
   const navigate = useNavigate()
-  const [user, loading, error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
 
   // const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit, watch } = useForm()
 
   const [State, SetState] = useImmer({
     id: 0,
@@ -190,7 +185,7 @@ export default function BuyForm() {
 
         await tx.wait()
 
-        navigate(`/offers-made`)
+        navigate(`/your-nfts`)
       } catch (e) {
         console.error(e)
       }

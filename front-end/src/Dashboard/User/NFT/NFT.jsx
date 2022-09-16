@@ -10,6 +10,7 @@ import { db } from "../../../DB/firebase-config"
 import { doc, getDoc } from "firebase/firestore"
 import { Injected } from "../../../Comp/Wallets/Connectors"
 import Maintenance from "./Maintenance"
+import WalletSide from "../../../Comp/Header/WalletSide"
 
 export default function NFT() {
   const { Contract, id } = useParams()
@@ -17,6 +18,8 @@ export default function NFT() {
     useContextAPI()
   const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
   const { account, active, activate } = useWeb3React()
+
+  const [open, setOpen] = useState(false)
 
   const [state, setState] = useImmer({
     imageSrc: null,
@@ -357,12 +360,15 @@ export default function NFT() {
                         )}
                       </>
                     ) : (
-                      <button
-                        onClick={async () => await activate(Injected)}
-                        className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >
-                        Connect To Wallet
-                      </button>
+                      <>
+                        <button
+                          onClick={async () => setOpen(true)}
+                          className="md:col-span-2 cursor-pointer mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                          Connect To Wallet
+                        </button>
+                        <WalletSide open={open} setOpen={setOpen} />
+                      </>
                     )}
                   </div>
 

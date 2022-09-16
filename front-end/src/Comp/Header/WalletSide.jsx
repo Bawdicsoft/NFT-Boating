@@ -4,20 +4,45 @@ import { Dialog, Transition, Menu } from "@headlessui/react"
 import { BellIcon, XIcon } from "@heroicons/react/outline"
 import { LockClosedIcon } from "@heroicons/react/solid"
 import { useWeb3React } from "@web3-react/core"
-import { Injected } from "../Wallets/Connectors"
+import { Injected, CoinbaseWallet, walletConnect } from "../Wallets/Connectors"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "../../DB/firebase-config"
 import { useContextAPI } from "../../ContextAPI"
 import { useImmer } from "use-immer"
-import { formatEther } from "ethers/lib/utils"
+import { formatUnits } from "ethers/lib/utils"
 
 export default function WalletSide({ open, setOpen }) {
   const { activate, active, account, deactivate } = useWeb3React()
-  const [user, loading, error] = useAuthState(auth)
+  const [user] = useAuthState(auth)
 
-  async function conToMetaMask() {
+  async function connectInjected() {
     try {
       await activate(Injected)
+      localStorage.setItem("isWalletConnected", "Injected")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async function connectCoinbaseWallet() {
+    try {
+      await activate(CoinbaseWallet)
+      localStorage.setItem("isWalletConnected", "CoinbaseWallet")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async function connectWalletConnect() {
+    try {
+      await activate(walletConnect)
+      localStorage.setItem("isWalletConnected", "walletConnect")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  function DisconnectWallet() {
+    try {
+      deactivate()
+      localStorage.setItem("isWalletConnected", "")
     } catch (error) {
       console.log(error)
     }
@@ -37,10 +62,13 @@ export default function WalletSide({ open, setOpen }) {
           const userBalance = await ContractUSDT.balanceOf(account)
 
           SetState((draft) => {
-            draft.userBalance = formatEther(userBalance.toString())
+            draft.userBalance = formatUnits(userBalance.toString(), 6)
           })
         } catch (e) {
-          console.log(e)
+          console.error(e)
+          SetState((draft) => {
+            draft.userBalance = "00"
+          })
         }
       }
       run()
@@ -124,7 +152,7 @@ export default function WalletSide({ open, setOpen }) {
                               </div>
                               <button
                                 className="cursor-pointer bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onClick={conToMetaMask}
+                                onClick={connectInjected}
                               >
                                 connect
                               </button>
@@ -132,7 +160,7 @@ export default function WalletSide({ open, setOpen }) {
                           </div>
 
                           {/* coinbase */}
-                          {/* <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
+                          <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
                             <div className="flex  justify-between items-center">
                               <div className="flex text-sm items-center">
                                 <div className="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -146,14 +174,17 @@ export default function WalletSide({ open, setOpen }) {
                                 </div>
                                 <span className="ml-1">CoinBase</span>
                               </div>
-                              <button className="cursor-pointer bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <button
+                                className="cursor-pointer bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onClick={connectCoinbaseWallet}
+                              >
                                 connect
                               </button>
                             </div>
-                          </div> */}
+                          </div>
 
                           {/* connectwallet */}
-                          {/* <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
+                          <div className="mt-1 cursor-pointer bg-slate-50 p-3 rounded-md shadow">
                             <div className="flex  justify-between items-center">
                               <div className="flex text-sm items-center">
                                 <div className="ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -167,11 +198,14 @@ export default function WalletSide({ open, setOpen }) {
                                 </div>
                                 <span className="ml-1">WalletConnect</span>
                               </div>
-                              <button className="cursor-pointer  bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <button
+                                className="cursor-pointer  bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onClick={connectWalletConnect}
+                              >
                                 connect
                               </button>
                             </div>
-                          </div> */}
+                          </div>
                         </div>
                       ) : (
                         <>
@@ -195,7 +229,7 @@ export default function WalletSide({ open, setOpen }) {
                               </div>
                               <button
                                 className="cursor-pointer bg-indigo-600 border border-transparent rounded-md px-2 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onClick={() => deactivate()}
+                                onClick={DisconnectWallet}
                               >
                                 Disconnect
                               </button>

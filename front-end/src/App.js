@@ -53,9 +53,11 @@ const UpdateContract = React.lazy(() =>
 import StateContext from "./StateContext"
 import DispatchContext from "./DispatchContext"
 import { useImmerReducer } from "use-immer"
-import HeaderBanner from "./Comp/HeaderBanner/HeaderBanner"
+import { useWeb3React } from "@web3-react/core"
 
 export default function App() {
+  const { active, chainId } = useWeb3React()
+
   const initialState = {
     food: {},
   }
@@ -72,7 +74,24 @@ export default function App() {
 
   return (
     <>
-      {typeof window.ethereum === "undefined" && <HeaderBanner />}
+      {!active && (
+        <div className="bg-indigo-600">
+          <div className="max-w-7xl mx-auto py-1 px-3 sm:px-6 lg:px-8">
+            <p className="ml-3 font-medium text-white text-center truncate">
+              Connect your Wallet
+            </p>
+          </div>
+        </div>
+      )}
+      {active && chainId !== 4 && (
+        <div className="bg-red-600">
+          <div className="max-w-7xl mx-auto py-1 px-3 sm:px-6 lg:px-8">
+            <p className="ml-3 font-medium text-white text-center truncate">
+              Please switch to network Ropsten, chainId (4)
+            </p>
+          </div>
+        </div>
+      )}
       <Header />
       <div className="main-root">
         <StateContext.Provider value={state}>

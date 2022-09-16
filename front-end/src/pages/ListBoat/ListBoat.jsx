@@ -14,6 +14,7 @@ import html2canvas from "html2canvas"
 import GoogleMapReact from "google-map-react"
 import { Carousel } from "flowbite-react"
 import { Injected } from "../../Comp/Wallets/Connectors"
+import WalletSide from "../../Comp/Header/WalletSide"
 
 async function uploadImg({ name, fileName, file }) {
   return new Promise((resolve, reject) => {
@@ -72,9 +73,7 @@ export default function ListBoat() {
   console.log(state.gallery, "state.gallery")
 
   const { activate, account } = useWeb3React()
-  const connectMetaMask = async () => {
-    await activate(Injected)
-  }
+  const [open, setOpen] = useState(false)
 
   const location = watch(["location"])
   useMemo(() => {
@@ -518,15 +517,20 @@ export default function ListBoat() {
                           </label>
                           <p
                             id="account"
-                            onClick={connectMetaMask}
                             className="w-full py-2.5 px-3 border cursor-pointer mb-4 rounded-md"
                           >
                             {account ? (
                               account
                             ) : (
-                              <span className="text-red-600 cursor-pointer">
-                                Connect MetaMask
-                              </span>
+                              <>
+                                <span
+                                  className="text-red-600 cursor-pointer"
+                                  onClick={() => setOpen(true)}
+                                >
+                                  Connect MetaMask
+                                </span>
+                                <WalletSide open={open} setOpen={setOpen} />
+                              </>
                             )}
                           </p>
                         </div>

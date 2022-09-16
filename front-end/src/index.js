@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client"
 import "./index.css"
 import App from "./App"
-import { ethers } from "ethers"
+import { Web3Provider } from "@ethersproject/providers"
 import { BrowserRouter } from "react-router-dom"
 import { ContextProvider } from "./ContextAPI"
 import { Web3ReactProvider } from "@web3-react/core"
@@ -9,7 +9,9 @@ import { Web3ReactProvider } from "@web3-react/core"
 const root = ReactDOM.createRoot(document.getElementById("root"))
 
 const getLibrary = (provider) => {
-  return new ethers.providers.Web3Provider(provider)
+  const library = new Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
 }
 
 root.render(

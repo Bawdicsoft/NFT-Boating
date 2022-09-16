@@ -1,5 +1,6 @@
 import { useContext, useEffect, createContext, useState } from "react"
 import { ethers } from "ethers"
+import { useWeb3React } from "@web3-react/core"
 import {
   Deploy,
   Factory,
@@ -19,6 +20,11 @@ import {
   doc,
   deleteField,
 } from "firebase/firestore"
+import {
+  CoinbaseWallet,
+  Injected,
+  walletConnect,
+} from "./Comp/Wallets/Connectors"
 
 export const ContextAPI = createContext()
 export const useContextAPI = () => {
@@ -26,6 +32,7 @@ export const useContextAPI = () => {
 }
 
 export const ContextProvider = ({ children }) => {
+  const { library, account, activate } = useWeb3React()
   const [user, loading] = useAuthState(auth)
 
   const DeployAddress = "0x081269944DCBbf6744C38A44687909830CCde51A"
@@ -34,23 +41,66 @@ export const ContextProvider = ({ children }) => {
   const NFTilityTokenAddress = "0x9b59a220157f408156d8C344A84F26410D2EE738"
   const NFTilityExchangeAddress = "0x329306e74036CB4Cbb232E8E3E15A301e1098516"
 
-  let provider
-  if (typeof window.ethereum !== "undefined") {
-    provider = new ethers.providers.Web3Provider(window.ethereum).getSigner()
-  }
+  useEffect(() => {
+    const connectWalletOnPageLoad = async () => {
+      if (localStorage?.getItem("isWalletConnected") === "Injected") {
+        try {
+          await activate(Injected)
+          localStorage.setItem("isWalletConnected", "Injected")
+        } catch (ex) {
+          console.log(ex)
+        }
+      } else if (
+        localStorage?.getItem("isWalletConnected") === "CoinbaseWallet"
+      ) {
+        try {
+          await activate(CoinbaseWallet)
+          localStorage.setItem("isWalletConnected", "CoinbaseWallet")
+        } catch (ex) {
+          console.log(ex)
+        }
+      } else if (
+        localStorage?.getItem("isWalletConnected") === "walletConnect"
+      ) {
+        try {
+          await activate(walletConnect)
+          localStorage.setItem("isWalletConnected", "walletConnect")
+        } catch (ex) {
+          console.log(ex)
+        }
+      }
+    }
+    connectWalletOnPageLoad()
+  }, [])
 
-  const ContractDeploy = new ethers.Contract(DeployAddress, Deploy, provider)
-  const ContractFactory = new ethers.Contract(FactoryAddress, Factory, provider)
-  const ContractUSDT = new ethers.Contract(USDTAddress, USDT, provider)
+  // if (typeof window.ethereum !== "undefined") {
+  //   provider = new ethers.providers.Web3Provider(window.ethereum).getSigner()
+  // }
+
+  const ContractDeploy = new ethers.Contract(
+    DeployAddress,
+    Deploy,
+    library?.getSigner(account)
+  )
+  const ContractFactory = new ethers.Contract(
+    FactoryAddress,
+    Factory,
+    library?.getSigner(account)
+  )
+  const ContractUSDT = new ethers.Contract(
+    USDTAddress,
+    USDT,
+    library?.getSigner(account)
+  )
   const ContractNFTilityToken = new ethers.Contract(
     NFTilityTokenAddress,
     NFTilityToken,
-    provider
+    library?.getSigner(account)
   )
   const ContractNFTilityExchange = new ethers.Contract(
     NFTilityExchangeAddress,
     NFTilityExchange,
-    provider
+    library?.getSigner(account)
   )
 
   const [UserData, setUserData] = useState()
@@ -95,7 +145,7 @@ export const ContextProvider = ({ children }) => {
     ContractNFTilityToken,
     ContractNFTilityExchange,
     NFTYacht,
-    provider,
+    provider: library?.getSigner(account),
     FactoryAddress,
     fetchUser,
     updateDocRequests,
