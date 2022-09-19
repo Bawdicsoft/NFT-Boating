@@ -74,15 +74,6 @@ export default function App() {
 
   return (
     <>
-      {!active && (
-        <div className="bg-indigo-600">
-          <div className="max-w-7xl mx-auto py-1 px-3 sm:px-6 lg:px-8">
-            <p className="ml-3 font-medium text-white text-center truncate">
-              Connect your Wallet
-            </p>
-          </div>
-        </div>
-      )}
       {active && chainId !== 4 && (
         <div className="bg-red-600">
           <div className="max-w-7xl mx-auto py-1 px-3 sm:px-6 lg:px-8">
@@ -102,7 +93,7 @@ export default function App() {
               <Route
                 path="/listed-boats"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <Home />
                   </Suspense>
                 }
@@ -110,7 +101,7 @@ export default function App() {
               <Route
                 path="/Add-Whitelist-Address"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <AddWhitelistAddress />
                   </Suspense>
                 }
@@ -118,7 +109,7 @@ export default function App() {
               <Route
                 path="/Boat/:Contract"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <Boat />
                   </Suspense>
                 }
@@ -126,7 +117,7 @@ export default function App() {
               <Route
                 path="/Contract/:Contract/buy-nft"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <BuyForm />
                   </Suspense>
                 }
@@ -134,21 +125,39 @@ export default function App() {
               <Route
                 path="/Contract/:Contract/Booking-form/:id"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <BookingForm />
                   </Suspense>
                 }
               />
-              <Route path="/BoatInfo/:Contract" element={<BoatInfo />} />
+              <Route
+                path="/BoatInfo/:Contract"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <BoatInfo />
+                  </Suspense>
+                }
+              />
               <Route
                 path="/ContractInfo/:Contract/booked-dates"
-                element={<ContractBookedDates />}
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <ContractBookedDates />
+                  </Suspense>
+                }
               />
-              <Route path="/create-new" element={<CreateNew />} />
+              <Route
+                path="/create-new"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <CreateNew />
+                  </Suspense>
+                }
+              />
               <Route
                 path="/about"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <About />
                   </Suspense>
                 }
@@ -156,7 +165,7 @@ export default function App() {
               <Route
                 path="/list-boat"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <ListBoat />
                   </Suspense>
                 }
@@ -164,7 +173,7 @@ export default function App() {
               <Route
                 path="/requsts"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <Requsts />
                   </Suspense>
                 }
@@ -172,7 +181,7 @@ export default function App() {
               <Route
                 path="/booked-dates"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <BookedDates />
                   </Suspense>
                 }
@@ -180,7 +189,7 @@ export default function App() {
               <Route
                 path="/all-users"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <AllUsers />
                   </Suspense>
                 }
@@ -190,7 +199,7 @@ export default function App() {
               <Route
                 path="/Contract/:Contract/nft/:id"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <NFT />
                   </Suspense>
                 }
@@ -198,7 +207,7 @@ export default function App() {
               <Route
                 path="/offers-received"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <OffersReceived />
                   </Suspense>
                 }
@@ -206,7 +215,7 @@ export default function App() {
               <Route
                 path="/booked-date"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <BookedDate />
                   </Suspense>
                 }
@@ -214,7 +223,7 @@ export default function App() {
               <Route
                 path="/offers-made"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <OffersMade />
                   </Suspense>
                 }
@@ -222,7 +231,7 @@ export default function App() {
               <Route
                 path="/your-nfts"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <Collected />
                   </Suspense>
                 }
@@ -230,7 +239,7 @@ export default function App() {
               <Route
                 path="/Boats"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <Boats />
                   </Suspense>
                 }
@@ -238,7 +247,7 @@ export default function App() {
               <Route
                 path="/nft"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <NFT />
                   </Suspense>
                 }
@@ -246,7 +255,7 @@ export default function App() {
               <Route
                 path="/add-food"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <AddFood />
                   </Suspense>
                 }
@@ -254,7 +263,7 @@ export default function App() {
               <Route
                 path="/update-contract"
                 element={
-                  <Suspense fallback={<div>Loading</div>}>
+                  <Suspense fallback={<Loading />}>
                     <UpdateContract />
                   </Suspense>
                 }
@@ -265,5 +274,13 @@ export default function App() {
       </div>
       <Footer />
     </>
+  )
+}
+
+function Loading() {
+  return (
+    <div className="m-auto text-center w-max py-10">
+      <p>Loading....</p>
+    </div>
   )
 }

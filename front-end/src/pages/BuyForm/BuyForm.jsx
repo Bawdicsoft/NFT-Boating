@@ -40,6 +40,7 @@ export default function BuyForm() {
     userBalance: "0.0",
     approveIsLoading: false,
     confirmIsLoading: false,
+    userHaveBalance: false,
   })
 
   useEffect(() => {
@@ -213,6 +214,34 @@ export default function BuyForm() {
     })
   }
 
+  useMemo(() => {
+    if (selectToken === "USDT") {
+      if (
+        Number(totalMint * State.priceUSDT) <= Number(State.userBalance) &&
+        Number(State.userBalance) > 0
+      ) {
+        SetState((draft) => {
+          draft.userHaveBalance = true
+        })
+      } else {
+        SetState((draft) => {
+          draft.userHaveBalance = false
+        })
+      }
+    } else {
+      if (Number(totalMint * State.priceNNT) <= Number(State.userBalance)) {
+        console.log("totalMint useMemo 2")
+        SetState((draft) => {
+          draft.userHaveBalance = true
+        })
+      } else {
+        SetState((draft) => {
+          draft.userHaveBalance = false
+        })
+      }
+    }
+  }, [totalMint, selectToken, account])
+
   return (
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
       <div className="mb-20 text-center">
@@ -358,82 +387,84 @@ export default function BuyForm() {
                       </div>
                     ) : (
                       <>
-                        <div className="col-span-6 sm:col-span-3">
-                          <span
-                            onClick={handleApprove}
-                            className={
-                              "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
-                              (state
-                                ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer"
-                                : "bg-gray-600 opacity-50 cursor-not-allowed")
-                            }
-                          >
-                            {/* <svg
-                              className="animate-spin h-5 w-5 mr-3 text-white"
-                              viewBox="0 0 24 24"
-                            >
-                              A
-                            </svg> */}
-                            {State.approveIsLoading && (
-                              <svg
-                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
+                        {State.userHaveBalance ? (
+                          <>
+                            <div className="col-span-6 sm:col-span-3">
+                              <span
+                                onClick={handleApprove}
+                                className={
+                                  "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
+                                  (state
+                                    ? "bg-indigo-600  hover:bg-indigo-700 cursor-pointer"
+                                    : "bg-gray-600 opacity-50 cursor-not-allowed")
+                                }
                               >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                ></circle>
-                                <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                              </svg>
-                            )}
-                            Approve
-                          </span>
-                        </div>
-                        <div className="col-span-6 sm:col-span-3">
-                          <button
-                            className={
-                              "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
-                              (state
-                                ? "bg-gray-600 opacity-50 cursor-not-allowed"
-                                : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")
-                            }
-                            type="submit"
-                          >
-                            {State.confirmIsLoading && (
-                              <svg
-                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
+                                {State.approveIsLoading && (
+                                  <svg
+                                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                      className="opacity-75"
+                                      fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                  </svg>
+                                )}
+                                Approve
+                              </span>
+                            </div>
+                            <div className="col-span-6 sm:col-span-3">
+                              <button
+                                className={
+                                  "text-center w-full  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " +
+                                  (state
+                                    ? "bg-gray-600 opacity-50 cursor-not-allowed"
+                                    : "bg-indigo-600  hover:bg-indigo-700 cursor-pointer")
+                                }
+                                type="submit"
                               >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                ></circle>
-                                <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                              </svg>
-                            )}
-                            Confirm
-                          </button>
-                        </div>
+                                {State.confirmIsLoading && (
+                                  <svg
+                                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                      className="opacity-75"
+                                      fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                  </svg>
+                                )}
+                                Confirm
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <p className="col-span-6 text-center bg-red-700 text-white">
+                            You don't have balance
+                          </p>
+                        )}
                       </>
                     )}
                   </div>

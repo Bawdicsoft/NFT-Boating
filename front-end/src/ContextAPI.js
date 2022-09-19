@@ -1,4 +1,4 @@
-import { useContext, useEffect, createContext, useState } from "react"
+import { useContext, createContext, useState, useMemo } from "react"
 import { ethers } from "ethers"
 import { useWeb3React } from "@web3-react/core"
 import {
@@ -41,7 +41,7 @@ export const ContextProvider = ({ children }) => {
   const NFTilityTokenAddress = "0x9b59a220157f408156d8C344A84F26410D2EE738"
   const NFTilityExchangeAddress = "0x329306e74036CB4Cbb232E8E3E15A301e1098516"
 
-  useEffect(() => {
+  useMemo(() => {
     const connectWalletOnPageLoad = async () => {
       if (localStorage?.getItem("isWalletConnected") === "Injected") {
         try {
@@ -59,23 +59,10 @@ export const ContextProvider = ({ children }) => {
         } catch (ex) {
           console.log(ex)
         }
-      } else if (
-        localStorage?.getItem("isWalletConnected") === "walletConnect"
-      ) {
-        try {
-          await activate(walletConnect)
-          localStorage.setItem("isWalletConnected", "walletConnect")
-        } catch (ex) {
-          console.log(ex)
-        }
       }
     }
     connectWalletOnPageLoad()
   }, [])
-
-  // if (typeof window.ethereum !== "undefined") {
-  //   provider = new ethers.providers.Web3Provider(window.ethereum).getSigner()
-  // }
 
   const ContractDeploy = new ethers.Contract(
     DeployAddress,
@@ -105,16 +92,6 @@ export const ContextProvider = ({ children }) => {
 
   const [UserData, setUserData] = useState()
 
-  useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return
-    } else if (user) {
-      fetchUser()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, loading])
-
   const fetchUser = async () => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", user?.uid))
@@ -126,6 +103,15 @@ export const ContextProvider = ({ children }) => {
       console.error(err)
     }
   }
+
+  useMemo(() => {
+    if (loading) {
+      return
+    } else if (user) {
+      fetchUser()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, loading])
 
   const updateDocRequests = (collection, object) => {
     const fieldToEdit = doc(db, collection, UserData?.id)
