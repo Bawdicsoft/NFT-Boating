@@ -72,13 +72,17 @@ export default function App() {
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
+  const contractNetworkName = process.env.REACT_APP_CONTRACT_NETWORK_NAME
+  const contractNetworkId = Number(process.env.REACT_APP_CONTRACT_NETWORK_ID)
+
   return (
     <>
-      {active && chainId !== 4 && (
+      {active && chainId !== contractNetworkId && (
         <div className="bg-red-600">
           <div className="max-w-7xl mx-auto py-1 px-3 sm:px-6 lg:px-8">
             <p className="ml-3 font-medium text-white text-center truncate">
-              Please switch to network Ropsten, chainId (4)
+              Please switch to network {contractNetworkName}, chainId (
+              {contractNetworkId})
             </p>
           </div>
         </div>

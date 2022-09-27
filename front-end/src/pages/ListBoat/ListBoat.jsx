@@ -13,14 +13,16 @@ import { useContextAPI } from "../../ContextAPI"
 import html2canvas from "html2canvas"
 import GoogleMapReact from "google-map-react"
 import { Carousel } from "flowbite-react"
-import { Injected } from "../../Comp/Wallets/Connectors"
 import WalletSide from "../../Comp/Header/WalletSide"
 
-async function uploadImg({ name, fileName, file }) {
+async function uploadImg({ uid, name, fileName, file }) {
   return new Promise((resolve, reject) => {
     console.log("Uploading image ...")
 
-    const storageRef = ref(storage, `user-uploads/images/${name}/${fileName}`)
+    const storageRef = ref(
+      storage,
+      `user-uploads/${uid}/images/${name}/${fileName}`
+    )
     const uploadTask = uploadBytesResumable(storageRef, file)
 
     uploadTask.on(
@@ -72,7 +74,7 @@ export default function ListBoat() {
   })
   console.log(state.gallery, "state.gallery")
 
-  const { activate, account } = useWeb3React()
+  const { account } = useWeb3React()
   const [open, setOpen] = useState(false)
 
   const location = watch(["location"])
@@ -151,11 +153,10 @@ export default function ListBoat() {
         allowTaint: true,
         useCORS: true,
       }).then(async (canvas) => {
-        const API_KEY = "6486e5c40cd049a8d0d1"
-        const API_SECRET =
-          "f8ffade9a388141c898be2d960ba8e52e1a2ef45717469caf9d9985ab68ad2bb"
-
-        const URLforpinJSONtoIPFS = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
+        const API_KEY = process.env.REACT_APP_API_KEY
+        const API_SECRET = process.env.REACT_APP_API_SECRET
+        const URLforpinJSONtoIPFS =
+          process.env.REACT_APP_URL_FOR_PIN_JSON_TO_IPFS
 
         axios
           .post(
@@ -176,14 +177,24 @@ export default function ListBoat() {
             const file = e.featuredImage[0]
             const name = e.name
             const fileName = file.name
-            const featuredImageURL = await uploadImg({ name, fileName, file })
+            const featuredImageURL = await uploadImg({
+              uid: UserData.uid,
+              name,
+              fileName,
+              file,
+            })
 
             let gallery = []
             for (let i = 0; i < images.length; i++) {
               const file = images[i]
               const name = e.name
               const fileName = file.name
-              const imagesURL = await uploadImg({ name, fileName, file })
+              const imagesURL = await uploadImg({
+                uid: UserData.uid,
+                name,
+                fileName,
+                file,
+              })
               gallery.push(imagesURL)
             }
 
@@ -230,7 +241,7 @@ export default function ListBoat() {
             const Mail = {
               fromName: "NFT Boating",
               from: "nabeelatdappvert@gmail.com",
-              to: `nabeelatdappvert@gmail.com ${UserData.email} `,
+              to: `${process.env.REACT_APP_EMAIL}, ${UserData.email}`,
               subject: "You have new request from NFT Boation",
               text: `
                 name: ${e.name} \n

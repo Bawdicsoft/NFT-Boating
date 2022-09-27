@@ -146,7 +146,7 @@ export default function NFT() {
       const Mail = {
         fromName: "NFT Boating",
         from: "nabeelatdappvert@gmail.com",
-        to: `nabeelatdappvert@gmail.com, ${state.ContractInfo.email}, ${UserData.email}`,
+        to: `${process.env.REACT_APP_EMAIL}, ${state.ContractInfo.email}, ${UserData.email}`,
         subject: "user has cancelled the booking",
         text: `user has cancelled the booking \n
         date: ${state.contract.bookedDate}`,
@@ -217,7 +217,7 @@ export default function NFT() {
         const Mail = {
           fromName: "NFT Boating",
           from: "nabeelatdappvert@gmail.com",
-          to: `nabeelatdappvert@gmail.com, ${state.ContractInfo.email}, ${UserData.email}`,
+          to: `${process.env.REACT_APP_EMAIL}, ${state.ContractInfo.email}, ${UserData.email}`,
           subject: "user has accepted the offer",
           text: `user has accepted the offer price \n
           date: ${state.contract.bookedDate} \n

@@ -7,14 +7,12 @@ import axios from "axios"
 
 /* This example requires Tailwind CSS v2.0+ */
 import { PencilIcon } from "@heroicons/react/solid"
-import image1 from "../../../Assets/images/yachat.jpg"
 
 export default function Boats() {
   const { account, active } = useWeb3React()
   const { ContractFactory, ContractDeploy } = useContextAPI()
 
   const [state, SetState] = useImmer({
-    image: null,
     data: [],
     userNFT: 0,
   })
@@ -27,7 +25,7 @@ export default function Boats() {
           addresses = await ContractFactory.UserAllContractAddress(account)
           console.log(addresses, "addresses>>>>>>>>>")
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
 
         if (addresses.length) {
@@ -36,7 +34,11 @@ export default function Boats() {
               addresses[i]
             )
 
-            console.log(contractData)
+            const getBaseURL = contractData.baseURI.split("//").pop()
+            console.log({ getBaseURL })
+            const ipfsRes = await axios.get(
+              `https://gateway.pinata.cloud/ipfs/${getBaseURL}/`
+            )
 
             const data = {
               id: contractData.id.toString(),
@@ -47,25 +49,13 @@ export default function Boats() {
               owner: contractData.owner.toString(),
               baseURI: contractData.baseURI.toString(),
               contractAddress: addresses[i].toString(),
-              imageSrc: image1,
-              imageAlt: "Front of men's Basic Tee in black.",
+              imageSrc: ipfsRes.data.image,
+              imageAlt: contractData.name.toString(),
             }
-
-            console.log(data)
 
             SetState((draft) => {
               draft.userNFT = addresses.length
               draft.data.push(data)
-            })
-
-            const getBaseURL = contractData.baseURI.split("//").pop()
-            console.log({ getBaseURL })
-            const ipfsRes = await axios.get(
-              `https://gateway.pinata.cloud/ipfs/${getBaseURL}/`
-            )
-
-            SetState((draft) => {
-              draft.image = ipfsRes.data.image
             })
           }
         } else {
@@ -114,30 +104,36 @@ export default function Boats() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto py-10 sm:py-10 lg:py-10 lg:max-w-none">
             <div className="mt-6 lg:space-y-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-6 sm:gap-x-6">
-              {state.data.map((Contract) => (
-                <div key={Contract.id} className="group relative mb-4">
-                  <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
-                    <img
-                      src={state.image}
-                      alt={Contract.imageAlt}
-                      className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                    />
-                  </div>
-                  <div className="mt-4 flex justify-between">
-                    <div>
-                      <h3 className="text-2xl text-gray-700 ">
-                        <Link to={`/BoatInfo/${Contract.contractAddress}`}>
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0 "
-                          />
-                          {Contract.name}
-                        </Link>
-                      </h3>
+              {state.data.length > 0 ? (
+                <>
+                  {state.data.map((Contract) => (
+                    <div key={Contract.id} className="group relative mb-4">
+                      <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
+                        <img
+                          src={Contract.imageSrc}
+                          alt={Contract.imageAlt}
+                          className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                        />
+                      </div>
+                      <div className="mt-4 flex justify-between">
+                        <div>
+                          <h3 className="text-2xl text-gray-700 ">
+                            <Link to={`/BoatInfo/${Contract.contractAddress}`}>
+                              <span
+                                aria-hidden="true"
+                                className="absolute inset-0 "
+                              />
+                              {Contract.name}
+                            </Link>
+                          </h3>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  ))}
+                </>
+              ) : (
+                <h1>No Boat found</h1>
+              )}
             </div>
           </div>
         </div>

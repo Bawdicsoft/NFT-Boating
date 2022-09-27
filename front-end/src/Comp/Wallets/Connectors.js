@@ -8,18 +8,18 @@ export const Injected = new InjectedConnector({
 })
 
 export const CoinbaseWallet = new WalletLinkConnector({
-  url: `https://rinkeby.infura.io/v3/461d35d8280c4ee78f25da15fdcc48c1`,
+  url: `https://${process.env.REACT_APP_CONTRACT_NETWORK_NAME}.infura.io/v3/${process.env.REACT_APP_INFURA_ID}}`,
   appName: "NFT Boating",
 })
 
 export const walletConnect = new WalletConnectConnector({
   rpc: {
-    1: "https://mainnet.infura.io/v3/7a93b9ef35c1445482ba26cc4b8c16f0",
-    4: "https://rinkeby.infura.io/v3/7a93b9ef35c1445482ba26cc4b8c16f0",
+    1: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`,
+    4: `https://${process.env.REACT_APP_CONTRACT_NETWORK_NAME}.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`,
   },
-  infuraId: "7a93b9ef35c1445482ba26cc4b8c16f0",
+  infuraId: `${process.env.REACT_APP_INFURA_ID}`,
   bridge: "https://bridge.walletconnect.org",
-  chainId: 4,
+  chainId: process.env.REACT_APP_CONTRACT_NETWORK_ID,
   qrcode: true,
   pollingInterval: 12000,
 })

@@ -131,7 +131,7 @@ export default function CreateNew() {
       const Mail = {
         fromName: "NFT Boating",
         from: "nabeelatdappvert@gmail.com",
-        to: `nabeelatdappvert@gmail.com, ${UserData.email}`,
+        to: `${process.env.REACT_APP_EMAIL}, ${UserData.email}`,
         subject: "New Smart Contract Deployed",
         text: `New Smart Contract Deployed \n
         contract address: ${_Contract} \n

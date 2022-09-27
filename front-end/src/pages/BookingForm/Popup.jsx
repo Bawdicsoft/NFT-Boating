@@ -93,7 +93,7 @@ export default function Popup({ open, setOpen, state }) {
     const Mail = {
       fromName: "NFT Boating",
       from: "nabeelatdappvert@gmail.com",
-      to: `nabeelatdappvert@gmail.com, ${state.formData.OwnerEmail}, ${state.formData.userEmail}`,
+      to: `${process.env.REACT_APP_EMAIL}, ${state.formData.OwnerEmail}, ${state.formData.userEmail}`,
       subject: "New Date Was Booked",
       text: `date: {
           year: ${state.formData.year},

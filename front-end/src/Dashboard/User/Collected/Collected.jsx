@@ -61,7 +61,7 @@ export default function Collected() {
             const getBaseURL = baseURI.split("//").pop()
             console.log({ getBaseURL })
             const ipfsRes = await axios.get(
-              `https://gateway.pinata.cloud/ipfs/${getBaseURL}/`
+              `${process.env.REACT_APP_IPFS_GATEWAY}${getBaseURL}/`
             )
 
             UserIDs.forEach((nftid) => {
@@ -148,35 +148,41 @@ export default function Collected() {
                 </>
               ) : (
                 <>
-                  {state.data.map((Contract) => (
-                    <div
-                      key={Contract.nftNumber + Math.random()}
-                      className="group relative"
-                    >
-                      <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
-                        <img
-                          src={Contract.imageSrc}
-                          alt={Contract.imageAlt}
-                          className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                        />
-                      </div>
-                      <div className="mt-4 flex justify-between">
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            <Link
-                              to={`/contract/${Contract.contractAddress}/nft/${Contract.nftNumber}`}
-                            >
-                              <span
-                                aria-hidden="true"
-                                className="absolute inset-0"
-                              />
-                              ( {Contract.name} ) #{Contract.nftNumber}
-                            </Link>
-                          </h3>
+                  {state.data.length > 0 ? (
+                    <>
+                      {state.data.map((Contract) => (
+                        <div
+                          key={Contract.nftNumber + Math.random()}
+                          className="group relative"
+                        >
+                          <div className="w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75  lg:aspect-none">
+                            <img
+                              src={Contract.imageSrc}
+                              alt={Contract.imageAlt}
+                              className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                            />
+                          </div>
+                          <div className="mt-4 flex justify-between">
+                            <div>
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                <Link
+                                  to={`/contract/${Contract.contractAddress}/nft/${Contract.nftNumber}`}
+                                >
+                                  <span
+                                    aria-hidden="true"
+                                    className="absolute inset-0"
+                                  />
+                                  ( {Contract.name} ) #{Contract.nftNumber}
+                                </Link>
+                              </h3>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      ))}
+                    </>
+                  ) : (
+                    <h1 className="text-center">No NFT Found</h1>
+                  )}
                 </>
               )}
             </div>

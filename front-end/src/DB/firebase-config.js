@@ -17,13 +17,13 @@ import { getStorage } from "firebase/storage"
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_KEY,
-  authDomain: "nft-yacht.firebaseapp.com",
-  projectId: "nft-yacht",
-  storageBucket: "nft-yacht.appspot.com",
-  messagingSenderId: "755723829636",
-  appId: "1:755723829636:web:7ed9d98fce9f146ba01dd1",
-  measurementId: "G-2QKMN1F2XR",
+  apiKey: "AIzaSyASzhoxdX8TGXXZsPNxT7uuUaJimGwioCo",
+  authDomain: "nftboating-f659d.firebaseapp.com",
+  projectId: "nftboating-f659d",
+  storageBucket: "nftboating-f659d.appspot.com",
+  messagingSenderId: "441287601820",
+  appId: "1:441287601820:web:8e90a7aae953f54fb4c759",
+  measurementId: "G-D225S5NJGH",
 }
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
