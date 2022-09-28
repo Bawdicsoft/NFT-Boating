@@ -9,26 +9,27 @@ import heroImg from "./../../Assets/8763487326873785.webp"
 
 const features = [
   {
-    name: "Become a Member by Purchasing an NFT",
+    name: "Become a member",
     description:
-      "Purchasing the NFT membership entitles you to rent any boat for any day of your choice throughout the year.",
+      "The NFT membership is a great way to stay afloat all year round! With this unique offer, you can choose any boat and rent it out for your next adventure.",
     icon: UserGroupIcon,
   },
   {
-    name: "Choose your date, Reserve your boat",
-    description: "Select the date, and get your yacht reserved for the day.",
+    name: "Choose your date & reserve your boat",
+    description:
+      "Why not make your next party or getaway a luxury yacht experience? Book today and we'll provide the rest. Might as well go out with a bang!",
     icon: CalendarIcon,
   },
   {
-    name: "Grab your bathing suit and have a great time out on the Ocean!",
+    name: "Grab your bathing suit & enjoy",
     description:
-      "Enjoy your holiday with our experienced crew and enjoy your time.",
+      "Sit back, relax, and celebrate! Our rented yachts give you the freedom and relaxation of being on open water without any worries about managing navigation or other Captains' duties.",
     icon: ClockIcon,
   },
   {
-    name: "Your NFT is valid for 5 years, you can choose 1 day per year and you only pay once.",
+    name: "Enjoy 5 years of benefits",
     description:
-      "Your Membership is valid for 5 years, it means that with the cost of only one rental day you can receive 4 more days for the remaining 4 years.",
+      "With the purchase of one NFT boating membership, you get 5 years' worth of boat days for the price of one. That means 4 free boat days in the upcoming 4 years. That's more than twice as much fun!.",
     icon: BadgeCheckIcon,
   },
 ]
@@ -53,16 +54,14 @@ export default function LandingPage() {
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                   <span className="block xl:inline text-center">
-                    Decentralize Comfort
+                    Decentralize leisure.
                   </span>
-                  {/* <span className="block text-indigo-600 xl:inline">
-                    Boat Rental Experience
-                  </span> */}
                 </h1>
                 <p className="mt-3 text-base text-justify text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  Enhance your boat rental experience with the use of innovative
-                  NFT technology. The hassle-free process to get memberships and
-                  services of your choice.
+                  Did you hear? NFTs are the future of boat ownership. Innovate
+                  your weekend fun with cutting-edge blockchain technology. Get
+                  memberships and services of your choice, all in one place.
+                  Book yours today to experience hassle-free Web3 boat rentals!
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
@@ -101,12 +100,15 @@ export default function LandingPage() {
               How it works
             </h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              Easier Charters, Better Service
+              Accessible charters. Unparalleled Service.
             </p>
             <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-              Own a boat membership instantly through a secure blockchain
-              transaction and a digital certificate of ownership. Making a truly
-              memorable boating experience.
+              The future of boating is now possible with NFT Boating&#39;s
+              revolutionary new blockchain- based system. With one simple
+              transaction, you can instantly own a boat membership and enjoy all
+              the perks that come along with it - from exclusive offers on
+              accessories to luxury dining experiences! Claim your digital
+              certificate of ownership today.
             </p>
           </div>
 
@@ -134,9 +136,9 @@ export default function LandingPage() {
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            <span className="block">Ready to ride the waves?</span>
+            <span className="block">Ready to ride the waves in style?</span>
             <span className="block text-indigo-600">
-              Become a Member today.
+              Become a member today.
             </span>
           </h2>
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
@@ -145,7 +147,7 @@ export default function LandingPage() {
                 to="/listed-boats"
                 className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
               >
-                Book Your's Now
+                Book yours now,
               </Link>
             </div>
             <div className="ml-3 inline-flex rounded-md shadow">
@@ -153,7 +155,7 @@ export default function LandingPage() {
                 to="/about"
                 className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50"
               >
-                About US
+                About us
               </Link>
             </div>
           </div>

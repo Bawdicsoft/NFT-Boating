@@ -54,14 +54,20 @@ export default function Home() {
     <div className="bg-white">
       <div className="max-w-7xl px-10 mx-auto py-16 sm:py-24">
         <div className=" mb-20 text-center">
-          <h1 className="mb-3 font-bold text-5xl ">Boats</h1>
-          <div className="max-w-3xl mx-auto text-center">
-            Presenting our fleet of sensational boats for you to choose from.
-            Select one and get one step closer to fulfilling your long pending
-            voyager across the horizon. Services provided on each of our listed
-            vessels can be customized to your choice so grab a boat and ride on…
-          </div>
-          <div className="max-w-3xl mx-auto text-center">Book Now!</div>
+          <h1 className="mb-3 font-bold text-5xl ">Boat Rentals</h1>
+          <p className="max-w-3xl mx-auto text-center">
+            NFT Boating provides the perfect luxury boat rental for your
+            upcoming voyage across the horizon. Our fleet of breathtaking boats
+            will take you to your desired destination in style and comfort. Each
+            of our listed vessels comes equipped with NFT Boating's exclusive
+            service, which can be customized to your choice*.
+          </p>
+          <p className="max-w-3xl mx-auto text-center">
+            Sign up, browse our rentals, and get one step closer to fulfilling
+            your long-overdue vacation at sea. NFT Boating looks forward to
+            providing you with the best possible experience during your special
+            day. Book now to experience the freedom of NFT Boating!
+          </p>
         </div>
 
         <div className="grid grid-cols-3 gap-6">

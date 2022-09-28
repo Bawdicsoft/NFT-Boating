@@ -445,23 +445,24 @@ export default function ListBoat() {
         <div className="mt-20 mb-20 px-3 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Become a Host </h1>
           <div className="max-w-3xl mx-auto text-center">
-            Are you willing to profit from the lucrative business of renting
-            your boat?
+            NFT Boating is about to be a booming trend in luxury boat rental,
+            and it's a great way to profit from your investment. With NFT
+            Boating, you can list your boat with us and get connected with
+            plenty of customers who are ready to rent.
           </div>
           <div className="max-w-3xl mx-auto text-center">
-            List your boat with us and get instantly connected with plenty of
-            customers willing to rent...
+            This isn't a regular rent for the day; if you post your boat with
+            us, it will be issued 365 NFT memberships specifically for your
+            boat. You'll choose the price for the day's rent, but keep in mind
+            that the NFT will be valid for 5 years. The owner of the NFT can
+            book a day for 5 consecutive years. In addition, the NFT owner will
+            pay you a boat maintenance fee per year depending on the length of
+            the boat.
           </div>
           <div className="max-w-3xl mx-auto text-center">
-            This is not a regular rent for the day, if you post your boat with
-            us, it will be issue 365 NFT memberships related only to your boat,
-            you will choose the price for the day rent bit keep in mind the NFT
-            will be valid for 5 years, the owner of the NFT can book a day for 5
-            consecutive years.
-          </div>
-          <div className="max-w-3xl mx-auto text-center">
-            In addition, the NFT owner will pay you a boat maintenance fee per
-            year depending on the length of the boat.
+            So, if you're looking for a way to make some passive income from
+            your luxury boat, NFT Boating is the perfect solution. Sign up to
+            start earning today!
           </div>
         </div>
       </header>
@@ -474,12 +475,12 @@ export default function ListBoat() {
                   Boat Specifications
                 </h2>
                 <p className="mt-4 text-gray-500">
-                  Provide details about your vessel to help customers choose
-                  easily. We encourage you to post pictures, it is very
-                  important for possible customers
+                  Provide details about your vessel to help guests get a good
+                  idea of your rental. We encourage you to post pictures—it
+                  increases the chances of prospective clients!
                 </p>
 
-                <dl className="mt-8 grid grid-cols-1 gap-x-6 gap-y-7 lg:gap-x-8">
+                {/* <dl className="mt-8 grid grid-cols-1 gap-x-6 gap-y-7 lg:gap-x-8">
                   <div className="border-t border-gray-200 pt-4">
                     <dt className="font-medium text-gray-900">
                       Considerations
@@ -489,7 +490,7 @@ export default function ListBoat() {
                       choose easily.
                     </dd>
                   </div>
-                </dl>
+                </dl> */}
               </div>
               <div className="mt-5 md:mt-0 md:col-span-2">
                 <form onSubmit={handleSubmit(onSubmit)}>
