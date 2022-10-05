@@ -622,7 +622,7 @@ contract Factory is Ownable {
     }
 
 
-    function deleteContract(address[] memory _contractAddress, address _to) public {
+    function deleteContract(address[] memory _contractAddress, address _to) public onlyOwner {
 
         address USDTAddress = address(USDT);
 
