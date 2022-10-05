@@ -8,7 +8,6 @@ import "./Contracts/Ownable.sol";
 
 contract Deploy is Ownable, Whitelist {
 
-
     struct contractDitals_ {
         uint id;
         string name;
@@ -46,7 +45,6 @@ contract Deploy is Ownable, Whitelist {
     }
 
 
-
     function allContractAddress() public view returns(address[] memory) {
         return _allContractAddress;
     }
@@ -70,9 +68,6 @@ contract Deploy is Ownable, Whitelist {
     }
 
 
-
-
-
     function updateFactoryAddress(address factory_) public onlyOwner {
         factory = factory_;
         emit factoryAddressChanged_(factory, factory_);
@@ -90,9 +85,6 @@ contract Deploy is Ownable, Whitelist {
     function changeOwner(address contract_, address owner_) public onlyContractOwner(contract_) {
         _contractDitals[contract_].owner = owner_;
     }
-
-
-
 
 
     function deploy(
@@ -122,4 +114,5 @@ contract Deploy is Ownable, Whitelist {
         emit deploy_(_Contract, _contractCounter);
 
     }
+
 }

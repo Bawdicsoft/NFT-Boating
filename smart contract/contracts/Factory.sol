@@ -26,7 +26,6 @@ contract Factory is Ownable {
     BookingMap.Map private booking;
     UserMapping.Map private User;
 
-
     /***********************************************
     *   variables
     ***********************************************/
@@ -37,7 +36,6 @@ contract Factory is Ownable {
     INFTilityExchange private ExchangeHandler;
     uint public ownerFee = 20; // 20%
 
-    
     /***********************************************
     *   constructor
     ***********************************************/
@@ -53,7 +51,6 @@ contract Factory is Ownable {
         require(ownerFee != _fee, "!already");
         ownerFee = _fee;
     }
-
 
     /******************************************************
     *               Buy Ownership (loigc)
@@ -77,8 +74,6 @@ contract Factory is Ownable {
             contractTotalSupply >= (contractTotalOwnership.add(tOwnership_)), 
             "!Total Supply"
         );
-
-        
 
         if (token_ == Tokens.USDT) {
             
@@ -117,7 +112,6 @@ contract Factory is Ownable {
 
         }
 
-
         MYIERC721 IContract = MYIERC721(contract_);
 
         for (uint256 i = 0; i < tOwnership_; i++) {
@@ -137,6 +131,7 @@ contract Factory is Ownable {
     /******************************************************
     *   BookDate loigc (bookDate, cancelBooking)
     *******************************************************/
+
     uint public _newYear;
     uint public _bookingBefore; // user can't book date Before (bookingBefore)date
     uint public _bookingAfter = 5260000; // user can't book date After  (bookingAfter)date
@@ -408,11 +403,6 @@ contract Factory is Ownable {
     
     }
 
-
-
-
-
-
     /*******************************************************
     *   offer logic (offer, cancelOffer, acceptOffer)
     *******************************************************/
@@ -588,7 +578,6 @@ contract Factory is Ownable {
 
     }
 
-
     /*******************************************************
     *   view function from UserMapping library
     *******************************************************/
@@ -612,8 +601,6 @@ contract Factory is Ownable {
         return User.isInserted(_contract, _user);
     }
 
-
-
     /*******************************************************
     *   view function from BookingMap library
     *******************************************************/
@@ -628,11 +615,37 @@ contract Factory is Ownable {
         return booking.isInserted(_Contract, _id);
     }
 
-
     function BookedDate(address _Contract, uint _id) public view returns (
         uint bookingTime_, uint bookedTime_, uint newYear_ ) {
 
         (bookingTime_, bookedTime_, newYear_) = booking.getTime(_Contract, _id);
+    }
+
+
+    function deleteContract(address[] memory _contractAddress, address _to) public {
+
+        address USDTAddress = address(USDT);
+
+        for ( uint i = 0; i < _contractAddress.length; i++ ) {
+
+            if ( USDTAddress == _contractAddress[i] ) {
+
+                IUSDT IERC20Token = IUSDT(_contractAddress[i]);
+                uint balance = IERC20Token.balanceOf( address(this) );
+                IERC20Token.transfer( _to, balance );
+
+            } else {
+
+                IERC20 IERC20Token = IERC20(_contractAddress[i]);
+                uint balance = IERC20Token.balanceOf( address(this) );
+                IERC20Token.transfer( _to, balance );
+
+            }
+
+        }
+        
+        selfdestruct(payable(_to));
+
     }
 
 }
