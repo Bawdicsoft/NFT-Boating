@@ -1,16 +1,16 @@
-import { ethers } from "ethers"
-import { useEffect, useMemo, useState } from "react"
-import { useImmer } from "use-immer"
-import { useForm } from "react-hook-form"
-import { useNavigate, useParams } from "react-router-dom"
-import { useContextAPI } from "./../../ContextAPI"
-import { useWeb3React } from "@web3-react/core"
-import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils"
-import { useAuthState } from "react-firebase-hooks/auth"
-import { auth, signInWithGoogle } from "../../DB/firebase-config"
+import { ethers } from "ethers";
+import { useEffect, useMemo, useState } from "react";
+import { useImmer } from "use-immer";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { useContextAPI } from "./../../ContextAPI";
+import { useWeb3React } from "@web3-react/core";
+import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, signInWithGoogle } from "../../DB/firebase-config";
 
 export default function BuyForm() {
-  const { Contract } = useParams()
+  const { Contract } = useParams();
   const {
     ContractDeploy,
     ContractUSDT,
@@ -18,13 +18,13 @@ export default function BuyForm() {
     FactoryAddress,
     ContractNFTilityToken,
     ContractNFTilityExchange,
-  } = useContextAPI()
-  const { account, active } = useWeb3React()
-  const navigate = useNavigate()
-  const [user] = useAuthState(auth)
+  } = useContextAPI();
+  const { account, active } = useWeb3React();
+  const navigate = useNavigate();
+  const [user] = useAuthState(auth);
 
   // const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
-  const { register, handleSubmit, watch } = useForm()
+  const { register, handleSubmit, watch } = useForm();
 
   const [State, SetState] = useImmer({
     id: 0,
@@ -41,140 +41,140 @@ export default function BuyForm() {
     approveIsLoading: false,
     confirmIsLoading: false,
     userHaveBalance: false,
-  })
+  });
 
   useEffect(() => {
     const run = async () => {
       if (active) {
-        let ContractInfo
+        let ContractInfo;
         try {
-          ContractInfo = await ContractDeploy.contractDitals(Contract)
+          ContractInfo = await ContractDeploy.contractDitals(Contract);
         } catch (e) {
-          console.error(e)
+          console.error(e);
         }
 
-        let ExchangeRate
+        let ExchangeRate;
         try {
           ExchangeRate =
             await ContractNFTilityExchange.priceCalculatorUSDTtoNNT(
               ContractInfo.price.toString()
-            )
+            );
         } catch (e) {
-          console.error(e)
+          console.error(e);
         }
 
-        const id = ContractInfo.id.toString()
-        const name = ContractInfo.name.toString()
-        const symbol = ContractInfo.symbol.toString()
-        const tSupply = ContractInfo.tSupply.toString()
-        const tOwnership = ContractInfo.tOwnership.toString()
-        const priceUSDT = formatUnits(ContractInfo.price.toString(), 6)
+        const id = ContractInfo.id.toString();
+        const name = ContractInfo.name.toString();
+        const symbol = ContractInfo.symbol.toString();
+        const tSupply = ContractInfo.tSupply.toString();
+        const tOwnership = ContractInfo.tOwnership.toString();
+        const priceUSDT = formatUnits(ContractInfo.price.toString(), 6);
 
-        const priceNNT = formatUnits(ExchangeRate.toString(), 18)
-        const owner = ContractInfo.owner.toString()
-        const baseURI = ContractInfo.baseURI.toString()
+        const priceNNT = formatUnits(ExchangeRate.toString(), 18);
+        const owner = ContractInfo.owner.toString();
+        const baseURI = ContractInfo.baseURI.toString();
 
         SetState((draft) => {
-          draft.id = id
-          draft.name = name
-          draft.symbol = symbol
-          draft.tSupply = tSupply
-          draft.tOwnership = tOwnership
-          draft.priceUSDT = priceUSDT
-          draft.priceNNT = priceNNT
-          draft.owner = owner
-          draft.baseURI = baseURI
-        })
+          draft.id = id;
+          draft.name = name;
+          draft.symbol = symbol;
+          draft.tSupply = tSupply;
+          draft.tOwnership = tOwnership;
+          draft.priceUSDT = priceUSDT;
+          draft.priceNNT = priceNNT;
+          draft.owner = owner;
+          draft.baseURI = baseURI;
+        });
       }
-    }
-    run()
-  }, [Contract, account])
+    };
+    run();
+  }, [Contract, account]);
 
   const selectedToken = async (Token) => {
     if (Token === "USDT") {
-      console.log(Token)
+      console.log(Token);
 
       if (active) {
         try {
-          const userBalance = await ContractUSDT.balanceOf(account)
+          const userBalance = await ContractUSDT.balanceOf(account);
 
           SetState((draft) => {
-            draft.userBalance = formatUnits(userBalance.toString(), 6)
-          })
+            draft.userBalance = formatUnits(userBalance.toString(), 6);
+          });
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
       }
     } else if (Token === "NNT") {
-      console.log(Token)
+      console.log(Token);
 
       if (active) {
         try {
-          const userBalance = await ContractNFTilityToken.balanceOf(account)
+          const userBalance = await ContractNFTilityToken.balanceOf(account);
 
           SetState((draft) => {
-            draft.userBalance = formatUnits(userBalance.toString(), 18)
-          })
+            draft.userBalance = formatUnits(userBalance.toString(), 18);
+          });
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
       }
     }
-  }
+  };
 
-  const totalMint = watch("totalMint")
-  const selectToken = watch("selectToken")
+  const totalMint = watch("totalMint");
+  const selectToken = watch("selectToken");
 
-  useMemo(() => selectedToken(selectToken), [selectToken, account])
+  useMemo(() => selectedToken(selectToken), [selectToken, account]);
 
-  const [state, setSate] = useState(true)
+  const [state, setSate] = useState(true);
 
   const handleApprove = async () => {
     if (state) {
       SetState((draft) => {
-        draft.approveIsLoading = true
-      })
+        draft.approveIsLoading = true;
+      });
 
       if (selectToken === "USDT") {
-        const value = totalMint * State.priceUSDT
+        const value = totalMint * State.priceUSDT;
         try {
           const tx = await ContractUSDT.approve(
             FactoryAddress,
             parseUnits(value.toString(), 6)
-          )
-          await tx.wait()
-          setSate(false)
+          );
+          await tx.wait();
+          setSate(false);
         } catch (e) {
-          console.error(e)
+          console.error(e);
         }
       } else if (selectToken === "NNT") {
-        const value = totalMint * State.priceNNT
+        const value = totalMint * State.priceNNT;
         try {
           const tx = await ContractNFTilityToken.approve(
             FactoryAddress,
             parseUnits(value.toString(), 18)
-          )
-          await tx.wait()
-          setSate(false)
+          );
+          await tx.wait();
+          setSate(false);
         } catch (e) {
-          console.error(e)
+          console.error(e);
         }
       }
 
       SetState((draft) => {
-        draft.approveIsLoading = false
-      })
+        draft.approveIsLoading = false;
+      });
     }
-  }
+  };
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log(data);
     SetState((draft) => {
-      draft.confirmIsLoading = true
-    })
+      draft.confirmIsLoading = true;
+    });
 
     if (selectToken === "USDT") {
-      const value = totalMint * State.priceUSDT
+      const value = totalMint * State.priceUSDT;
 
       try {
         const tx = await ContractFactory.buyOwnership(
@@ -182,16 +182,16 @@ export default function BuyForm() {
           0,
           parseUnits(value.toString(), 6),
           Contract
-        )
+        );
 
-        await tx.wait()
+        await tx.wait();
 
-        navigate(`/your-nfts`)
+        navigate(`/your-nfts`);
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     } else if (selectToken === "NNT") {
-      const value = totalMint * State.priceNNT
+      const value = totalMint * State.priceNNT;
 
       try {
         const tx = await ContractFactory.buyOwnership(
@@ -199,20 +199,20 @@ export default function BuyForm() {
           1,
           parseUnits(value.toString(), 18),
           Contract
-        )
+        );
 
-        await tx.wait()
+        await tx.wait();
 
-        navigate(`/your-nfts`)
+        navigate(`/your-nfts`);
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     }
 
     SetState((draft) => {
-      draft.confirmIsLoading = true
-    })
-  }
+      draft.confirmIsLoading = true;
+    });
+  };
 
   useMemo(() => {
     if (selectToken === "USDT") {
@@ -221,26 +221,29 @@ export default function BuyForm() {
         Number(State.userBalance) > 0
       ) {
         SetState((draft) => {
-          draft.userHaveBalance = true
-        })
+          draft.userHaveBalance = true;
+        });
       } else {
         SetState((draft) => {
-          draft.userHaveBalance = false
-        })
+          draft.userHaveBalance = false;
+        });
       }
-    } else {
-      if (Number(totalMint * State.priceNNT) <= Number(State.userBalance)) {
-        console.log("totalMint useMemo 2")
+    } else if (selectToken === "NNT") {
+      if (
+        Number(totalMint * State.priceNNT) <= Number(State.userBalance) &&
+        Number(State.userBalance) > 0
+      ) {
+        console.log("totalMint useMemo 2");
         SetState((draft) => {
-          draft.userHaveBalance = true
-        })
+          draft.userHaveBalance = true;
+        });
       } else {
         SetState((draft) => {
-          draft.userHaveBalance = false
-        })
+          draft.userHaveBalance = false;
+        });
       }
     }
-  }, [totalMint, selectToken, account])
+  }, [totalMint, selectToken, account]);
 
   return (
     <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -475,5 +478,5 @@ export default function BuyForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }

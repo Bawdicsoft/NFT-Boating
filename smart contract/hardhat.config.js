@@ -1,6 +1,7 @@
-require("@nomicfoundation/hardhat-toolbox")
-require("dotenv").config()
-require("@nomiclabs/hardhat-etherscan")
+require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+// require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-waffle");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -32,4 +33,4 @@ module.exports = {
   etherscan: {
     apiKey: process.env.API_KEY,
   },
-}
+};
