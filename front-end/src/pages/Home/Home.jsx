@@ -1,10 +1,10 @@
-import { useImmer } from "use-immer"
-import { useEffect } from "react"
-import { Link } from "react-router-dom"
-import { collection, getDocs } from "firebase/firestore"
-import { db } from "../../DB/firebase-config"
-import GoogleMapReact from "google-map-react"
-import axios from "axios"
+import { useImmer } from "use-immer";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../DB/firebase-config";
+import GoogleMapReact from "google-map-react";
+import axios from "axios";
 
 export default function Home() {
   const [state, setState] = useImmer({
@@ -14,41 +14,41 @@ export default function Home() {
     contractCounter: null,
     isLoading: true,
     hoveredName: "",
-  })
+  });
 
   useEffect(() => {
     const run = async () => {
-      const querySnapshot = await getDocs(collection(db, "ContractInfo"))
+      const querySnapshot = await getDocs(collection(db, "ContractInfo"));
 
       querySnapshot.forEach(async (doc) => {
         const res = await axios.get(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${
             doc.data().location
           }&key=${process.env.REACT_APP_MAPKEY}`
-        )
+        );
 
         const location = {
           lat: res.data.results[0].geometry.location.lat,
           lng: res.data.results[0].geometry.location.lng,
           name: doc.data().name,
-        }
+        };
 
         setState((d) => {
-          d.boats.push(doc.data())
-          d.locations.push(location)
-          d.boatsID.push(doc.id)
-          d.isLoading = false
-        })
-      })
+          d.boats.push(doc.data());
+          d.locations.push(location);
+          d.boatsID.push(doc.id);
+          d.isLoading = false;
+        });
+      });
 
       if (state.boats.length === 0) {
         setState((d) => {
-          d.isLoading = false
-        })
+          d.isLoading = false;
+        });
       }
-    }
-    run()
-  }, [])
+    };
+    run();
+  }, []);
 
   return (
     <div className="bg-white">
@@ -125,7 +125,7 @@ export default function Home() {
               <div className="inline-flex w-full h-[80vh] shadow rounded-lg">
                 <GoogleMapReact
                   bootstrapURLKeys={{
-                    key: "AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k",
+                    key: `${process.env.REACT_APP_MAPKEY}`,
                   }}
                   center={{
                     lat: 25.761681,
@@ -142,7 +142,7 @@ export default function Home() {
                         name={location.name}
                         hoveredItem={location.name === state.hoveredName}
                       />
-                    )
+                    );
                   })}
                 </GoogleMapReact>
               </div>
@@ -151,11 +151,11 @@ export default function Home() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const Marker = (props) => {
-  const { name, hoveredItem } = props
+  const { name, hoveredItem } = props;
   return (
     <div className="relative flex flex-col items-center group">
       <div
@@ -181,5 +181,5 @@ const Marker = (props) => {
         {/* <div className="w-3 h-3 -mt-2 rotate-45 bg-black">hello</div> */}
       </div>
     </div>
-  )
-}
+  );
+};

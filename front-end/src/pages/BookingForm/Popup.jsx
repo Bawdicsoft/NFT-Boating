@@ -1,32 +1,32 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useMemo, useRef, useState } from "react"
-import { Dialog, Transition } from "@headlessui/react"
-import { ExclamationIcon } from "@heroicons/react/outline"
-import DispatchContext from "../../DispatchContext"
-import axios from "axios"
-import { db } from "../../DB/firebase-config"
-import { doc, setDoc } from "firebase/firestore"
-import { useContextAPI } from "../../ContextAPI"
-import { useNavigate } from "react-router-dom"
-import StateContext from "../../StateContext"
-import { formatUnits, parseUnits } from "ethers/lib/utils"
-import { useForm } from "react-hook-form"
-import { useImmer } from "use-immer"
-import { useWeb3React } from "@web3-react/core"
+import { Fragment, useContext, useMemo, useRef, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { ExclamationIcon } from "@heroicons/react/outline";
+import DispatchContext from "../../DispatchContext";
+import axios from "axios";
+import { db } from "../../DB/firebase-config";
+import { doc, setDoc } from "firebase/firestore";
+import { useContextAPI } from "../../ContextAPI";
+import { useNavigate } from "react-router-dom";
+import StateContext from "../../StateContext";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { useForm } from "react-hook-form";
+import { useImmer } from "use-immer";
+import { useWeb3React } from "@web3-react/core";
 
 export default function Popup({ open, setOpen, state }) {
-  const ConformButtonRef = useRef(null)
-  const appDispatch = useContext(DispatchContext)
-  const appState = useContext(StateContext)
-  console.log(appState.food.total)
+  const ConformButtonRef = useRef(null);
+  const appDispatch = useContext(DispatchContext);
+  const appState = useContext(StateContext);
+  console.log(appState.food.total);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     ContractFactory,
     ContractUSDT,
     ContractNFTilityToken,
     ContractNFTilityExchange,
-  } = useContextAPI()
+  } = useContextAPI();
 
   const submit = async () => {
     let data = {
@@ -37,8 +37,8 @@ export default function Popup({ open, setOpen, state }) {
       id: state.formData.id,
       selectedToken: state.formData.selectedToken,
       specialDayAmount: state.formData.specialDayAmount,
-    }
-    console.log(data, "data")
+    };
+    console.log(data, "data");
 
     try {
       const tx = await ContractFactory.bookDate(
@@ -49,50 +49,50 @@ export default function Popup({ open, setOpen, state }) {
         state.formData.id,
         state.formData.selectedToken,
         state.formData.specialDayAmount
-      )
-      await tx.wait()
+      );
+      await tx.wait();
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
 
-    console.log(state.formData)
+    console.log(state.formData);
 
     try {
-      let tx
+      let tx;
       if (innerState.selectToken === "USDT") {
         tx = await ContractUSDT.transfer(
           "0x344A0e306cdD004508b19C51Ec5c646500acd2f6",
           parseUnits(innerState.totalFee.toString(), 6)
-        )
+        );
       } else if (innerState.selectToken === "NNT") {
         tx = await ContractNFTilityToken.transfer(
           "0x344A0e306cdD004508b19C51Ec5c646500acd2f6",
           parseUnits(innerState.totalFee.toString(), 18)
-        )
+        );
       }
-      await tx.wait()
+      await tx.wait();
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
 
-    let foodHtmlList = ""
+    let foodHtmlList = "";
     if (appState.food.array == !undefined) {
       for (let i = 0; i < appState.food.array.length; i++) {
-        const element = appState.food.array[i]
+        const element = appState.food.array[i];
         for (const key in element) {
           foodHtmlList += `<tr>
             <th>${key}</th>
           </tr>
           <tr style="background-color: #eaeaea">
             <td>${element[key]}</td>
-          </tr>`
+          </tr>`;
         }
       }
     }
 
     const Mail = {
       fromName: "NFT Boating",
-      from: "nabeelatdappvert@gmail.com",
+      from: `${process.env.REACT_APP_EMAIL}`,
       to: `${process.env.REACT_APP_EMAIL}, ${state.formData.OwnerEmail}, ${state.formData.userEmail}`,
       subject: "New Date Was Booked",
       text: `date: {
@@ -182,17 +182,17 @@ export default function Popup({ open, setOpen, state }) {
         </body>
       </html>
       `,
-    }
+    };
     const res = await axios.post(
-      "https://nft-boating-mail.herokuapp.com/email",
+      `${process.env.REACT_APP_EMAIL_END_URL}`,
       Mail
-    )
-    console.log(res.data.msg)
+    );
+    console.log(res.data.msg);
 
     try {
       // set doc in db
-      const date = `${state.formData.day}-${state.formData.month}-${state.formData.year}`
-      console.log(date)
+      const date = `${state.formData.day}-${state.formData.month}-${state.formData.year}`;
+      console.log(date);
       await setDoc(doc(db, state.formData.Contract, date), {
         date: {
           year: state.formData.year,
@@ -208,15 +208,15 @@ export default function Popup({ open, setOpen, state }) {
         food: state.formData.food,
         total: appState.food.total,
         note: state.formData.data.note,
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
     try {
       // set doc in db
-      const date = `${state.formData.day}-${state.formData.month}-${state.formData.year}`
-      console.log(date)
+      const date = `${state.formData.day}-${state.formData.month}-${state.formData.year}`;
+      console.log(date);
       await setDoc(doc(db, "BookingInfo", date), {
         date: {
           year: state.formData.year,
@@ -232,15 +232,15 @@ export default function Popup({ open, setOpen, state }) {
         food: state.formData.food,
         total: appState.food.total,
         note: state.formData.data.note,
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    appDispatch({ type: "food", value: {} })
+    appDispatch({ type: "food", value: {} });
 
-    navigate(`/contract/${state.formData.Contract}/nft/${state.formData.id}`)
-  }
+    navigate(`/contract/${state.formData.Contract}/nft/${state.formData.id}`);
+  };
 
   const [innerState, setInnerState] = useImmer({
     userBalance: "00",
@@ -249,114 +249,116 @@ export default function Popup({ open, setOpen, state }) {
     captainFee: "00",
     totalFee: "00",
     selectToken: "USDT",
-  })
+  });
 
-  const { register, watch } = useForm()
+  const { register, watch } = useForm();
 
-  const { account, active } = useWeb3React()
+  const { account, active } = useWeb3React();
 
-  const selectToken = watch("selectToken")
+  const selectToken = watch("selectToken");
 
   const selectedToken = async (Token) => {
     if (Token === "USDT") {
-      console.log("innerState.fuelTotalUSDT", innerState)
+      console.log("innerState.fuelTotalUSDT", innerState);
 
       if (active) {
         try {
-          const userBalance = await ContractUSDT.balanceOf(account)
+          const userBalance = await ContractUSDT.balanceOf(account);
 
-          let totalFee
+          let totalFee;
           if (Number(appState.food.total) > 0) {
-            totalFee = Number(appState.food.total) + 400
+            totalFee = Number(appState.food.total) + 400;
           } else {
-            totalFee = 400
+            totalFee = 400;
           }
 
           setInnerState((draft) => {
-            draft.fuelTotal = "200"
-            draft.captainFee = "200"
-            draft.foodTotal = appState.food.total
-            draft.userBalance = formatUnits(userBalance.toString(), 6)
-            draft.totalFee = totalFee
-            draft.selectToken = "USDT"
-          })
+            draft.fuelTotal = "200";
+            draft.captainFee = "200";
+            draft.foodTotal = appState.food.total;
+            draft.userBalance = formatUnits(userBalance.toString(), 6);
+            draft.totalFee = totalFee;
+            draft.selectToken = "USDT";
+          });
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
       }
     } else if (Token === "NNT") {
-      console.log(Token)
+      console.log(Token);
 
       if (active) {
         try {
-          const userBalance = await ContractNFTilityToken.balanceOf(account)
-          console.log(userBalance)
+          const userBalance = await ContractNFTilityToken.balanceOf(account);
+          console.log(userBalance);
 
-          const ExchangeRatePrice = await ContractNFTilityExchange.price()
+          const ExchangeRatePrice = await ContractNFTilityExchange.price();
 
-          let foodTotal
+          let foodTotal;
           if (Number(appState.food.total) > 0) {
             foodTotal =
-              Number(appState.food.total) * Number(ExchangeRatePrice.toString())
+              Number(appState.food.total) *
+              Number(ExchangeRatePrice.toString());
           } else {
-            foodTotal = 0
+            foodTotal = 0;
           }
 
           const fuelTotal =
-            Number(innerState.fuelTotal) * Number(ExchangeRatePrice.toString())
+            Number(innerState.fuelTotal) * Number(ExchangeRatePrice.toString());
 
           const captainFee =
-            Number(innerState.captainFee) * Number(ExchangeRatePrice.toString())
+            Number(innerState.captainFee) *
+            Number(ExchangeRatePrice.toString());
 
-          const totalFee = foodTotal + fuelTotal + captainFee
+          const totalFee = foodTotal + fuelTotal + captainFee;
 
           setInnerState((draft) => {
-            draft.userBalance = formatUnits(userBalance.toString(), 18)
-            draft.foodTotal = foodTotal
-            draft.fuelTotal = fuelTotal
-            draft.captainFee = captainFee
-            draft.totalFee = totalFee
-            draft.selectToken = "NNT"
-          })
+            draft.userBalance = formatUnits(userBalance.toString(), 18);
+            draft.foodTotal = foodTotal;
+            draft.fuelTotal = fuelTotal;
+            draft.captainFee = captainFee;
+            draft.totalFee = totalFee;
+            draft.selectToken = "NNT";
+          });
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
       }
     }
-  }
+  };
   useMemo(() => {
-    selectedToken(selectToken)
+    selectedToken(selectToken);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectToken])
+  }, [selectToken]);
 
   const calculateUSDT = async () => {
-    console.log("hello from calculateUSDT")
+    console.log("hello from calculateUSDT");
     if (active) {
-      const userBalance = await ContractUSDT.balanceOf(account)
-      console.log(userBalance)
+      const userBalance = await ContractUSDT.balanceOf(account);
+      console.log(userBalance);
 
-      let totalFee
+      let totalFee;
       if (Number(appState.food.total) > 0) {
-        totalFee = Number(appState.food.total) + 400
+        totalFee = Number(appState.food.total) + 400;
       } else {
-        totalFee = 400
+        totalFee = 400;
       }
 
       setInnerState((draft) => {
-        draft.fuelTotal = "200"
-        draft.captainFee = "200"
-        draft.foodTotal = appState.food.total
-        draft.userBalance = formatUnits(userBalance.toString(), 6)
-        draft.totalFee = totalFee
-        draft.selectToken = "USDT"
-      })
+        draft.fuelTotal = "200";
+        draft.captainFee = "200";
+        draft.foodTotal = appState.food.total;
+        draft.userBalance = formatUnits(userBalance.toString(), 6);
+        draft.totalFee = totalFee;
+        draft.selectToken = "USDT";
+      });
     }
-  }
+  };
 
   useMemo(() => {
-    calculateUSDT()
+    calculateUSDT();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, appState.food.total])
+  }, [account, appState.food.total]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -490,5 +492,5 @@ export default function Popup({ open, setOpen, state }) {
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }

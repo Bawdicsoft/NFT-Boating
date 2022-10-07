@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react"
-import { useImmer } from "use-immer"
-import { useParams, Link } from "react-router-dom"
-import axios from "axios"
-import { useContextAPI } from "../../../ContextAPI"
-import { ethers } from "ethers"
-import { formatEther } from "ethers/lib/utils"
-import { useWeb3React } from "@web3-react/core"
-import { db } from "../../../DB/firebase-config"
-import { doc, getDoc } from "firebase/firestore"
-import { Injected } from "../../../Comp/Wallets/Connectors"
-import Maintenance from "./Maintenance"
-import WalletSide from "../../../Comp/Header/WalletSide"
+import { useEffect, useState } from "react";
+import { useImmer } from "use-immer";
+import { useParams, Link } from "react-router-dom";
+import axios from "axios";
+import { useContextAPI } from "../../../ContextAPI";
+import { ethers } from "ethers";
+import { formatEther } from "ethers/lib/utils";
+import { useWeb3React } from "@web3-react/core";
+import { db } from "../../../DB/firebase-config";
+import { doc, getDoc } from "firebase/firestore";
+import { Injected } from "../../../Comp/Wallets/Connectors";
+import Maintenance from "./Maintenance";
+import WalletSide from "../../../Comp/Header/WalletSide";
 
 export default function NFT() {
-  const { Contract, id } = useParams()
+  const { Contract, id } = useParams();
   const { NFTYacht, provider, ContractFactory, UserData, ContractDeploy } =
-    useContextAPI()
-  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider)
-  const { account, active, activate } = useWeb3React()
+    useContextAPI();
+  const ContractNFTYacht = new ethers.Contract(Contract, NFTYacht, provider);
+  const { account, active, activate } = useWeb3React();
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const [state, setState] = useImmer({
     imageSrc: null,
@@ -34,46 +34,46 @@ export default function NFT() {
     },
     offer: [],
     isInserted: false,
-  })
+  });
 
-  console.log({ state })
+  console.log({ state });
 
   const fetch = async () => {
-    let contractData
+    let contractData;
     try {
-      contractData = await ContractDeploy.contractDitals(Contract)
+      contractData = await ContractDeploy.contractDitals(Contract);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    const name = contractData.name.toString()
-    const symbol = contractData.symbol.toString()
-    const baseURI = contractData.baseURI.toString()
+    const name = contractData.name.toString();
+    const symbol = contractData.symbol.toString();
+    const baseURI = contractData.baseURI.toString();
 
     setState((draft) => {
-      draft.contract.name = name
-      draft.contract.symbol = symbol
-    })
+      draft.contract.name = name;
+      draft.contract.symbol = symbol;
+    });
 
-    const ownerOf = await ContractNFTYacht.ownerOf(id)
-    const BookedDate = await ContractFactory.BookedDate(Contract, id)
+    const ownerOf = await ContractNFTYacht.ownerOf(id);
+    const BookedDate = await ContractFactory.BookedDate(Contract, id);
 
-    var t = new Date(1970, 0, 1) // Epoch
-    t.setSeconds(BookedDate[1].toString()).toLocaleString()
+    var t = new Date(1970, 0, 1); // Epoch
+    t.setSeconds(BookedDate[1].toString()).toLocaleString();
 
-    console.log(Boolean(BookedDate.bookedTime_.toString() > 0))
+    console.log(Boolean(BookedDate.bookedTime_.toString() > 0));
 
     setState((draft) => {
-      draft.contract.isOwner = ownerOf === account
-      draft.contract.isBooked = Boolean(BookedDate.bookedTime_.toString() > 0)
-      draft.contract.bookedDate = t.toString()
-    })
+      draft.contract.isOwner = ownerOf === account;
+      draft.contract.isBooked = Boolean(BookedDate.bookedTime_.toString() > 0);
+      draft.contract.bookedDate = t.toString();
+    });
 
-    const Offer = await ContractFactory._offers(Contract, id)
+    const Offer = await ContractFactory._offers(Contract, id);
 
     if (Boolean(Offer.userID.toString() > 0)) {
-      var tt = new Date(1970, 0, 1) // Epoch
-      tt.setSeconds(Offer.Time.toString()).toLocaleString()
+      var tt = new Date(1970, 0, 1); // Epoch
+      tt.setSeconds(Offer.Time.toString()).toLocaleString();
 
       const data = {
         id: Offer.id.toString(),
@@ -83,69 +83,69 @@ export default function NFT() {
         offeredDate: Offer.offeredDate.toString(),
         user: Offer.User,
         contract: Offer.Contract,
-      }
+      };
 
-      console.log(data)
+      console.log(data);
 
       setState((draft) => {
-        draft.offer.push(data)
-      })
+        draft.offer.push(data);
+      });
     }
 
     const BookedIsInserted = await ContractFactory.BookedIsInserted(
       Contract,
       id
-    )
-    console.log(BookedIsInserted)
+    );
+    console.log(BookedIsInserted);
 
     if (BookedIsInserted) {
-      const _newYear = await ContractFactory._newYear()
+      const _newYear = await ContractFactory._newYear();
       const maintenanceFeePad = await ContractFactory._maintenanceFeePad(
         Contract,
         _newYear,
         id
-      )
+      );
       if (!maintenanceFeePad) {
         setState((draft) => {
-          draft.isInserted = true
-        })
+          draft.isInserted = true;
+        });
       }
     }
-  }
-  const [maintenanceOpen, setMaintenanceOpen] = useState(true)
+  };
+  const [maintenanceOpen, setMaintenanceOpen] = useState(true);
 
   useEffect(() => {
     if (active) {
-      fetch()
+      fetch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account])
+  }, [account]);
 
   useEffect(() => {
     const fetchContractInfo = async () => {
-      const docRef = doc(db, "ContractInfo", Contract)
-      const docSnap = await getDoc(docRef)
+      const docRef = doc(db, "ContractInfo", Contract);
+      const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data())
+        console.log("Document data:", docSnap.data());
         setState((e) => {
-          e.ContractInfo = docSnap.data()
-        })
+          e.ContractInfo = docSnap.data();
+        });
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!")
+        console.log("No such document!");
       }
-    }
-    fetchContractInfo()
-  }, [Contract])
+    };
+    fetchContractInfo();
+  }, [Contract]);
 
   const cancelBooking = async (Contract, id) => {
     try {
-      await ContractFactory.cancelBooking(Contract, id)
+      await ContractFactory.cancelBooking(Contract, id);
 
       const Mail = {
         fromName: "NFT Boating",
-        from: "nabeelatdappvert@gmail.com",
+        from: `${process.env.REACT_APP_EMAIL}`,
         to: `${process.env.REACT_APP_EMAIL}, ${state.ContractInfo.email}, ${UserData.email}`,
         subject: "user has cancelled the booking",
         text: `user has cancelled the booking \n
@@ -192,31 +192,31 @@ export default function NFT() {
           </body>
         </html>
         `,
-      }
+      };
       const res = await axios.post(
-        "https://nft-boating-mail.herokuapp.com/email",
+        `${process.env.REACT_APP_EMAIL_END_URL}`,
         Mail
-      )
-      console.log(res.data.msg)
+      );
+      console.log(res.data.msg);
 
       setState((draft) => {
-        draft.isBooked = false
-      })
+        draft.isBooked = false;
+      });
 
-      fetch()
+      fetch();
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const handelAcceptOffer = async (contract, id) => {
     await ContractFactory.acceptOffer(contract, id)
       .then(async (r) => {
-        console.log(r)
+        console.log(r);
 
         const Mail = {
           fromName: "NFT Boating",
-          from: "nabeelatdappvert@gmail.com",
+          from: `${process.env.REACT_APP_EMAIL}`,
           to: `${process.env.REACT_APP_EMAIL}, ${state.ContractInfo.email}, ${UserData.email}`,
           subject: "user has accepted the offer",
           text: `user has accepted the offer price \n
@@ -271,17 +271,17 @@ export default function NFT() {
             </body>
           </html>
           `,
-        }
+        };
         const res = await axios.post(
-          "https://nft-boating-mail.herokuapp.com/email",
+          `${process.env.REACT_APP_EMAIL_END_URL}`,
           Mail
-        )
-        console.log(res.data.msg)
+        );
+        console.log(res.data.msg);
 
-        fetch()
+        fetch();
       })
-      .catch((e) => e.reason)
-  }
+      .catch((e) => e.reason);
+  };
 
   return (
     <>
@@ -435,7 +435,7 @@ export default function NFT() {
                                       </button>
                                     </td>
                                   </tr>
-                                )
+                                );
                               })}
                             </tbody>
                           </table>
@@ -450,5 +450,5 @@ export default function NFT() {
         </main>
       </div>
     </>
-  )
+  );
 }

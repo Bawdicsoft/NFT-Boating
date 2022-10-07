@@ -1,50 +1,50 @@
-import { useForm } from "react-hook-form"
-import { useContextAPI } from "./../../ContextAPI"
-import { useWeb3React } from "@web3-react/core"
-import { useImmer } from "use-immer"
-import { useNavigate } from "react-router-dom"
-import { Injected } from "./../../Comp/Wallets/Connectors"
+import { useForm } from "react-hook-form";
+import { useContextAPI } from "./../../ContextAPI";
+import { useWeb3React } from "@web3-react/core";
+import { useImmer } from "use-immer";
+import { useNavigate } from "react-router-dom";
+import { Injected } from "./../../Comp/Wallets/Connectors";
 
 export default function AddWhitelistAddress() {
-  const { active, activate } = useWeb3React()
+  const { active, activate } = useWeb3React();
 
-  const { ContractDeploy } = useContextAPI()
-  const navigate = useNavigate()
+  const { ContractDeploy } = useContextAPI();
+  const navigate = useNavigate();
 
   const [state, setState] = useImmer({
     submitBtnDisable: false,
-  })
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   const onSubmit = async (data) => {
-    console.log({ data })
+    console.log({ data });
 
     setState((draft) => {
-      draft.submitBtnDisable = true
-    })
+      draft.submitBtnDisable = true;
+    });
 
     try {
-      await ContractDeploy.addAddressToWhitelist(data.address)
+      await ContractDeploy.addAddressToWhitelist(data.address);
     } catch (e) {
       setState((draft) => {
-        draft.submitBtnDisable = false
-      })
+        draft.submitBtnDisable = false;
+      });
     }
 
     ContractDeploy.on("deploy_", (_Contract) => {
-      navigate(`/contract/${_Contract}`)
-    })
-  }
-  console.log(errors)
+      navigate(`/contract/${_Contract}`);
+    });
+  };
+  console.log(errors);
 
   const connectWithMetaMask = async () => {
-    await activate(Injected)
-  }
+    await activate(Injected);
+  };
 
   return (
     <div className="CreateNew min-h-full">
@@ -96,7 +96,7 @@ export default function AddWhitelistAddress() {
                           type="submit"
                           disabled={state.submitBtnDisable}
                         >
-                          Add Whitelist Address
+                          Add to white list
                         </button>
                       )}
                     </div>
@@ -108,5 +108,5 @@ export default function AddWhitelistAddress() {
         </div>
       </main>
     </div>
-  )
+  );
 }

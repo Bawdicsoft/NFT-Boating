@@ -83,7 +83,7 @@ export default function ListBoat() {
       if (state.markerMap.address !== location[0] && location[0] !== "") {
         try {
           const res = await axios.get(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${location[0]}&key=AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k`
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${location[0]}&key=${process.env.REACT_APP_MAPKEY}`
           );
 
           if (res.data.status === "OK") {
@@ -240,7 +240,7 @@ export default function ListBoat() {
 
             const Mail = {
               fromName: "NFT Boating",
-              from: "nabeelatdappvert@gmail.com",
+              from: `${process.env.REACT_APP_EMAIL}`,
               to: `${process.env.REACT_APP_EMAIL}, ${UserData.email}`,
               subject: "You have new request from NFT Boation",
               text: `
@@ -398,7 +398,7 @@ export default function ListBoat() {
             };
 
             const res = await axios.post(
-              "https://nft-boating-mail.herokuapp.com/email",
+              `${process.env.REACT_APP_EMAIL_END_URL}`,
               Mail
             );
             console.log(res.data);
@@ -816,13 +816,13 @@ export default function ListBoat() {
                             <div className="col-6" style={{ height: "350px" }}>
                               <GoogleMapReact
                                 bootstrapURLKeys={{
-                                  key: "AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k",
+                                  key: `${process.env.REACT_APP_MAPKEY}`,
                                 }}
                                 center={{
                                   lat: state.markerMap.lat,
                                   lng: state.markerMap.lng,
                                 }}
-                                defaultZoom={5}
+                                defaultZoom={10}
                               >
                                 <Marker
                                   lat={state.markerMap.lat}
@@ -1050,22 +1050,20 @@ export default function ListBoat() {
 const Marker = (props) => {
   const { address } = props;
   return (
-    <>
-      <div className="relative flex flex-col items-center group">
+    <div className="relative flex flex-col items-center group">
+      <div
+        className="w-5 h-5"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 50 50"
+        fill="currentColor"
+      >
         <div
-          className="w-5 h-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 50 50"
-          fill="currentColor"
-        >
-          <div
-            className={`pin`}
-            style={{ backgroundColor: "red", cursor: "pointer" }}
-            title={address}
-          />
-          <div className="pulse" />
-        </div>
+          className={`pin`}
+          style={{ backgroundColor: "red", cursor: "pointer" }}
+          title={address}
+        />
+        <div className="pulse" />
       </div>
-    </>
+    </div>
   );
 };

@@ -13,7 +13,6 @@ let corsOptions = {
   origin: [
     "https://nftboating.io",
     "http://nftboating.io",
-    "http://localhost:3010",
     "http://localhost:3000",
   ],
   optionsSuccessStatus: 200,

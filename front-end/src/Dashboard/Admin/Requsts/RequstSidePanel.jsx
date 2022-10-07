@@ -1,34 +1,33 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react"
-import axios from "axios"
-import { Dialog, Transition } from "@headlessui/react"
-import { XIcon } from "@heroicons/react/outline"
-import { useContextAPI } from "../../../ContextAPI"
-import { doc, deleteDoc } from "firebase/firestore"
-import { db } from "../../../DB/firebase-config"
-import { useImmer } from "use-immer"
-import { Carousel } from "flowbite-react"
-import Map from "../../../Comp/Map/Map"
+import { Fragment } from "react";
+import axios from "axios";
+import { Dialog, Transition } from "@headlessui/react";
+import { XIcon } from "@heroicons/react/outline";
+import { useContextAPI } from "../../../ContextAPI";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../../DB/firebase-config";
+import { useImmer } from "use-immer";
+import { Carousel } from "flowbite-react";
+import Map from "../../../Comp/Map/Map";
 
 export default function RequstSidePanel({ open, setOpen, state, setState }) {
-  const { ContractDeploy, UserData } = useContextAPI()
-  console.log(state.request)
+  const { ContractDeploy, UserData } = useContextAPI();
+  console.log(state.request);
 
   const [statep, setStatep] = useImmer({
     err: "",
-  })
+  });
 
   const addToWhiteList = async () => {
     try {
-      await ContractDeploy.addAddressToWhitelist(state.request.account)
-      await deleteDoc(doc(db, "Request", state.id))
+      await ContractDeploy.addAddressToWhitelist(state.request.account);
+      await deleteDoc(doc(db, "Request", state.id));
 
       const Mail = {
         fromName: "NFT Boating",
-        from: "nabeelatdappvert@gmail.com",
+        from: `${process.env.REACT_APP_EMAIL}`,
         to: `${UserData.email}`,
         subject: "your request was accepted",
-        text: `http://localhost:3010/create-new`,
         html: `<!DOCTYPE html>
         <html lang="en">
           <head>
@@ -77,41 +76,41 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
           </body>
         </html>
         `,
-      }
+      };
       const res = await axios.post(
-        "https://nft-boating-mail.herokuapp.com/email",
+        `${process.env.REACT_APP_EMAIL_END_URL}`,
         Mail
-      )
-      console.log(res.data.msg)
+      );
+      console.log(res.data.msg);
 
       setState((e) => {
         if (state.index > -1) {
-          e.requests.splice(state.index, 1)
+          e.requests.splice(state.index, 1);
         }
-      })
-      setOpen(false)
+      });
+      setOpen(false);
     } catch (e) {
-      console.log(e.reason)
+      console.log(e.reason);
 
       if (e.reason === "execution reverted: !whitelist") {
         setStatep((e) => {
-          e.err = "Already Whitelisted"
-        })
+          e.err = "Already Whitelisted";
+        });
       }
       if (e.reason === "execution reverted: !owner") {
         setStatep((e) => {
-          e.err = "If you owner please change your account to Owner Account"
-        })
+          e.err = "If you owner please change your account to Owner Account";
+        });
       }
     }
-  }
+  };
 
   const deleteMyDoc = async () => {
-    await deleteDoc(doc(db, "Request", state.id))
+    await deleteDoc(doc(db, "Request", state.id));
 
     const Mail = {
       fromName: "NFT Boating",
-      from: "nabeelatdappvert@gmail.com",
+      from: `${process.env.REACT_APP_EMAIL}`,
       to: `${UserData.email}`,
       subject: "Your request was canceled",
       text: `Your request was canceled`,
@@ -157,20 +156,20 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
         </body>
       </html>
       `,
-    }
+    };
     const res = await axios.post(
-      "https://nft-boating-mail.herokuapp.com/email",
+      `${process.env.REACT_APP_EMAIL_END_URL}`,
       Mail
-    )
-    console.log(res.data.msg)
+    );
+    console.log(res.data.msg);
 
     setState((e) => {
       if (state.index > -1) {
-        e.requests.splice(state.index, 1)
+        e.requests.splice(state.index, 1);
       }
-    })
-    setOpen(false)
-  }
+    });
+    setOpen(false);
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -298,5 +297,5 @@ export default function RequstSidePanel({ open, setOpen, state, setState }) {
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }

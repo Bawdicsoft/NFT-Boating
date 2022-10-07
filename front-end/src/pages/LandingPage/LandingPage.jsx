@@ -3,9 +3,9 @@ import {
   ClockIcon,
   CalendarIcon,
   UserGroupIcon,
-} from "@heroicons/react/outline"
-import { Link } from "react-router-dom"
-import heroImg from "./../../Assets/8763487326873785.webp"
+} from "@heroicons/react/outline";
+import { Link } from "react-router-dom";
+import heroImg from "./../../Assets/8763487326873785.webp";
 
 const features = [
   {
@@ -32,7 +32,7 @@ const features = [
       "With the purchase of one NFT boating membership, you get 5 years' worth of boat days for the price of one. That means 4 free boat days in the upcoming 4 years. That's more than twice as much fun!.",
     icon: BadgeCheckIcon,
   },
-]
+];
 
 export default function LandingPage() {
   return (
@@ -162,5 +162,5 @@ export default function LandingPage() {
         </div>
       </div>
     </>
-  )
+  );
 }

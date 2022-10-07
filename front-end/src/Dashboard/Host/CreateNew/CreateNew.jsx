@@ -1,19 +1,19 @@
-import { useForm } from "react-hook-form"
-import { useContextAPI } from "./../../../ContextAPI"
-import { useWeb3React } from "@web3-react/core"
-import { useImmer } from "use-immer"
-import { Link, useNavigate } from "react-router-dom"
-import { Injected } from "./../../../Comp/Wallets/Connectors"
-import { useEffect } from "react"
-import axios from "axios"
-import { db } from "./../../../DB/firebase-config"
-import { deleteField, doc, getDoc, setDoc } from "firebase/firestore"
+import { useForm } from "react-hook-form";
+import { useContextAPI } from "./../../../ContextAPI";
+import { useWeb3React } from "@web3-react/core";
+import { useImmer } from "use-immer";
+import { Link, useNavigate } from "react-router-dom";
+import { Injected } from "./../../../Comp/Wallets/Connectors";
+import { useEffect } from "react";
+import axios from "axios";
+import { db } from "./../../../DB/firebase-config";
+import { deleteField, doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function CreateNew() {
-  const { account, active, activate } = useWeb3React()
+  const { account, active, activate } = useWeb3React();
   const { ContractDeploy, UserData, updateDocRequests, fetchUser } =
-    useContextAPI()
-  const navigate = useNavigate()
+    useContextAPI();
+  const navigate = useNavigate();
 
   const [State, SetState] = useImmer({
     SetBtnDisable: false,
@@ -22,79 +22,79 @@ export default function CreateNew() {
     request: {},
     isWhiteListed: true,
     isRightAccount: true,
-  })
+  });
 
-  console.log(State.isWhiteListed, State.isRightAccount)
+  console.log(State.isWhiteListed, State.isRightAccount);
 
   const {
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   const fetchUserData = async () => {
-    const docRef = doc(db, "users", UserData.id)
-    const docSnap = await getDoc(docRef)
+    const docRef = doc(db, "users", UserData.id);
+    const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data().request)
+      console.log("Document data:", docSnap.data().request);
       if (docSnap.data().request !== undefined) {
         SetState((d) => {
-          d.request = docSnap.data().request
-          d.haveRequest = true
-        })
+          d.request = docSnap.data().request;
+          d.haveRequest = true;
+        });
       } else {
         SetState((d) => {
-          d.haveRequest = false
-        })
+          d.haveRequest = false;
+        });
       }
     } else {
       // doc.data() will be undefined in this case
-      console.log("No such document!")
+      console.log("No such document!");
       SetState((d) => {
-        d.haveRequest = false
-      })
+        d.haveRequest = false;
+      });
     }
-  }
+  };
 
   useEffect(() => {
     if (UserData === undefined) {
-      return
+      return;
     } else {
-      fetchUserData()
+      fetchUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (UserData === undefined) {
-      return
+      return;
     } else {
-      fetchUserData()
+      fetchUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [UserData])
+  }, [UserData]);
 
   const isWhiteListed = async () => {
-    const whitelist = await ContractDeploy.whitelist(State.request.account)
-    console.log("isWhiteListed", whitelist)
+    const whitelist = await ContractDeploy.whitelist(State.request.account);
+    console.log("isWhiteListed", whitelist);
 
     SetState((e) => {
-      e.isWhiteListed = whitelist
-      e.isRightAccount = Boolean(State.request.account === account)
-    })
-  }
+      e.isWhiteListed = whitelist;
+      e.isRightAccount = Boolean(State.request.account === account);
+    });
+  };
 
   useEffect(() => {
-    isWhiteListed()
+    isWhiteListed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account])
+  }, [account]);
 
   const onSubmit = async (data) => {
-    console.log("State.request", State.request)
+    console.log("State.request", State.request);
 
     SetState((draft) => {
-      draft.SetBtnDisable = true
-    })
+      draft.SetBtnDisable = true;
+    });
 
     try {
       await ContractDeploy.deploy(
@@ -104,33 +104,33 @@ export default function CreateNew() {
         State.request.amount,
         State.request.account,
         `ipfs://${State.request.IpfsHash}`
-      )
+      );
     } catch (e) {
-      console.log(e)
+      console.log(e);
       SetState((draft) => {
-        draft.SetBtnDisable = false
-        draft.executionReverted = true
-      })
+        draft.SetBtnDisable = false;
+        draft.executionReverted = true;
+      });
     }
 
     ContractDeploy.on("deploy_", async (_Contract) => {
       try {
-        await setDoc(doc(db, "ContractInfo", _Contract), State.request)
+        await setDoc(doc(db, "ContractInfo", _Contract), State.request);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
 
       try {
         await updateDocRequests("users", {
           request: deleteField(),
-        })
+        });
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
 
       const Mail = {
         fromName: "NFT Boating",
-        from: "nabeelatdappvert@gmail.com",
+        from: `${process.env.REACT_APP_EMAIL}`,
         to: `${process.env.REACT_APP_EMAIL}, ${UserData.email}`,
         subject: "New Smart Contract Deployed",
         text: `New Smart Contract Deployed \n
@@ -184,22 +184,22 @@ export default function CreateNew() {
           </body>
         </html>
         `,
-      }
+      };
       const res = await axios.post(
-        "https://nft-boating-mail.herokuapp.com/email",
+        `${process.env.REACT_APP_EMAIL_END_URL}`,
         Mail
-      )
-      console.log(res.data.msg)
+      );
+      console.log(res.data.msg);
 
-      fetchUser()
-      navigate(`/Boat/${_Contract}`)
-    })
-  }
-  console.log(errors)
+      fetchUser();
+      navigate(`/Boat/${_Contract}`);
+    });
+  };
+  console.log(errors);
 
   const connectWithMetaMask = async () => {
-    await activate(Injected)
-  }
+    await activate(Injected);
+  };
 
   return (
     <div className="CreateNew min-h-full">
@@ -319,5 +319,5 @@ export default function CreateNew() {
         </div>
       </main>
     </div>
-  )
+  );
 }
