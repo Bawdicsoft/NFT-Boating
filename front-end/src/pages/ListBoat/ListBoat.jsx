@@ -1,62 +1,62 @@
-import { useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
-import { useImmer } from "use-immer"
-import QRCode from "react-qr-code"
-import logo from "./../../Assets/logo.png"
-import { collection, addDoc } from "firebase/firestore"
-import { Link, useNavigate } from "react-router-dom"
-import axios from "axios"
-import { useWeb3React } from "@web3-react/core"
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
-import { db, storage } from "../../DB/firebase-config"
-import { useContextAPI } from "../../ContextAPI"
-import html2canvas from "html2canvas"
-import GoogleMapReact from "google-map-react"
-import { Carousel } from "flowbite-react"
-import WalletSide from "../../Comp/Header/WalletSide"
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useImmer } from "use-immer";
+import QRCode from "react-qr-code";
+import logo from "./../../Assets/logo.png";
+import { collection, addDoc } from "firebase/firestore";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useWeb3React } from "@web3-react/core";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { db, storage } from "../../DB/firebase-config";
+import { useContextAPI } from "../../ContextAPI";
+import html2canvas from "html2canvas";
+import GoogleMapReact from "google-map-react";
+import { Carousel } from "flowbite-react";
+import WalletSide from "../../Comp/Header/WalletSide";
 
 async function uploadImg({ uid, name, fileName, file }) {
   return new Promise((resolve, reject) => {
-    console.log("Uploading image ...")
+    console.log("Uploading image ...");
 
     const storageRef = ref(
       storage,
       `user-uploads/${uid}/images/${name}/${fileName}`
-    )
-    const uploadTask = uploadBytesResumable(storageRef, file)
+    );
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
       "state_changed",
       (snapshot) => {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        )
-        console.log("Upload is " + progress + "% done")
+        );
+        console.log("Upload is " + progress + "% done");
       },
       (error) => {
-        console.error(error)
-        reject(error)
+        console.error(error);
+        reject(error);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((imgURL) => {
-          console.log(`uploaded image:`, imgURL)
-          resolve(imgURL)
-        })
+          console.log(`uploaded image:`, imgURL);
+          resolve(imgURL);
+        });
       }
-    )
-  })
+    );
+  });
 }
 
 export default function ListBoat() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const { updateDocRequests, UserData } = useContextAPI()
+  const { updateDocRequests, UserData } = useContextAPI();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   const [state, setState] = useImmer({
     btnLoading: false,
@@ -71,92 +71,92 @@ export default function ListBoat() {
       address: null,
       status: "null",
     },
-  })
-  console.log(state.gallery, "state.gallery")
+  });
+  console.log(state.gallery, "state.gallery");
 
-  const { account } = useWeb3React()
-  const [open, setOpen] = useState(false)
+  const { account } = useWeb3React();
+  const [open, setOpen] = useState(false);
 
-  const location = watch(["location"])
+  const location = watch(["location"]);
   useMemo(() => {
     const runMap = async () => {
       if (state.markerMap.address !== location[0] && location[0] !== "") {
         try {
           const res = await axios.get(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${location[0]}&key=AIzaSyCtSZl9y1AEVHZhs0wrhhtmK7RunH71K5k`
-          )
+          );
 
           if (res.data.status === "OK") {
-            console.log("OK")
+            console.log("OK");
             setState((e) => {
-              e.markerMap.lat = res.data.results[0].geometry.location.lat
-              e.markerMap.lng = res.data.results[0].geometry.location.lng
-              e.markerMap.address = location[0]
-              e.markerMap.status = res.data.status
-            })
+              e.markerMap.lat = res.data.results[0].geometry.location.lat;
+              e.markerMap.lng = res.data.results[0].geometry.location.lng;
+              e.markerMap.address = location[0];
+              e.markerMap.status = res.data.status;
+            });
           }
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
       }
-    }
-    runMap()
+    };
+    runMap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location])
+  }, [location]);
 
-  const featuredImage = watch(["featuredImage"])
+  const featuredImage = watch(["featuredImage"]);
   useMemo(() => {
     if (featuredImage[0] !== undefined) {
       if (featuredImage[0].length > 0) {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.addEventListener("load", () => {
           setState((e) => {
-            e.featuredImageData = reader.result
-          })
-        })
-        reader.readAsDataURL(featuredImage[0][0])
+            e.featuredImageData = reader.result;
+          });
+        });
+        reader.readAsDataURL(featuredImage[0][0]);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [featuredImage])
+  }, [featuredImage]);
 
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState([]);
   const handelGallery = (e) => {
-    console.log(e.target.files, "gallery")
+    console.log(e.target.files, "gallery");
 
     if (e.target.files.length > 0) {
-      setImages([...e.target.files])
+      setImages([...e.target.files]);
       setState((e) => {
-        e.galleryData = []
-      })
+        e.galleryData = [];
+      });
       for (let i = 0; i < e.target.files.length; i++) {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.addEventListener("load", () => {
           setState((e) => {
-            e.galleryData.push(reader.result)
-          })
-        })
-        reader.readAsDataURL(e.target.files[i])
+            e.galleryData.push(reader.result);
+          });
+        });
+        reader.readAsDataURL(e.target.files[i]);
       }
     }
-  }
+  };
 
   const onSubmit = async (e) => {
-    console.table(e)
+    console.table(e);
 
     if (state.markerMap.status === "OK") {
       setState((draft) => {
-        draft.btnLoading = true
-      })
+        draft.btnLoading = true;
+      });
 
       html2canvas(document.getElementById("HTML-IMG"), {
         allowTaint: true,
         useCORS: true,
       }).then(async (canvas) => {
-        const API_KEY = process.env.REACT_APP_API_KEY
-        const API_SECRET = process.env.REACT_APP_API_SECRET
+        const API_KEY = process.env.REACT_APP_API_KEY;
+        const API_SECRET = process.env.REACT_APP_API_SECRET;
         const URLforpinJSONtoIPFS =
-          process.env.REACT_APP_URL_FOR_PIN_JSON_TO_IPFS
+          process.env.REACT_APP_URL_FOR_PIN_JSON_TO_IPFS;
 
         axios
           .post(
@@ -174,28 +174,28 @@ export default function ListBoat() {
             }
           )
           .then(async (response) => {
-            const file = e.featuredImage[0]
-            const name = e.name
-            const fileName = file.name
+            const file = e.featuredImage[0];
+            const name = e.name;
+            const fileName = file.name;
             const featuredImageURL = await uploadImg({
               uid: UserData.uid,
               name,
               fileName,
               file,
-            })
+            });
 
-            let gallery = []
+            let gallery = [];
             for (let i = 0; i < images.length; i++) {
-              const file = images[i]
-              const name = e.name
-              const fileName = file.name
+              const file = images[i];
+              const name = e.name;
+              const fileName = file.name;
               const imagesURL = await uploadImg({
                 uid: UserData.uid,
                 name,
                 fileName,
                 file,
-              })
-              gallery.push(imagesURL)
+              });
+              gallery.push(imagesURL);
             }
 
             const request = {
@@ -219,23 +219,23 @@ export default function ListBoat() {
               gallery: gallery,
               IpfsHash: response.data.IpfsHash,
               amount: e.amount,
-            }
+            };
 
             try {
               await addDoc(collection(db, "Request"), {
                 request,
-              })
+              });
             } catch (error) {
-              console.error(error)
+              console.error(error);
             }
 
             try {
               await updateDocRequests("users", {
                 request,
                 host: true,
-              })
+              });
             } catch (error) {
-              console.error(error)
+              console.error(error);
             }
 
             const Mail = {
@@ -395,28 +395,28 @@ export default function ListBoat() {
                   </body>
                 </html>
                 `,
-            }
+            };
 
             const res = await axios.post(
               "https://nft-boating-mail.herokuapp.com/email",
               Mail
-            )
-            console.log(res.data)
+            );
+            console.log(res.data);
 
-            navigate(`/create-new`)
+            navigate(`/create-new`);
           })
           .catch((error) => {
-            console.error(error)
+            console.error(error);
             setState((e) => {
-              e.btnLoading = false
-            })
-          })
-      })
+              e.btnLoading = false;
+            });
+          });
+      });
     } else {
-      console.error("Please Check Your address")
+      console.error("Please Check Your address");
     }
-  }
-  console.log(errors)
+  };
+  console.log(errors);
 
   if (UserData?.request !== undefined) {
     return (
@@ -436,7 +436,7 @@ export default function ListBoat() {
           </div>
         </header>
       </div>
-    )
+    );
   }
 
   return (
@@ -882,7 +882,10 @@ export default function ListBoat() {
                                       alt=""
                                     />
                                     <div className="px-1 py-1 bg-white">
-                                      <QRCode value={"Hello"} size={70} />
+                                      <QRCode
+                                        value={"https://nftboating.io/"}
+                                        size={70}
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -1041,11 +1044,11 @@ export default function ListBoat() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
 const Marker = (props) => {
-  const { address } = props
+  const { address } = props;
   return (
     <>
       <div className="relative flex flex-col items-center group">
@@ -1064,5 +1067,5 @@ const Marker = (props) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
