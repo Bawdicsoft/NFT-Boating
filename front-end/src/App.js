@@ -54,6 +54,8 @@ import StateContext from "./StateContext"
 import DispatchContext from "./DispatchContext"
 import { useImmerReducer } from "use-immer"
 import { useWeb3React } from "@web3-react/core"
+import TermsAndConditions from "./pages/TermsAndConditions"
+import PrivacyPolicy from "./pages/PrivacyPolicy"
 
 export default function App() {
   const { active, chainId } = useWeb3React()
@@ -115,6 +117,22 @@ export default function App() {
                 element={
                   <Suspense fallback={<Loading />}>
                     <Boat />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/terms-and-conditions"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <TermsAndConditions />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/privacy-policy"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <PrivacyPolicy />
                   </Suspense>
                 }
               />
