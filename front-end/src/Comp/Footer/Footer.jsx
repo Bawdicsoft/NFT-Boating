@@ -14,6 +14,12 @@ const Footer = () => {
             <a href="https://bawdicsoft.com/">Bawdic Soft</a>
           </span>
           <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
+            <a className="text-sm" href="/privacy-policy">
+              Privacy Policy
+            </a>
+            <a className="text-sm" href="/terms-and-conditions">
+              Term & Conditions
+            </a>
             <a
               href="https://twitter.com/NFTboating"
               target="_blank"
