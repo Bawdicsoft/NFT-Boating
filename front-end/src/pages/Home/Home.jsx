@@ -1,10 +1,10 @@
-import { useImmer } from "use-immer";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../DB/firebase-config";
-import GoogleMapReact from "google-map-react";
-import axios from "axios";
+import { useImmer } from "use-immer"
+import { useEffect } from "react"
+import { Link } from "react-router-dom"
+import { collection, getDocs } from "firebase/firestore"
+import { db } from "../../DB/firebase-config"
+import GoogleMapReact from "google-map-react"
+import axios from "axios"
 
 export default function Home() {
   const [state, setState] = useImmer({
@@ -14,41 +14,46 @@ export default function Home() {
     contractCounter: null,
     isLoading: true,
     hoveredName: "",
-  });
+  })
 
   useEffect(() => {
     const run = async () => {
-      const querySnapshot = await getDocs(collection(db, "ContractInfo"));
+      const querySnapshot = await getDocs(collection(db, "ContractInfo"))
 
       querySnapshot.forEach(async (doc) => {
-        const res = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${
-            doc.data().location
-          }&key=${process.env.REACT_APP_MAPKEY}`
-        );
+        let location = {}
+        try {
+          const res = await axios.get(
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${doc.data().location}&key=${
+              process.env.REACT_APP_MAPKEY
+            }`
+          )
 
-        const location = {
-          lat: res.data.results[0].geometry.location.lat,
-          lng: res.data.results[0].geometry.location.lng,
-          name: doc.data().name,
-        };
+          location = {
+            lat: res.data.results[0].geometry.location.lat,
+            lng: res.data.results[0].geometry.location.lng,
+            name: doc.data().name,
+          }
+        } catch (error) {
+          console.log(error)
+        }
 
         setState((d) => {
-          d.boats.push(doc.data());
-          d.locations.push(location);
-          d.boatsID.push(doc.id);
-          d.isLoading = false;
-        });
-      });
+          d.boats.push(doc.data())
+          d.locations.push(location)
+          d.boatsID.push(doc.id)
+          d.isLoading = false
+        })
+      })
 
       if (state.boats.length === 0) {
         setState((d) => {
-          d.isLoading = false;
-        });
+          d.isLoading = false
+        })
       }
-    };
-    run();
-  }, []);
+    }
+    run()
+  }, [])
 
   return (
     <div className="bg-white">
@@ -56,17 +61,15 @@ export default function Home() {
         <div className=" mb-20 text-center">
           <h1 className="mb-3 font-bold text-5xl ">Boat Rentals</h1>
           <p className="max-w-3xl mx-auto text-center">
-            NFT Boating provides the perfect luxury boat rental for your
-            upcoming voyage across the horizon. Our fleet of breathtaking boats
-            will take you to your desired destination in style and comfort. Each
-            of our listed vessels comes equipped with NFT Boating's exclusive
-            service, which can be customized to your choice*.
+            NFT Boating provides the perfect luxury boat rental for your upcoming voyage across the
+            horizon. Our fleet of breathtaking boats will take you to your desired destination in
+            style and comfort. Each of our listed vessels comes equipped with NFT Boating's
+            exclusive service, which can be customized to your choice*.
           </p>
           <p className="max-w-3xl mx-auto text-center">
-            Sign up, browse our rentals, and get one step closer to fulfilling
-            your long-overdue vacation at sea. NFT Boating looks forward to
-            providing you with the best possible experience during your special
-            day. Book now to experience the freedom of NFT Boating!
+            Sign up, browse our rentals, and get one step closer to fulfilling your long-overdue
+            vacation at sea. NFT Boating looks forward to providing you with the best possible
+            experience during your special day. Book now to experience the freedom of NFT Boating!
           </p>
         </div>
 
@@ -97,10 +100,7 @@ export default function Home() {
                             <div>
                               <h3 className="text-lg font-semibold text-gray-700">
                                 <Link to={`/boat/${state.boatsID[index]}`}>
-                                  <span
-                                    aria-hidden="true"
-                                    className="absolute inset-0"
-                                  />
+                                  <span aria-hidden="true" className="absolute inset-0" />
                                   {boat.name}
                                 </Link>
                               </h3>
@@ -142,7 +142,7 @@ export default function Home() {
                         name={location.name}
                         hoveredItem={location.name === state.hoveredName}
                       />
-                    );
+                    )
                   })}
                 </GoogleMapReact>
               </div>
@@ -151,11 +151,11 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 const Marker = (props) => {
-  const { name, hoveredItem } = props;
+  const { name, hoveredItem } = props
   return (
     <div className="relative flex flex-col items-center group">
       <div
@@ -181,5 +181,5 @@ const Marker = (props) => {
         {/* <div className="w-3 h-3 -mt-2 rotate-45 bg-black">hello</div> */}
       </div>
     </div>
-  );
-};
+  )
+}

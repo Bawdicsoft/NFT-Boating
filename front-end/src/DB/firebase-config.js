@@ -1,18 +1,6 @@
 import { initializeApp } from "firebase/app"
-import {
-  GoogleAuthProvider,
-  getAuth,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth"
-import {
-  getFirestore,
-  query,
-  getDocs,
-  collection,
-  where,
-  addDoc,
-} from "firebase/firestore"
+import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth"
+import { getFirestore, query, getDocs, collection, where, addDoc } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -25,6 +13,7 @@ const firebaseConfig = {
   appId: "1:441287601820:web:8e90a7aae953f54fb4c759",
   measurementId: "G-D225S5NJGH",
 }
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)

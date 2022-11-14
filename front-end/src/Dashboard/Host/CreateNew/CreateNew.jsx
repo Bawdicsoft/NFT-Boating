@@ -1,19 +1,19 @@
-import { useForm } from "react-hook-form";
-import { useContextAPI } from "./../../../ContextAPI";
-import { useWeb3React } from "@web3-react/core";
-import { useImmer } from "use-immer";
-import { Link, useNavigate } from "react-router-dom";
-import { Injected } from "./../../../Comp/Wallets/Connectors";
-import { useEffect } from "react";
-import axios from "axios";
-import { db } from "./../../../DB/firebase-config";
-import { deleteField, doc, getDoc, setDoc } from "firebase/firestore";
+import { useForm } from "react-hook-form"
+import { useContextAPI } from "./../../../ContextAPI"
+import { useWeb3React } from "@web3-react/core"
+import { useImmer } from "use-immer"
+import { Link, useNavigate } from "react-router-dom"
+import { Injected } from "./../../../Comp/Wallets/Connectors"
+import { useEffect, useMemo } from "react"
+import axios from "axios"
+import { db } from "./../../../DB/firebase-config"
+import { deleteField, doc, getDoc, setDoc } from "firebase/firestore"
+import { getAddress } from "ethers/lib/utils"
 
 export default function CreateNew() {
-  const { account, active, activate } = useWeb3React();
-  const { ContractDeploy, UserData, updateDocRequests, fetchUser } =
-    useContextAPI();
-  const navigate = useNavigate();
+  const { account, active, library, activate } = useWeb3React()
+  const { ContractDeploy, UserData, updateDocRequests, fetchUser } = useContextAPI()
+  const navigate = useNavigate()
 
   const [State, SetState] = useImmer({
     SetBtnDisable: false,
@@ -22,79 +22,60 @@ export default function CreateNew() {
     request: {},
     isWhiteListed: true,
     isRightAccount: true,
-  });
-
-  console.log(State.isWhiteListed, State.isRightAccount);
+  })
 
   const {
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm()
 
   const fetchUserData = async () => {
-    const docRef = doc(db, "users", UserData.id);
-    const docSnap = await getDoc(docRef);
+    const docRef = doc(db, "users", UserData.id)
+    const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data().request);
       if (docSnap.data().request !== undefined) {
+        try {
+          const whitelist = await ContractDeploy.whitelist(docSnap.data().request.account)
+
+          SetState((e) => {
+            e.isWhiteListed = whitelist
+            e.isRightAccount = Boolean(getAddress(docSnap.data().request.account) === account)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+
         SetState((d) => {
-          d.request = docSnap.data().request;
-          d.haveRequest = true;
-        });
+          d.request = docSnap.data().request
+          d.haveRequest = true
+        })
       } else {
         SetState((d) => {
-          d.haveRequest = false;
-        });
+          d.haveRequest = false
+        })
       }
     } else {
       // doc.data() will be undefined in this case
-      console.log("No such document!");
+      console.log("No such document!")
       SetState((d) => {
-        d.haveRequest = false;
-      });
+        d.haveRequest = false
+      })
     }
-  };
+  }
 
-  useEffect(() => {
-    if (UserData === undefined) {
-      return;
-    } else {
-      fetchUserData();
-    }
+  useMemo(() => {
+    if (UserData === undefined) return
+    if (library === undefined) return
+
+    fetchUserData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (UserData === undefined) {
-      return;
-    } else {
-      fetchUserData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [UserData]);
-
-  const isWhiteListed = async () => {
-    const whitelist = await ContractDeploy.whitelist(State.request.account);
-    console.log("isWhiteListed", whitelist);
-
-    SetState((e) => {
-      e.isWhiteListed = whitelist;
-      e.isRightAccount = Boolean(State.request.account === account);
-    });
-  };
-
-  useEffect(() => {
-    isWhiteListed();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
+  }, [UserData, library])
 
   const onSubmit = async (data) => {
-    console.log("State.request", State.request);
-
     SetState((draft) => {
-      draft.SetBtnDisable = true;
-    });
+      draft.SetBtnDisable = true
+    })
 
     try {
       await ContractDeploy.deploy(
@@ -104,28 +85,28 @@ export default function CreateNew() {
         State.request.amount,
         State.request.account,
         `ipfs://${State.request.IpfsHash}`
-      );
+      )
     } catch (e) {
-      console.log(e);
+      console.log(e)
       SetState((draft) => {
-        draft.SetBtnDisable = false;
-        draft.executionReverted = true;
-      });
+        draft.SetBtnDisable = false
+        draft.executionReverted = true
+      })
     }
 
     ContractDeploy.on("deploy_", async (_Contract) => {
       try {
-        await setDoc(doc(db, "ContractInfo", _Contract), State.request);
+        await setDoc(doc(db, "ContractInfo", _Contract), State.request)
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
 
       try {
         await updateDocRequests("users", {
           request: deleteField(),
-        });
+        })
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
 
       const Mail = {
@@ -184,22 +165,19 @@ export default function CreateNew() {
           </body>
         </html>
         `,
-      };
-      const res = await axios.post(
-        `${process.env.REACT_APP_EMAIL_END_URL}`,
-        Mail
-      );
-      console.log(res.data.msg);
+      }
+      const res = await axios.post(`${process.env.REACT_APP_EMAIL_END_URL}`, Mail)
+      console.log(res.data.msg)
 
-      fetchUser();
-      navigate(`/Boat/${_Contract}`);
-    });
-  };
-  console.log(errors);
+      fetchUser()
+      navigate(`/Boat/${_Contract}`)
+    })
+  }
+  console.log(errors)
 
   const connectWithMetaMask = async () => {
-    await activate(Injected);
-  };
+    await activate(Injected)
+  }
 
   return (
     <div className="CreateNew min-h-full">
@@ -216,11 +194,7 @@ export default function CreateNew() {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="shadow sm:rounded-md">
                     <div className="px-4 py-5 bg-white sm:p-6">
-                      <img
-                        src={State.request.featuredImage}
-                        alt=""
-                        className="w-[300px] mb-6"
-                      />
+                      <img src={State.request.featuredImage} alt="" className="w-[300px] mb-6" />
 
                       <div className="grid grid-cols-6 gap-4">
                         <div className="col-span-6 sm:col-span-3">
@@ -271,22 +245,20 @@ export default function CreateNew() {
                             <>
                               {!State.isWhiteListed ? (
                                 <p>
-                                  your request is padding please Wat 1 or 2
-                                  business days after your request is accepted
-                                  you will get an email
+                                  your request is padding please Wat 1 or 2 business days after your
+                                  request is accepted you will get an email
                                 </p>
                               ) : (
                                 <>
                                   {!State.isRightAccount ? (
                                     <p>
-                                      please change your account to requested
-                                      account {State.request.account}
+                                      please change your account to requested account{" "}
+                                      {State.request.account}
                                     </p>
                                   ) : (
                                     <button
                                       className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                       type="submit"
-                                      disabled={State.btnDisable}
                                     >
                                       List your Boat
                                     </button>
@@ -304,9 +276,7 @@ export default function CreateNew() {
             ) : (
               <div className="max-w-sm mx-auto text-center">
                 <h1 className="text-2xl	">You did not submit any request</h1>
-                <p className="mb-3">
-                  Please go Become a Host page and submit your request
-                </p>
+                <p className="mb-3">Please go Become a Host page and submit your request</p>
                 <Link
                   className=" cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   to="/list-boat"
@@ -319,5 +289,5 @@ export default function CreateNew() {
         </div>
       </main>
     </div>
-  );
+  )
 }

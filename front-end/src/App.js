@@ -13,32 +13,18 @@ const BuyForm = React.lazy(() => import("./pages/BuyForm/BuyForm"))
 const BookingForm = React.lazy(() => import("./pages/BookingForm/BookingForm"))
 const Boat = React.lazy(() => import("./pages/Boat/Boat"))
 const ListBoat = React.lazy(() => import("./pages/ListBoat/ListBoat"))
-const AddWhitelistAddress = React.lazy(() =>
-  import("./pages/ListBoat/ListBoat")
-)
+const AddWhitelistAddress = React.lazy(() => import("./pages/ListBoat/ListBoat"))
 const About = React.lazy(() => import("./pages/About/About"))
 
 // Dashboard
-const CreateNew = React.lazy(() =>
-  import("./Dashboard/Host/CreateNew/CreateNew")
-)
-const OffersReceived = React.lazy(() =>
-  import("./Dashboard/User/OffersReceived/OffersReceived")
-)
-const OffersMade = React.lazy(() =>
-  import("./Dashboard/User/OffersMade/OffersMade")
-)
-const BookedDate = React.lazy(() =>
-  import("./Dashboard/User/BookedDate/BookedDate")
-)
-const Collected = React.lazy(() =>
-  import("./Dashboard/User/Collected/Collected")
-)
+const CreateNew = React.lazy(() => import("./Dashboard/Host/CreateNew/CreateNew"))
+const OffersReceived = React.lazy(() => import("./Dashboard/User/OffersReceived/OffersReceived"))
+const OffersMade = React.lazy(() => import("./Dashboard/User/OffersMade/OffersMade"))
+const BookedDate = React.lazy(() => import("./Dashboard/User/BookedDate/BookedDate"))
+const Collected = React.lazy(() => import("./Dashboard/User/Collected/Collected"))
 const Boats = React.lazy(() => import("./Dashboard/Host/Boats/Boats"))
 const NFT = React.lazy(() => import("./Dashboard/User/NFT/NFT"))
-const BookedDates = React.lazy(() =>
-  import("./Dashboard/Admin/BookedDates/BookedDates")
-)
+const BookedDates = React.lazy(() => import("./Dashboard/Admin/BookedDates/BookedDates"))
 const Requsts = React.lazy(() => import("./Dashboard/Admin/Requsts/Requsts"))
 const AllUsers = React.lazy(() => import("./Dashboard/Admin/AllUsers/AllUsers"))
 const ContractBookedDates = React.lazy(() =>
@@ -46,9 +32,7 @@ const ContractBookedDates = React.lazy(() =>
 )
 const BoatInfo = React.lazy(() => import("./Dashboard/Host/BoatInfo/BoatInfo"))
 const AddFood = React.lazy(() => import("./Dashboard/Admin/AddFood/AddFood"))
-const UpdateContract = React.lazy(() =>
-  import("./Dashboard/Admin/UpdateContract/UpdateContract")
-)
+const UpdateContract = React.lazy(() => import("./Dashboard/Admin/UpdateContract/UpdateContract"))
 
 import StateContext from "./StateContext"
 import DispatchContext from "./DispatchContext"
@@ -83,8 +67,7 @@ export default function App() {
         <div className="bg-red-600">
           <div className="max-w-7xl mx-auto py-1 px-3 sm:px-6 lg:px-8">
             <p className="ml-3 font-medium text-white text-center truncate">
-              Please switch to network {contractNetworkName}, chainId (
-              {contractNetworkId})
+              Please switch to network {contractNetworkName}, chainId ({contractNetworkId})
             </p>
           </div>
         </div>

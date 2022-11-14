@@ -1,30 +1,11 @@
 import { useContext, createContext, useState, useMemo } from "react"
 import { ethers } from "ethers"
 import { useWeb3React } from "@web3-react/core"
-import {
-  Deploy,
-  Factory,
-  NFTYacht,
-  USDT,
-  NFTilityToken,
-  NFTilityExchange,
-} from "./ABIs/ABIs"
+import { Deploy, Factory, NFTYacht, USDT, NFTilityToken, NFTilityExchange } from "./ABIs/ABIs"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { auth, db } from "./DB/firebase-config"
-import {
-  query,
-  collection,
-  getDocs,
-  where,
-  updateDoc,
-  doc,
-  deleteField,
-} from "firebase/firestore"
-import {
-  CoinbaseWallet,
-  Injected,
-  walletConnect,
-} from "./Comp/Wallets/Connectors"
+import { query, collection, getDocs, where, updateDoc, doc, deleteField } from "firebase/firestore"
+import { CoinbaseWallet, Injected, walletConnect } from "./Comp/Wallets/Connectors"
 
 export const ContextAPI = createContext()
 export const useContextAPI = () => {
@@ -50,9 +31,7 @@ export const ContextProvider = ({ children }) => {
         } catch (ex) {
           console.log(ex)
         }
-      } else if (
-        localStorage?.getItem("isWalletConnected") === "CoinbaseWallet"
-      ) {
+      } else if (localStorage?.getItem("isWalletConnected") === "CoinbaseWallet") {
         try {
           await activate(CoinbaseWallet)
           localStorage.setItem("isWalletConnected", "CoinbaseWallet")
@@ -64,21 +43,9 @@ export const ContextProvider = ({ children }) => {
     connectWalletOnPageLoad()
   }, [])
 
-  const ContractDeploy = new ethers.Contract(
-    DeployAddress,
-    Deploy,
-    library?.getSigner(account)
-  )
-  const ContractFactory = new ethers.Contract(
-    FactoryAddress,
-    Factory,
-    library?.getSigner(account)
-  )
-  const ContractUSDT = new ethers.Contract(
-    USDTAddress,
-    USDT,
-    library?.getSigner(account)
-  )
+  const ContractDeploy = new ethers.Contract(DeployAddress, Deploy, library?.getSigner(account))
+  const ContractFactory = new ethers.Contract(FactoryAddress, Factory, library?.getSigner(account))
+  const ContractUSDT = new ethers.Contract(USDTAddress, USDT, library?.getSigner(account))
   const ContractNFTilityToken = new ethers.Contract(
     NNTAddress,
     NFTilityToken,

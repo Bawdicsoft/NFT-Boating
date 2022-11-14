@@ -1,81 +1,78 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useEffect, useState } from "react";
-import { Dialog, Transition, Menu } from "@headlessui/react";
-import { BellIcon, XIcon } from "@heroicons/react/outline";
-import { LockClosedIcon } from "@heroicons/react/solid";
-import { useWeb3React } from "@web3-react/core";
-import { Injected, CoinbaseWallet, walletConnect } from "../Wallets/Connectors";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../DB/firebase-config";
-import { useContextAPI } from "../../ContextAPI";
-import { useImmer } from "use-immer";
-import { formatUnits } from "ethers/lib/utils";
+import { Fragment, useEffect, useState } from "react"
+import { Dialog, Transition, Menu } from "@headlessui/react"
+import { BellIcon, XIcon } from "@heroicons/react/outline"
+import { LockClosedIcon } from "@heroicons/react/solid"
+import { useWeb3React } from "@web3-react/core"
+import { Injected, CoinbaseWallet, walletConnect } from "../Wallets/Connectors"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from "../../DB/firebase-config"
+import { useContextAPI } from "../../ContextAPI"
+import { useImmer } from "use-immer"
+import { formatUnits } from "ethers/lib/utils"
 
 export default function WalletSide({ open, setOpen }) {
-  const { activate, active, account, deactivate } = useWeb3React();
-  const [user] = useAuthState(auth);
+  const { activate, active, account, deactivate } = useWeb3React()
+  const [user] = useAuthState(auth)
 
   async function connectInjected() {
     try {
-      await activate(Injected);
-      localStorage.setItem("isWalletConnected", "Injected");
+      await activate(Injected)
+      localStorage.setItem("isWalletConnected", "Injected")
     } catch (error) {
-      console.log(error);
+      console.error(error)
     }
   }
   async function connectCoinbaseWallet() {
     try {
-      await activate(CoinbaseWallet);
-      localStorage.setItem("isWalletConnected", "CoinbaseWallet");
+      await activate(CoinbaseWallet)
+      localStorage.setItem("isWalletConnected", "CoinbaseWallet")
     } catch (error) {
-      console.log(error);
+      console.error(error)
     }
   }
   async function connectWalletConnect() {
     try {
-      await activate(walletConnect);
-      localStorage.setItem("isWalletConnected", "walletConnect");
+      await activate(walletConnect)
+      localStorage.setItem("isWalletConnected", "walletConnect")
     } catch (error) {
-      console.log(error);
+      console.error(error)
     }
   }
   function DisconnectWallet() {
     try {
-      deactivate();
-      localStorage.setItem("isWalletConnected", "");
+      deactivate()
+      localStorage.setItem("isWalletConnected", "")
     } catch (error) {
-      console.log(error);
+      console.error(error)
     }
   }
 
-  const { ContractUSDT, ContractDeploy } = useContextAPI();
+  const { ContractUSDT, ContractDeploy } = useContextAPI()
 
   const [State, SetState] = useImmer({
     userBalance: "loading..",
-  });
+  })
 
   useEffect(() => {
     if (active) {
       const run = async () => {
-        console.log(account);
         try {
-          const userBalance = await ContractUSDT.balanceOf(account);
-          const factoryAddress = await ContractDeploy.factory();
-          console.log("factoryAddress", factoryAddress);
+          const userBalance = await ContractUSDT.balanceOf(account)
 
           SetState((draft) => {
-            draft.userBalance = formatUnits(userBalance.toString(), 6);
-          });
+            draft.userBalance = formatUnits(userBalance.toString(), 6)
+          })
         } catch (e) {
-          console.error(e);
+          console.error(e)
           SetState((draft) => {
-            draft.userBalance = "00";
-          });
+            draft.userBalance = "00"
+          })
         }
-      };
-      run();
+      }
+      run()
     }
-  }, [active]);
+  }, [active])
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -256,5 +253,5 @@ export default function WalletSide({ open, setOpen }) {
         </div>
       </Dialog>
     </Transition.Root>
-  );
+  )
 }
