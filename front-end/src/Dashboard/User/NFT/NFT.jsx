@@ -443,6 +443,18 @@ export default function NFT() {
                       </div>
                     </div>
                   </div>
+
+                  <div>
+                    <iframe
+                      width="400"
+                      height="250"
+                      src="https://www.youtube.com/embed/jHgO-wxXlWU"
+                      title="NFT Boating | how to book a boat rental"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                  </div>
                 </div>
               </div>
             </div>

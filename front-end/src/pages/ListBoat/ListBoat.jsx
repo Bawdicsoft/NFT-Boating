@@ -1,57 +1,62 @@
-import { useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
-import { useImmer } from "use-immer"
-import QRCode from "react-qr-code"
-import logo from "./../../Assets/logo.png"
-import { collection, addDoc } from "firebase/firestore"
-import { Link, useNavigate } from "react-router-dom"
-import axios from "axios"
-import { useWeb3React } from "@web3-react/core"
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
-import { db, storage } from "../../DB/firebase-config"
-import { useContextAPI } from "../../ContextAPI"
-import html2canvas from "html2canvas"
-import GoogleMapReact from "google-map-react"
-import { Carousel } from "flowbite-react"
-import WalletSide from "../../Comp/Header/WalletSide"
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useImmer } from "use-immer";
+import QRCode from "react-qr-code";
+import logo from "./../../Assets/logo.png";
+import { collection, addDoc } from "firebase/firestore";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useWeb3React } from "@web3-react/core";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { db, storage } from "../../DB/firebase-config";
+import { useContextAPI } from "../../ContextAPI";
+import html2canvas from "html2canvas";
+import GoogleMapReact from "google-map-react";
+import { Carousel } from "flowbite-react";
+import WalletSide from "../../Comp/Header/WalletSide";
 
 async function uploadImg({ uid, name, fileName, file }) {
   return new Promise((resolve, reject) => {
-    console.log("Uploading image ...")
+    console.log("Uploading image ...");
 
-    const storageRef = ref(storage, `user-uploads/${uid}/images/${name}/${fileName}`)
-    const uploadTask = uploadBytesResumable(storageRef, file)
+    const storageRef = ref(
+      storage,
+      `user-uploads/${uid}/images/${name}/${fileName}`
+    );
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        console.log("Upload is " + progress + "% done")
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        console.log("Upload is " + progress + "% done");
       },
       (error) => {
-        console.error(error)
-        reject(error)
+        console.error(error);
+        reject(error);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((imgURL) => {
-          console.log(`uploaded image:`, imgURL)
-          resolve(imgURL)
-        })
+          console.log(`uploaded image:`, imgURL);
+          resolve(imgURL);
+        });
       }
-    )
-  })
+    );
+  });
 }
 
 export default function ListBoat() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const { updateDocRequests, UserData } = useContextAPI()
+  const { updateDocRequests, UserData } = useContextAPI();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   const [state, setState] = useImmer({
     btnLoading: false,
@@ -66,89 +71,90 @@ export default function ListBoat() {
       address: null,
       status: "null",
     },
-  })
-  console.log(state.gallery, "state.gallery")
+  });
+  console.log(state.gallery, "state.gallery");
 
-  const { account } = useWeb3React()
-  const [open, setOpen] = useState(false)
+  const { account } = useWeb3React();
+  const [open, setOpen] = useState(false);
 
-  const location = watch(["location"])
+  const location = watch(["location"]);
   useMemo(() => {
     const runMap = async () => {
       if (state.markerMap.address !== location[0] && location[0] !== "") {
         try {
           const res = await axios.get(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${location[0]}&key=${process.env.REACT_APP_MAPKEY}`
-          )
+          );
 
           if (res.data.status === "OK") {
-            console.log("OK")
+            console.log("OK");
             setState((e) => {
-              e.markerMap.lat = res.data.results[0].geometry.location.lat
-              e.markerMap.lng = res.data.results[0].geometry.location.lng
-              e.markerMap.address = location[0]
-              e.markerMap.status = res.data.status
-            })
+              e.markerMap.lat = res.data.results[0].geometry.location.lat;
+              e.markerMap.lng = res.data.results[0].geometry.location.lng;
+              e.markerMap.address = location[0];
+              e.markerMap.status = res.data.status;
+            });
           }
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
       }
-    }
-    runMap()
+    };
+    runMap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location])
+  }, [location]);
 
-  const featuredImage = watch(["featuredImage"])
+  const featuredImage = watch(["featuredImage"]);
   useMemo(() => {
     if (featuredImage[0] !== undefined) {
       if (featuredImage[0].length > 0) {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.addEventListener("load", () => {
           setState((e) => {
-            e.featuredImageData = reader.result
-          })
-        })
-        reader.readAsDataURL(featuredImage[0][0])
+            e.featuredImageData = reader.result;
+          });
+        });
+        reader.readAsDataURL(featuredImage[0][0]);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [featuredImage])
+  }, [featuredImage]);
 
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState([]);
   const handelGallery = (e) => {
-    console.log(e.target.files, "gallery")
+    console.log(e.target.files, "gallery");
 
     if (e.target.files.length > 0) {
-      setImages([...e.target.files])
+      setImages([...e.target.files]);
       setState((e) => {
-        e.galleryData = []
-      })
+        e.galleryData = [];
+      });
       for (let i = 0; i < e.target.files.length; i++) {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.addEventListener("load", () => {
           setState((e) => {
-            e.galleryData.push(reader.result)
-          })
-        })
-        reader.readAsDataURL(e.target.files[i])
+            e.galleryData.push(reader.result);
+          });
+        });
+        reader.readAsDataURL(e.target.files[i]);
       }
     }
-  }
+  };
 
   const onSubmit = async (e) => {
     if (state.markerMap.status !== "OK") {
       setState((draft) => {
-        draft.btnLoading = true
-      })
+        draft.btnLoading = true;
+      });
 
       html2canvas(document.getElementById("HTML-IMG"), {
         allowTaint: true,
         useCORS: true,
       }).then(async (canvas) => {
-        const API_KEY = process.env.REACT_APP_API_KEY
-        const API_SECRET = process.env.REACT_APP_API_SECRET
-        const URLforpinJSONtoIPFS = process.env.REACT_APP_URL_FOR_PIN_JSON_TO_IPFS
+        const API_KEY = process.env.REACT_APP_API_KEY;
+        const API_SECRET = process.env.REACT_APP_API_SECRET;
+        const URLforpinJSONtoIPFS =
+          process.env.REACT_APP_URL_FOR_PIN_JSON_TO_IPFS;
 
         axios
           .post(
@@ -166,28 +172,28 @@ export default function ListBoat() {
             }
           )
           .then(async (response) => {
-            const file = e.featuredImage[0]
-            const name = e.name
-            const fileName = file.name
+            const file = e.featuredImage[0];
+            const name = e.name;
+            const fileName = file.name;
             const featuredImageURL = await uploadImg({
               uid: UserData.uid,
               name,
               fileName,
               file,
-            })
+            });
 
-            let gallery = []
+            let gallery = [];
             for (let i = 0; i < images.length; i++) {
-              const file = images[i]
-              const name = e.name
-              const fileName = file.name
+              const file = images[i];
+              const name = e.name;
+              const fileName = file.name;
               const imagesURL = await uploadImg({
                 uid: UserData.uid,
                 name,
                 fileName,
                 file,
-              })
-              gallery.push(imagesURL)
+              });
+              gallery.push(imagesURL);
             }
 
             const request = {
@@ -211,23 +217,23 @@ export default function ListBoat() {
               gallery: gallery,
               IpfsHash: response.data.IpfsHash,
               amount: e.amount,
-            }
+            };
 
             try {
               await addDoc(collection(db, "Request"), {
                 request,
-              })
+              });
             } catch (error) {
-              console.error(error)
+              console.error(error);
             }
 
             try {
               await updateDocRequests("users", {
                 request,
                 host: true,
-              })
+              });
             } catch (error) {
-              console.error(error)
+              console.error(error);
             }
 
             // const Mail = {
@@ -392,20 +398,20 @@ export default function ListBoat() {
             // const res = await axios.post(`${process.env.REACT_APP_EMAIL_END_URL}`, Mail)
             // console.log(res.data)
 
-            navigate(`/create-new`)
+            navigate(`/create-new`);
           })
           .catch((error) => {
-            console.error(error)
+            console.error(error);
             setState((e) => {
-              e.btnLoading = false
-            })
-          })
-      })
+              e.btnLoading = false;
+            });
+          });
+      });
     } else {
-      console.error("Please Check Your address")
+      console.error("Please Check Your address");
     }
-  }
-  console.log(errors)
+  };
+  console.log(errors);
 
   if (UserData?.request !== undefined) {
     return (
@@ -413,7 +419,8 @@ export default function ListBoat() {
         <header className="bg-white">
           <div className="mt-20 mb-20 text-center">
             <h1 className="mb-6 font-bold text-3xl">
-              You already request for a boat listing please check user nav and click create new
+              You already request for a boat listing please check user nav and
+              click create new
             </h1>
             <Link
               className="text-center w-[300px] m-auto  border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-indigo-600  hover:bg-indigo-700 cursor-pointer"
@@ -424,7 +431,7 @@ export default function ListBoat() {
           </div>
         </header>
       </div>
-    )
+    );
   }
 
   return (
@@ -433,20 +440,24 @@ export default function ListBoat() {
         <div className="mt-20 mb-20 px-3 text-center">
           <h1 className="mb-1 font-bold text-5xl "> Become a Host </h1>
           <div className="max-w-3xl mx-auto text-center">
-            NFT Boating is about to be a booming trend in luxury boat rental, and it's a great way
-            to profit from your investment. With NFT Boating, you can list your boat with us and get
-            connected with plenty of customers who are ready to rent.
+            NFT Boating is about to be a booming trend in luxury boat rental,
+            and it's a great way to profit from your investment. With NFT
+            Boating, you can list your boat with us and get connected with
+            plenty of customers who are ready to rent.
           </div>
           <div className="max-w-3xl mx-auto text-center">
-            This isn't a regular rent for the day; if you post your boat with us, it will be issued
-            365 NFT memberships specifically for your boat. You'll choose the price for the day's
-            rent, but keep in mind that the NFT will be valid for 5 years. The owner of the NFT can
-            book a day for 5 consecutive years. In addition, the NFT owner will pay you a boat
-            maintenance fee per year depending on the length of the boat.
+            This isn't a regular rent for the day; if you post your boat with
+            us, it will be issued 365 NFT memberships specifically for your
+            boat. You'll choose the price for the day's rent, but keep in mind
+            that the NFT will be valid for 5 years. The owner of the NFT can
+            book a day for 5 consecutive years. In addition, the NFT owner will
+            pay you a boat maintenance fee per year depending on the length of
+            the boat.
           </div>
           <div className="max-w-3xl mx-auto text-center">
-            So, if you're looking for a way to make some passive income from your luxury boat, NFT
-            Boating is the perfect solution. Sign up to start earning today!
+            So, if you're looking for a way to make some passive income from
+            your luxury boat, NFT Boating is the perfect solution. Sign up to
+            start earning today!
           </div>
         </div>
       </header>
@@ -459,10 +470,10 @@ export default function ListBoat() {
                   Boat Specifications
                 </h2>
                 <p className="mt-4 text-gray-500">
-                  Provide details about your vessel to help guests get a good idea of your rental.
-                  We encourage you to post pictures—it increases the chances of prospective clients!
+                  Provide details about your vessel to help guests get a good
+                  idea of your rental. We encourage you to post pictures—it
+                  increases the chances of prospective clients!
                 </p>
-
                 {/* <dl className="mt-8 grid grid-cols-1 gap-x-6 gap-y-7 lg:gap-x-8">
                   <div className="border-t border-gray-200 pt-4">
                     <dt className="font-medium text-gray-900">
@@ -474,6 +485,24 @@ export default function ListBoat() {
                     </dd>
                   </div>
                 </dl> */}
+                <div className="mt-18">
+                  <iframe
+                    width="400"
+                    height="250"
+                    src="https://www.youtube.com/embed/1hZc75B7sA8"
+                    title="NFT boating tutorial | how to list your boat."
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  >
+                    NFT boating tutorial{" "}
+                  </iframe>
+                  {/* <video
+                    width={500}
+                    src="<iframe width="752" height="409" src="https://www.youtube.com/embed/1hZc75B7sA8" title="NFT boating tutorial | how to list your boat." frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>"
+                    controls
+                  ></video> */}
+                </div>
               </div>
               <div className="mt-5 md:mt-0 md:col-span-2">
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -752,7 +781,9 @@ export default function ListBoat() {
                             })}
                             className="w-full py-2.5 px-3 border mb-2 rounded-md h-28"
                           />
-                          <p className="mb-4">please add amenities with a comma (,)</p>
+                          <p className="mb-4">
+                            please add amenities with a comma (,)
+                          </p>
                         </div>
 
                         <div className="col-span-6 sm:col-span-6">
@@ -853,17 +884,29 @@ export default function ListBoat() {
                                   </label>
                                   <p className="pl-1">Size should be 1x1</p>
                                 </div>
-                                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                <p className="text-xs text-gray-500">
+                                  PNG, JPG, GIF up to 10MB
+                                </p>
                               </div>
                             </div>
                             <div className="flex  justify-center">
                               {state.featuredImageData && (
-                                <div id="HTML-IMG" className="mt-4 relative h-[300px] w-[300px]">
+                                <div
+                                  id="HTML-IMG"
+                                  className="mt-4 relative h-[300px] w-[300px]"
+                                >
                                   <img src={state.featuredImageData} alt="" />
                                   <div className="absolute bottom-1 w-full justify-center flex ">
-                                    <img src={logo} className="w-[180px]" alt="" />
+                                    <img
+                                      src={logo}
+                                      className="w-[180px]"
+                                      alt=""
+                                    />
                                     <div className="px-1 py-1 bg-white">
-                                      <QRCode value={"https://nftboating.io/"} size={70} />
+                                      <QRCode
+                                        value={"https://nftboating.io/"}
+                                        size={70}
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -910,7 +953,9 @@ export default function ListBoat() {
                         </div> */}
 
                         <div className="col-span-6 sm:col-span-6 mb-3">
-                          <label className="block text-sm font-medium text-gray-700">Gallery</label>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Gallery
+                          </label>
                           <div className="mt-1 px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                             <div className=" flex justify-center ">
                               <div className="space-y-1 text-center">
@@ -931,7 +976,9 @@ export default function ListBoat() {
                                   </label>
                                   <p className="pl-1">Size should be 16x9</p>
                                 </div>
-                                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                <p className="text-xs text-gray-500">
+                                  PNG, JPG, GIF up to 10MB
+                                </p>
                               </div>
                             </div>
                             {state.galleryData.length > 0 && (
@@ -1018,11 +1065,11 @@ export default function ListBoat() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
 const Marker = (props) => {
-  const { address } = props
+  const { address } = props;
   return (
     <div className="relative flex flex-col items-center group">
       <div
@@ -1039,5 +1086,5 @@ const Marker = (props) => {
         <div className="pulse" />
       </div>
     </div>
-  )
-}
+  );
+};

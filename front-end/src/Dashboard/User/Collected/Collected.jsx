@@ -1,68 +1,68 @@
-import { useEffect } from "react"
-import { useImmer } from "use-immer"
-import { Link, useNavigate } from "react-router-dom"
-import { PencilIcon } from "@heroicons/react/solid"
-import { useWeb3React } from "@web3-react/core"
-import { useContextAPI } from "../../../ContextAPI"
-import axios from "axios"
+import { useEffect } from "react";
+import { useImmer } from "use-immer";
+import { Link, useNavigate } from "react-router-dom";
+import { PencilIcon } from "@heroicons/react/solid";
+import { useWeb3React } from "@web3-react/core";
+import { useContextAPI } from "../../../ContextAPI";
+import axios from "axios";
 
 export default function Collected() {
-  const navigate = useNavigate()
-  const { account, active } = useWeb3React()
-  const { ContractFactory, ContractDeploy } = useContextAPI()
+  const navigate = useNavigate();
+  const { account, active } = useWeb3React();
+  const { ContractFactory, ContractDeploy } = useContextAPI();
 
   const buyNew = () => {
-    navigate(`/`)
-  }
+    navigate(`/`);
+  };
 
   const [state, SetState] = useImmer({
     isLoading: true,
     data: [],
     userNFT: 0,
     images: null,
-  })
+  });
 
   useEffect(() => {
     if (active) {
       SetState((draft) => {
-        draft.userNFT = 0
-        draft.data = []
-        draft.isLoading = true
-      })
+        draft.userNFT = 0;
+        draft.data = [];
+        draft.isLoading = true;
+      });
 
       const run = async () => {
-        let addresses
+        let addresses;
         try {
-          addresses = await ContractFactory.UserAllContractAddress(account)
+          addresses = await ContractFactory.UserAllContractAddress(account);
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
 
         if (addresses.length) {
           for (let i = 0; i < addresses.length; i++) {
-            let UserIDs
-            let contractData
+            let UserIDs;
+            let contractData;
             try {
-              UserIDs = await ContractFactory.UserIDs(addresses[i], account)
-              contractData = await ContractDeploy.contractDitals(addresses[i])
+              UserIDs = await ContractFactory.UserIDs(addresses[i], account);
+              contractData = await ContractDeploy.contractDitals(addresses[i]);
             } catch (error) {
-              console.log(error)
+              console.log(error);
             }
 
-            const id = contractData.id.toString()
-            const name = contractData.name.toString()
-            const symbol = contractData.symbol.toString()
-            const tSupply = contractData.tSupply.toString()
-            const tOwnership = contractData.tOwnership.toString()
-            const price = contractData.price.toString()
-            const owner = contractData.owner.toString()
-            const baseURI = contractData.baseURI.toString()
+            const id = contractData.id.toString();
+            const name = contractData.name.toString();
+            const symbol = contractData.symbol.toString();
+            const tSupply = contractData.tSupply.toString();
+            const tOwnership = contractData.tOwnership.toString();
+            const price = contractData.price.toString();
+            const owner = contractData.owner.toString();
+            const baseURI = contractData.baseURI.toString();
 
-            const getBaseURL = baseURI.split("//").pop()
-            console.log({ getBaseURL })
+            const getBaseURL = baseURI.split("//").pop();
+            console.log({ getBaseURL });
             const ipfsRes = await axios.get(
               `${process.env.REACT_APP_IPFS_GATEWAY}${getBaseURL}/`
-            )
+            );
 
             UserIDs.forEach((nftid) => {
               let data = {
@@ -80,25 +80,25 @@ export default function Collected() {
                 contractAddress: addresses[i].toString(),
                 imageSrc: ipfsRes.data.image,
                 imageAlt: `${name} (${symbol})`,
-              }
+              };
               SetState((draft) => {
-                draft.userNFT = UserIDs.length
-                draft.data.push(data)
-                draft.isLoading = false
-              })
-            })
+                draft.userNFT = UserIDs.length;
+                draft.data.push(data);
+                draft.isLoading = false;
+              });
+            });
           }
         } else {
           SetState((draft) => {
-            draft.userNFT = 0
-            draft.isLoading = false
-          })
+            draft.userNFT = 0;
+            draft.isLoading = false;
+          });
         }
-      }
-      run()
+      };
+      run();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account])
+  }, [account]);
 
   return (
     <div className="Collected min-h-full">
@@ -190,5 +190,5 @@ export default function Collected() {
         </div>
       </main>
     </div>
-  )
+  );
 }
