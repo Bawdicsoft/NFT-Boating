@@ -1,420 +1,348 @@
 export default function PrivacyPolicy() {
   return (
     <div className="max-w-[900px] px-5 py-10 align-center mx-auto text-justify">
-      <h1 className="text-4xl font-bold text-center p-5">
-        PRIVACY POLICY NFT BOATING
-      </h1>
+      <h1 className="text-4xl font-bold text-center p-5">PRIVACY POLICY NFT BOATING</h1>
       <p className="text-1xl ">Effective date: January 1, 2020</p>
       <p className="text-1xl py-3">
-        NFT Boating (“we”, or “us”) respects your privacy and is committed to
-        protecting the personal information you provide to us. We have created
-        this Privacy Policy to inform you of our policies regarding the
-        collection, use and disclosure of personal information and the choices
-        you have associated with that information.
+        NFT Boating (“we”, or “us”) respects your privacy and is committed to protecting the
+        personal information you provide to us. We have created this Privacy Policy to inform you of
+        our policies regarding the collection, use and disclosure of personal information and the
+        choices you have associated with that information.
       </p>
       <p className="text-1xl py-3">
-        This Privacy Policy applies to all personal information collected about
-        you by NFT Boating when you do any of the following (collectively, the
-        “Services”): (i) visit our stores; (ii) communicate with us during any
-        written, electronic, and oral communications; (iii) use our website
-        https://nftbosting.io and all corresponding webpages, websites or mobile
-        applications that link to this Policy (the “Site”); and (iv) use any
-        other features or content owned or operated by NFT Boating .
+        This Privacy Policy applies to all personal information collected about you by NFT Boating
+        when you do any of the following (collectively, the “Services”): (i) visit our stores; (ii)
+        communicate with us during any written, electronic, and oral communications; (iii) use our
+        website https://nftbosting.io and all corresponding webpages, websites or mobile
+        applications that link to this Policy (the “Site”); and (iv) use any other features or
+        content owned or operated by NFT Boating.
       </p>
       <p className="text-1xl py-3">
-        Before using our Services, please carefully read our Terms and
-        Conditions (“Terms”), Unless otherwise defined in this Privacy Policy,
-        the terms used in this Policy have the same meanings as in our Terms. By
-        using this Site, you consent to the collection and use of the personal
-        information in accordance with this Privacy Policy and our Terms. If you
-        do not feel comfortable with any part of this Privacy Policy or our
-        Terms, you should not use or access our Services.
+        Before using our Services, please carefully read our Terms and Conditions (“Terms”), Unless
+        otherwise defined in this Privacy Policy, the terms used in this Policy have the same
+        meanings as in our Terms. By using this Site, you consent to the collection and use of the
+        personal information in accordance with this Privacy Policy and our Terms. If you do not
+        feel comfortable with any part of this Privacy Policy or our Terms, you should not use or
+        access our Services.
       </p>
       <p className="text-1xl py-3">
-        We may update this Privacy Policy from time to time and make changes to
-        information previously collected, as permitted by law. We will post
-        changes to this Privacy Policy here, so be sure to check back
-        periodically. We may also decide to notify our users by email of
-        material changes prior to the change becoming effective and update the
-        “effective date” at the top of this Privacy Policy. Changes to this
-        Privacy Policy are effective as of the date noted.
+        We may update this Privacy Policy from time to time and make changes to information
+        previously collected, as permitted by law. We will post changes to this Privacy Policy here,
+        so be sure to check back periodically. We may also decide to notify our users by email of
+        material changes prior to the change becoming effective and update the “effective date” at
+        the top of this Privacy Policy. Changes to this Privacy Policy are effective as of the date
+        noted.
       </p>
       <h2 className="text-2xl font-bold py-3">
         1. INFORMATION WE COLLECT ABOUT YOU AND HOW WE COLLECT IT
       </h2>
       <p className="text-1xl py-3">
-        We collect personal information when you use our Services. Personal
-        information is any information that relates to you, identifies you
-        personally, or could be used to identify you, such as your name, mailing
-        address, email address, or telephone number.
+        We collect personal information when you use our Services. Personal information is any
+        information that relates to you, identifies you personally, or could be used to identify
+        you, such as your name, mailing address, email address, or telephone number.
       </p>
       <p className="text-1xl py-3">
-        The types of personal information that we may collect about you include,
-        but are not limited to: information you provide to us, information
-        collected automatically about your use of our Site and services,
-        information from third parties, and information received from other
-        sources to help us supplement our records, improve the personalization
-        of our service to you, and to detect fraud.
+        The types of personal information that we may collect about you include, but are not limited
+        to: information you provide to us, information collected automatically about your use of our
+        Site and services, information from third parties, and information received from other
+        sources to help us supplement our records, improve the personalization of our service to
+        you, and to detect fraud.
       </p>
-      <p className="text-1xl pt-3 underline">
-        Information You Voluntarily Provide to Us
-      </p>
+      <p className="text-1xl pt-3 underline">Information You Voluntarily Provide to Us</p>
       <p className="text-1xl pb-3">
-        We may collect personal information from users who: purchase product
-        from us; register a purchased product with us; review our products;
-        participate in on-line surveys; wish to make certain on-line information
-        requests from us; and/or from users who wish to participate in on-line
-        contests, sweepstakes, promotions and discussions sponsored by us on
-        this Site and mobile applications. The type of information so requested
-        or collected by us may include user contact information (like their
-        name, mailing address, and email address), billing information (like
-        credit card number and expiration date) and user demographic information
-        (like their zip code, age or income level). The visitor’s contact
-        information will be used to contact the visitor when the visitor has
-        expressed interest in being contacted (visitors may opt-out of receiving
-        future mailings by emailing a request to us at
+        We may collect personal information from users who: purchase product from us; register a
+        purchased product with us; review our products; participate in on-line surveys; wish to make
+        certain on-line information requests from us; and/or from users who wish to participate in
+        on-line contests, sweepstakes, promotions and discussions sponsored by us on this Site and
+        mobile applications. The type of information so requested or collected by us may include
+        user contact information (like their name, mailing address, and email address), billing
+        information (like credit card number and expiration date) and user demographic information
+        (like their zip code, age or income level). The visitor's contact information will be used
+        to contact the visitor when the visitor has expressed interest in being contacted (visitors
+        may opt-out of receiving future mailings by emailing a request to us at
         privacy@us.frederiqueconstant.com).
       </p>
-      <p className="text-1xl pt-3 underline">
-        Information Collected Automatically
-      </p>
+      <p className="text-1xl pt-3 underline">Information Collected Automatically</p>
       <p className="text-1xl pb-3">
-        As you navigate through and interact with our Site or services, we may
-        use automatic data collection technologies to collect certain
-        information about your equipment, browsing actions and patterns,
-        including:
+        As you navigate through and interact with our Site or services, we may use automatic data
+        collection technologies to collect certain information about your equipment, browsing
+        actions and patterns, including:
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
-          Details of your visits to our Site, including, but not limited to,
-          traffic data, location data, logs and other communication data and the
-          resources that you access and use on the Site.
+          Details of your visits to our Site, including, but not limited to, traffic data, location
+          data, logs and other communication data and the resources that you access and use on the
+          Site.
         </li>
         <li>
-          Information about your computer and internet connection, including
-          your IP address, operating system, and browser type.
+          Information about your computer and internet connection, including your IP address,
+          operating system, and browser type.
         </li>
         <li>
-          Information about the type of device you are using, mobile ad
-          identifiers, the time and length of your visit, the website that
-          referred you to our website, and the subject of the ads you click or
-          scroll over.
+          Information about the type of device you are using, mobile ad identifiers, the time and
+          length of your visit, the website that referred you to our website, and the subject of the
+          ads you click or scroll over.
         </li>
         <li>
-          Information about your preferences to make your use of the Site more
-          productive, via the use of Cookies. For more information on Cookies,
-          please see Section 2.
+          Information about your preferences to make your use of the Site more productive, via the
+          use of Cookies. For more information on Cookies, please see Section 2.
         </li>
       </ul>
       <p className="text-1xl pt-3 underline">
         Information You Provide to Our Affiliates and Subsidiaries
       </p>
       <p className="text-1xl pb-3">
-        We may get your personal information from a company controlled by or
-        under common control with Frederique Constant.
+        We may get your personal information from a company controlled by or under common control
+        with Frederique Constant.
       </p>
-      <p className="text-1xl pt-3 underline">
-        Information Collected from Other Sources
-      </p>
+      <p className="text-1xl pt-3 underline">Information Collected from Other Sources</p>
       <p className="text-1xl pb-3">
-        We receive information about you from other sources to help us correct
-        or supplement our records, improve the quality or personalization of our
-        service to you, and prevent or detect fraud.
+        We receive information about you from other sources to help us correct or supplement our
+        records, improve the quality or personalization of our service to you, and prevent or detect
+        fraud.
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
-          Some information we collect is publicly available. For example, we may
-          collect information you submit to a blog, a chat room, or a social
-          network like Facebook, Twitter or Google+. We may also collect
-          information about you from other companies and organizations. By
-          gathering additional information about you, we can correct inaccurate
-          information, enhance the security of your transactions, and give you
-          product recommendations and special offers that are more likely to
-          interest you.
+          Some information we collect is publicly available. For example, we may collect information
+          you submit to a blog, a chat room, or a social network like Facebook, Twitter or Google+.
+          We may also collect information about you from other companies and organizations. By
+          gathering additional information about you, we can correct inaccurate information, enhance
+          the security of your transactions, and give you product recommendations and special offers
+          that are more likely to interest you.
         </li>
         <li>
-          We may use cameras in stores to keep employees and customers safe and
-          to look for ways to improve our customer experience. We do not use
-          these cameras to identify people except when necessary for security
-          reasons.
+          We may use cameras in stores to keep employees and customers safe and to look for ways to
+          improve our customer experience. We do not use these cameras to identify people except
+          when necessary for security reasons.
         </li>
       </ul>
-      <h2 className="text-2xl font-bold py-3">
-        2. COOKIES AND OTHER TRACKING TECHNOLOGIES
-      </h2>
+      <h2 className="text-2xl font-bold py-3">2. COOKIES AND OTHER TRACKING TECHNOLOGIES</h2>
       <p className="text-1xl py-3">
-        We may use cookies, embedded scripts, software development kits (“SDKs”)
-        and other similar tracking technologies (collectively, “Tracking
-        Technologies”) to collect additional personal information automatically
-        as you interact with the Services and to personalize your experience
-        with our Services. We also may use these technologies to collect
-        information about your online activities over time and across third
-        party websites or other online services (“behavioral tracking”).
+        We may use cookies, embedded scripts, software development kits (“SDKs”) and other similar
+        tracking technologies (collectively, “Tracking Technologies”) to collect additional personal
+        information automatically as you interact with the Services and to personalize your
+        experience with our Services. We also may use these technologies to collect information
+        about your online activities over time and across third party websites or other online
+        services (“behavioral tracking”).
       </p>
       <p className="text-1xl pt-3 underline">Cookies</p>
       <p className="text-1xl pb-3">
-        Cookies are small web files that a site or its provider transfers to
-        your device’s hard drive through your web browser that enables the
-        site’s or provider’s system to recognize your browser and remember
-        certain information. We use first-party and third-party cookies for the
-        following purposes: to make our Services function properly, to improve
-        our Site or services, to make login to our Site or services easier (such
-        as by remembering your User ID), to recognize you when you return to our
-        Site, to track your interaction with the Site or services, to enhance
-        your experience with the Site or services, to remember information you
-        have already provided, to collect information about your activities over
-        time and across third party websites or other online services in order
-        to deliver content and advertising tailored to your interests; and to
-        provide a secure browsing experience during your use of our Site or
-        services. The length of time a cookie will stay on your browsing device
-        depends on whether it is a &quot;persistent&quot; or &quot;session&quot;
-        cookie. Session cookies will only stay on your device until you stop
-        browsing. Persistent cookies stay on your browsing device until they
-        expire or are deleted (i.e. after you have finished browsing).
+        Cookies are small web files that a site or its provider transfers to your device's hard
+        drive through your web browser that enables the site's or provider's system to recognize
+        your browser and remember certain information. We use first-party and third-party cookies
+        for the following purposes: to make our Services function properly, to improve our Site or
+        services, to make login to our Site or services easier (such as by remembering your User
+        ID), to recognize you when you return to our Site, to track your interaction with the Site
+        or services, to enhance your experience with the Site or services, to remember information
+        you have already provided, to collect information about your activities over time and across
+        third party websites or other online services in order to deliver content and advertising
+        tailored to your interests; and to provide a secure browsing experience during your use of
+        our Site or services. The length of time a cookie will stay on your browsing device depends
+        on whether it is a &quot;persistent&quot; or &quot;session&quot; cookie. Session cookies
+        will only stay on your device until you stop browsing. Persistent cookies stay on your
+        browsing device until they expire or are deleted (i.e. after you have finished browsing).
       </p>
       <p className="text-1xl py-3">
-        We may place cookies from third-party service providers who may use
-        information about your visits to other websites to target advertisements
-        for products and services available from us. We do not control the types
-        of information collected and stored by these third-party cookies. You
-        should check the third-party&#39;s website for more information on how
-        they use cookies. The following types of cookies are used on our Site:
+        We may place cookies from third-party service providers who may use information about your
+        visits to other websites to target advertisements for products and services available from
+        us. We do not control the types of information collected and stored by these third-party
+        cookies. You should check the third-party&#39;s website for more information on how they use
+        cookies. The following types of cookies are used on our Site:
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
-          Strictly Necessary Cookies. These cookies are essential because they
-          enable you to use our Site. For example, strictly necessary cookies
-          allow you to access secure areas on our Site. Without these cookies,
-          some Services cannot be provided. These cookies do not gather
-          information about you for marketing purposes. This category of cookies
-          is essential for our Site to work and they cannot be disabled.
+          Strictly Necessary Cookies. These cookies are essential because they enable you to use our
+          Site. For example, strictly necessary cookies allow you to access secure areas on our
+          Site. Without these cookies, some Services cannot be provided. These cookies do not gather
+          information about you for marketing purposes. This category of cookies is essential for
+          our Site to work and they cannot be disabled.
         </li>
         <li>
-          Functional or Preference Cookies. We use functional cookies to
-          remember your choices so we can tailor our Site to provide you with
-          enhanced features and personalized content. For example, these cookies
-          can be used to remember your name or preferences on our Site. We do
-          not use functional cookies to target you with online marketing. While
-          these cookies can be disabled, this may result in less functionality
-          during your use of our Site.
+          Functional or Preference Cookies. We use functional cookies to remember your choices so we
+          can tailor our Site to provide you with enhanced features and personalized content. For
+          example, these cookies can be used to remember your name or preferences on our Site. We do
+          not use functional cookies to target you with online marketing. While these cookies can be
+          disabled, this may result in less functionality during your use of our Site.
         </li>
         <li>
-          Performance or Analytic Cookies. These cookies collect passive
-          information about how you use our Site, including webpages you visit
-          and links you click. We use the information collected by such cookies
-          to improve and optimize our Site. We do not use these cookies to
+          Performance or Analytic Cookies. These cookies collect passive information about how you
+          use our Site, including webpages you visit and links you click. We use the information
+          collected by such cookies to improve and optimize our Site. We do not use these cookies to
           target you with online marketing. You can disable these cookies.
         </li>
         <li>
-          Advertising or Targeting Cookies. These cookies are used to make
-          advertising messages more relevant to you. They perform functions like
-          preventing the same ad from continuously reappearing, ensuring that
-          ads are properly displayed for advertisers, and in some cases
-          selecting advertisements that are based on your interests. Our
-          third-party advertising partners may use these cookies to build a
-          profile of your interests and deliver relevant advertising on other
-          sites. You may disable the use of these cookies as set forth below.
+          Advertising or Targeting Cookies. These cookies are used to make advertising messages more
+          relevant to you. They perform functions like preventing the same ad from continuously
+          reappearing, ensuring that ads are properly displayed for advertisers, and in some cases
+          selecting advertisements that are based on your interests. Our third-party advertising
+          partners may use these cookies to build a profile of your interests and deliver relevant
+          advertising on other sites. You may disable the use of these cookies as set forth below.
         </li>
       </ul>
       <p className="text-1xl py-3">
-        We use Google Analytics on our web sites to collect usage data, to
-        analyze how users use the web sites and to provide advertisements to you
-        on other websites. For more information on the privacy practices of
-        Google, please visit https://policies.google.com/privacy?hl=en. For more
-        information about how to opt out of having your information used by
-        Google Analytics, visit https://tools.google.com/dlpage/gaoptout/.
+        We use Google Analytics on our web sites to collect usage data, to analyze how users use the
+        web sites and to provide advertisements to you on other websites. For more information on
+        the privacy practices of Google, please visit https://policies.google.com/privacy?hl=en. For
+        more information about how to opt out of having your information used by Google Analytics,
+        visit https://tools.google.com/dlpage/gaoptout/.
       </p>
       <p className="text-1xl pt-3 underline">Behavioral Remarketing</p>
       <p className="text-1xl pb-3">
-        We also use remarketing services to advertise on third-party websites to
-        you after you have visited our Site or used our Services. We and our
-        third-party vendors use cookies to inform, optimize and serve ads based
-        on your past visits to our Site. We use Google and other third parties
-        these purposes. For more information on how to opt out of these ads, see
-        “Your Choices” below.
+        We also use remarketing services to advertise on third-party websites to you after you have
+        visited our Site or used our Services. We and our third-party vendors use cookies to inform,
+        optimize and serve ads based on your past visits to our Site. We use Google and other third
+        parties these purposes. For more information on how to opt out of these ads, see “Your
+        Choices” below.
       </p>
       <p className="text-1xl pt-3 underline">Other Tracking Technologies</p>
       <p className="text-1xl pb-3">
-        We may also use tracking technologies to collect &quot;clickstream&quot;
-        data, such as the domain name of the service providing you with Internet
-        access, your device type, IP address used to connect your computer to
-        the Internet, your browser type and version, operating system and
-        platform, the average time spent on our Site, webpages viewed, content
-        searched for, access times and other relevant statistics, and assign
-        unique identifiers to the device or other credentials you use to access
-        the Site for the same purposes.
+        We may also use tracking technologies to collect &quot;clickstream&quot; data, such as the
+        domain name of the service providing you with Internet access, your device type, IP address
+        used to connect your computer to the Internet, your browser type and version, operating
+        system and platform, the average time spent on our Site, webpages viewed, content searched
+        for, access times and other relevant statistics, and assign unique identifiers to the device
+        or other credentials you use to access the Site for the same purposes.
       </p>
       <p className="text-1xl py-3">
-        Pages of our Site may also use JavaScript, which are code snippets
-        embedded in various parts of websites and applications that facilitate a
-        variety of operations including accelerating the refresh speed of
-        certain functionality or monitoring usage of various online components;
-        entity tags, which are HTTP code mechanisms that allow portions of
-        websites to be stored or “cached” within your browser to accelerate
-        website performance; and HTML5 local storage, which allows data from
-        websites to be stored or “cached” within your browser to retrieve data
-        in HTML5 pages when the website is revisited.
+        Pages of our Site may also use JavaScript, which are code snippets embedded in various parts
+        of websites and applications that facilitate a variety of operations including accelerating
+        the refresh speed of certain functionality or monitoring usage of various online components;
+        entity tags, which are HTTP code mechanisms that allow portions of websites to be stored or
+        “cached” within your browser to accelerate website performance; and HTML5 local storage,
+        which allows data from websites to be stored or “cached” within your browser to retrieve
+        data in HTML5 pages when the website is revisited.
       </p>
       <p className="text-1xl pt-3 underline">Your Choices</p>
       <p className="text-1xl pb-3">
-        We think that you benefit from a more personalized experience when we
-        know more about you and what you like. However, you can limit the
-        information you provide to us, and you can limit the communications that
-        we send to you. In particular:
+        We think that you benefit from a more personalized experience when we know more about you
+        and what you like. However, you can limit the information you provide to us, and you can
+        limit the communications that we send to you. In particular:
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
-          Marketing Emails: You may choose to opt out of receiving commercial
-          emails from us by following the instructions contained in any of the
-          marketing emails we send. Please note that even if you unsubscribe
-          from marketing email messages, we may still send you transactional
-          emails related to your account or your purchases with us. You may
-          update your subscription preferences at any time.
+          Marketing Emails: You may choose to opt out of receiving commercial emails from us by
+          following the instructions contained in any of the marketing emails we send. Please note
+          that even if you unsubscribe from marketing email messages, we may still send you
+          transactional emails related to your account or your purchases with us. You may update
+          your subscription preferences at any time.
         </li>
         <li>
-          Cookies and Other Technologies: You may manage how your browser
-          handles cookies by adjusting its privacy and security settings.
-          Browsers are different, so refer to instructions related to your
-          browser to learn about cookie-related and other privacy and security
-          settings that may be available. You can opt out of being targeted by
-          certain ad-service companies and Frederique Constant-served ads online
-          by using the National Advertising Initiative’s Opt-Out Tool
-          (http://optout.networkadvertising.org/?c=1) or the Digital Advertising
-          Alliance’s (DAA) About Ads Opt-Out Tool
-          (http://www.aboutads.info/choices/). In addition, your browser may
-          provide you with the option to refuse some or all browser cookies. You
-          may also be able to remove cookies from your browser. You can exercise
-          your preferences in relation to cookies on our Site by taking the
-          steps outlined below.
+          Cookies and Other Technologies: You may manage how your browser handles cookies by
+          adjusting its privacy and security settings. Browsers are different, so refer to
+          instructions related to your browser to learn about cookie-related and other privacy and
+          security settings that may be available. You can opt out of being targeted by certain
+          ad-service companies and Frederique Constant-served ads online by using the National
+          Advertising Initiative's Opt-Out Tool (http://optout.networkadvertising.org/?c=1) or the
+          Digital Advertising Alliance's (DAA) About Ads Opt-Out Tool
+          (http://www.aboutads.info/choices/). In addition, your browser may provide you with the
+          option to refuse some or all browser cookies. You may also be able to remove cookies from
+          your browser. You can exercise your preferences in relation to cookies on our Site by
+          taking the steps outlined below.
         </li>
         <li>
-          First-Party Cookies. You can use the browser with which you are
-          viewing this Site to enable, disable or delete cookies. To do this,
-          follow the instructions provided by your browser (usually located
-          within the “Help”, “Tools” or “Edit” settings). Please note, if you
-          set your browser to disable cookies, you may not be able to access
-          secure areas of the Site. Also, if you disable cookies other parts of
-          the Services may not work properly.
+          First-Party Cookies. You can use the browser with which you are viewing this Site to
+          enable, disable or delete cookies. To do this, follow the instructions provided by your
+          browser (usually located within the “Help”, “Tools” or “Edit” settings). Please note, if
+          you set your browser to disable cookies, you may not be able to access secure areas of the
+          Site. Also, if you disable cookies other parts of the Services may not work properly.
         </li>
         <li>
-          Third-Party Cookies. To opt-out of third-party advertising networks
-          and similar entities that use advertising cookies,
-          visit http://www.aboutads.info/choices. Once you click the link you
-          may choose to opt-out of such advertising from all participating
-          advertising companies or only advertising provided by specific
-          advertising entities. For more information about third-party
-          advertising networks and similar entities that use these technologies,
-          please see http://www.aboutads.info/consumers.
+          Third-Party Cookies. To opt-out of third-party advertising networks and similar entities
+          that use advertising cookies, visit http://www.aboutads.info/choices. Once you click the
+          link you may choose to opt-out of such advertising from all participating advertising
+          companies or only advertising provided by specific advertising entities. For more
+          information about third-party advertising networks and similar entities that use these
+          technologies, please see http://www.aboutads.info/consumers.
         </li>
         <li>
-          Flash Cookies. Certain features of our Site may use local stored
-          objects (or Flash cookies) to collect and store information about your
-          preferences and navigation to, from and on our Site. If you do not
-          want Flash Cookies stored on your computer, you can adjust the
-          settings of your Flash player to block Flash Cookies storage. Flash
-          cookies are not managed by the same browser settings as are used for
-          browser cookies, but may be managed here:
-          http://www.macromedia.com/support/documentation/en/flashplaye
+          Flash Cookies. Certain features of our Site may use local stored objects (or Flash
+          cookies) to collect and store information about your preferences and navigation to, from
+          and on our Site. If you do not want Flash Cookies stored on your computer, you can adjust
+          the settings of your Flash player to block Flash Cookies storage. Flash cookies are not
+          managed by the same browser settings as are used for browser cookies, but may be managed
+          here: http://www.macromedia.com/support/documentation/en/flashplaye
           r/help/settings_manager07.html
         </li>
         <li>
-          Targeted Advertising. If you do not want us to use information that we
-          collect or that you provide to us to deliver advertisements according
-          to our advertisers’ target-audience preferences, you can opt-out of
-          interest-based targeting provided by participating ad servers through
-          the Digital Advertising Alliance (http://optout.aboutads.info/) or the
-          Network Advertising Initiative
-          (http://optout.networkadvertising.org/?c=1). In addition, on your
-          iPhone, iPad or Android mobile device, you can change your device
-          settings to control whether you see online interest-based ads.
+          Targeted Advertising. If you do not want us to use information that we collect or that you
+          provide to us to deliver advertisements according to our advertisers target-audience
+          preferences, you can opt-out of interest-based targeting provided by participating ad
+          servers through the Digital Advertising Alliance (http://optout.aboutads.info/) or the
+          Network Advertising Initiative (http://optout.networkadvertising.org/?c=1). In addition,
+          on your iPhone, iPad or Android mobile device, you can change your device settings to
+          control whether you see online interest-based ads.
         </li>
       </ul>
       <p className="text-1xl py-3">
-        We use internet and network activity information and device data to
-        directly serve you ads on third-party websites and mobile applications.
-        These ads will display the AdChoices icon. If you prefer not to receive
-        ads from Frederique Constant on third-party sites, you can click on the
-        AdChoices icon in the ad, which will direct you to an AdChoices page
-        where you can opt-out of receiving ads served by Frederique Constant.
-        Visit the DAA’s AdChoices page (https://youradchoices.com/) to learn
-        more about interest-based advertising and to opt out of having cookies
-        placed by ad-serving companies.
+        We use internet and network activity information and device data to directly serve you ads
+        on third-party websites and mobile applications. These ads will display the AdChoices icon.
+        If you prefer not to receive ads from Frederique Constant on third-party sites, you can
+        click on the AdChoices icon in the ad, which will direct you to an AdChoices page where you
+        can opt-out of receiving ads served by Frederique Constant. Visit the DAA's AdChoices page
+        (https://youradchoices.com/) to learn more about interest-based advertising and to opt out
+        of having cookies placed by ad-serving companies.
       </p>
       <p className="text-1xl py-3">
-        Currently, we do not alter our data collection and use practices in
-        response to Do Not Track signals.
+        Currently, we do not alter our data collection and use practices in response to Do Not Track
+        signals.
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
-          Device Data: You may manage how your mobile device and mobile browser
-          share certain device data, as well as how your mobile browser handles
-          cookies by adjusting the privacy and security settings on your mobile
-          device. Please refer to the instructions provided by your mobile
-          service provider or the manufacturer of your device to learn how to
-          adjust your settings.
+          Device Data: You may manage how your mobile device and mobile browser share certain device
+          data, as well as how your mobile browser handles cookies by adjusting the privacy and
+          security settings on your mobile device. Please refer to the instructions provided by your
+          mobile service provider or the manufacturer of your device to learn how to adjust your
+          settings.
         </li>
       </ul>
       <p className="text-1xl pt-3 underline">Location Information</p>
       <p className="text-1xl pb-3">
-        You may be able to adjust the settings of your device so that
-        information about your physical location is not sent to us or
-        third-parties by (a) disabling location services within the device
-        settings; or (b) denying certain websites or mobile applications
-        permission to access location information by changing the relevant
-        preferences and permissions in your mobile device or browser settings.
-        Please note that your location may be derived from your WiFi, Bluetooth,
-        and other device settings. See your device settings for more
-        information.
+        You may be able to adjust the settings of your device so that information about your
+        physical location is not sent to us or third-parties by (a) disabling location services
+        within the device settings; or (b) denying certain websites or mobile applications
+        permission to access location information by changing the relevant preferences and
+        permissions in your mobile device or browser settings. Please note that your location may be
+        derived from your WiFi, Bluetooth, and other device settings. See your device settings for
+        more information.
       </p>
-      <h2 className="text-2xl font-bold py-3">
-        3. HOW WE USE YOUR INFORMATION
-      </h2>
+      <h2 className="text-2xl font-bold py-3">3. HOW WE USE YOUR INFORMATION</h2>
       <p className="text-1xl py-3">
-        We will only use your personal information as described in this Privacy
-        Policy or as disclosed to you prior to such processing taking place.
+        We will only use your personal information as described in this Privacy Policy or as
+        disclosed to you prior to such processing taking place.
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
           <p className="text-1xl pt-3 underline">To Provide You Our Services</p>
           <p className="text-1xl pb-3">
-            We will use your personal information to provide information or
-            perform Services that you request. If the applicable information is
-            to be provided or Service is to be performed by a third party, then
-            we will disclose the applicable information to the third party
-            providing the information or performing applicable Services. Your
-            information may be available or provided to third-party service
-            providers and contractors that are contractually obligated to
-            protect your information as disclosed in this Policy
+            We will use your personal information to provide information or perform Services that
+            you request. If the applicable information is to be provided or Service is to be
+            performed by a third party, then we will disclose the applicable information to the
+            third party providing the information or performing applicable Services. Your
+            information may be available or provided to third-party service providers and
+            contractors that are contractually obligated to protect your information as disclosed in
+            this Policy
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            To Engage in Marketing Activities
-          </p>
+          <p className="text-1xl pt-3 underline">To Engage in Marketing Activities</p>
           <p className="text-1xl pb-3">
-            Marketing lets us grow our community and update you about new
-            products and services. We process your contact information or
-            information about your interactions on our Services to: send you
-            marketing communications and keep you updated about our products and
-            services; provide you with information about events; and deliver
-            targeted marketing to you. See Cookies and Other Tracking
-            Technologies section of this Policy for more information about
-            tracking techniques we use for our marketing campaigns.
+            Marketing lets us grow our community and update you about new products and services. We
+            process your contact information or information about your interactions on our Services
+            to: send you marketing communications and keep you updated about our products and
+            services; provide you with information about events; and deliver targeted marketing to
+            you. See Cookies and Other Tracking Technologies section of this Policy for more
+            information about tracking techniques we use for our marketing campaigns.
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            To Engage in Marketing Activities
-          </p>
+          <p className="text-1xl pt-3 underline">To Engage in Marketing Activities</p>
           <p className="text-1xl pb-3">
-            Marketing lets us grow our community and update you about new
-            products and services. We process your contact information or
-            information about your interactions on our Services to: send you
-            marketing communications and keep you updated about our products and
-            services; provide you with information about events; and deliver
-            targeted marketing to you. See Cookies and Other Tracking
-            Technologies section of this Policy for more information about
-            tracking techniques we use for our marketing campaigns.
+            Marketing lets us grow our community and update you about new products and services. We
+            process your contact information or information about your interactions on our Services
+            to: send you marketing communications and keep you updated about our products and
+            services; provide you with information about events; and deliver targeted marketing to
+            you. See Cookies and Other Tracking Technologies section of this Policy for more
+            information about tracking techniques we use for our marketing campaigns.
           </p>
         </li>
         <li>
@@ -422,54 +350,43 @@ export default function PrivacyPolicy() {
             To Provide You with Service-Related Communications
           </p>
           <p className="text-1xl pb-3">
-            We will send you administrative or account-related information to
-            keep you updated about your account and the Services. Such
-            communications may include information about Policy updates,
-            confirmations of your account actions or transactions, security
-            updates or tips or other relevant transaction-related information.
-            We process your contact information to send you such communications.
-            Service-related communications are not promotional in nature. You
-            are not able to unsubscribe from such communications, otherwise you
-            may miss important developments relating to your account or the
-            Services.
+            We will send you administrative or account-related information to keep you updated about
+            your account and the Services. Such communications may include information about Policy
+            updates, confirmations of your account actions or transactions, security updates or tips
+            or other relevant transaction-related information. We process your contact information
+            to send you such communications. Service-related communications are not promotional in
+            nature. You are not able to unsubscribe from such communications, otherwise you may miss
+            important developments relating to your account or the Services.
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            To Provide Customer Support or Respond to You
-          </p>
+          <p className="text-1xl pt-3 underline">To Provide Customer Support or Respond to You</p>
           <p className="text-1xl pb-3">
-            We collect any information that you provide to us when you contact
-            us, such as with questions, concerns, feedback, disputes or issues.
-            Without your personal information, we cannot respond to you or
-            ensure your continued use and enjoyment of the Services.
+            We collect any information that you provide to us when you contact us, such as with
+            questions, concerns, feedback, disputes or issues. Without your personal information, we
+            cannot respond to you or ensure your continued use and enjoyment of the Services.
           </p>
         </li>
         <li>
           <p className="text-1xl pt-3 underline">For Internal Use</p>
           <p className="text-1xl pb-3">
-            We will use your personal information for the purposes of furthering
-            our business. For this purpose, we may monitor how our users use our
-            Site including without limitation search terms entered, pages
-            visited and documents viewed. This information may be stored with an
-            IP address. This information is used solely for purposes of enabling
-            us to provide you with a personalized Site experience.
+            We will use your personal information for the purposes of furthering our business. For
+            this purpose, we may monitor how our users use our Site including without limitation
+            search terms entered, pages visited and documents viewed. This information may be stored
+            with an IP address. This information is used solely for purposes of enabling us to
+            provide you with a personalized Site experience.
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            To Ensure the Security of the Services
-          </p>
+          <p className="text-1xl pt-3 underline">To Ensure the Security of the Services</p>
           <p className="text-1xl pb-3">
-            We care about keeping you secure and safe while using our Services.
-            Keeping you safe requires us to process your personal information,
-            such as your device information, activity information and other
-            relevant information. We use such information to combat spam,
-            malware, malicious activities or security risks; improve and enforce
-            our security measures; and to monitor and verify your identity so
-            that unauthorized users do not gain access to your information. We
-            cannot ensure the security of our Services if we do not process your
-            personal information for security purposes.
+            We care about keeping you secure and safe while using our Services. Keeping you safe
+            requires us to process your personal information, such as your device information,
+            activity information and other relevant information. We use such information to combat
+            spam, malware, malicious activities or security risks; improve and enforce our security
+            measures; and to monitor and verify your identity so that unauthorized users do not gain
+            access to your information. We cannot ensure the security of our Services if we do not
+            process your personal information for security purposes.
           </p>
         </li>
         <li>
@@ -477,391 +394,323 @@ export default function PrivacyPolicy() {
             To Enforce Compliance with Our Terms and Agreements or Policies
           </p>
           <p className="text-1xl pb-3">
-            When you access or use our Services, you are bound to our Terms and
-            this Privacy Policy. To ensure you comply with them, we process your
-            personal information by actively monitoring, investigating,
-            preventing and mitigating any alleged or actual prohibited, illicit
-            or illegal activities on our Site. We also process your personal
-            information to: investigate, prevent or mitigate violations of our
-            internal terms, agreements or policies; enforce our agreements with
-            third parties and business partners; and, as applicable, collect
-            fees based on your use of our Services. We cannot perform our
-            Services in accordance with our terms, agreements or policies
-            without processing your personal information for such purposes.
+            When you access or use our Services, you are bound to our Terms and this Privacy Policy.
+            To ensure you comply with them, we process your personal information by actively
+            monitoring, investigating, preventing and mitigating any alleged or actual prohibited,
+            illicit or illegal activities on our Site. We also process your personal information to:
+            investigate, prevent or mitigate violations of our internal terms, agreements or
+            policies; enforce our agreements with third parties and business partners; and, as
+            applicable, collect fees based on your use of our Services. We cannot perform our
+            Services in accordance with our terms, agreements or policies without processing your
+            personal information for such purposes.
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            To Maintain Legal and Regulatory Compliance
-          </p>
+          <p className="text-1xl pt-3 underline">To Maintain Legal and Regulatory Compliance</p>
           <p className="text-1xl pb-3">
-            Our Services are subject to certain laws and regulations which may
-            require us to process your personal information. For example, we
-            process your personal information to pay our taxes and to fulfill
-            our business obligations as necessary to manage risk as required
-            under applicable law. Without processing your personal information
-            for such purposes, we cannot perform the Services in accordance with
-            our legal and regulatory requirements.
+            Our Services are subject to certain laws and regulations which may require us to process
+            your personal information. For example, we process your personal information to pay our
+            taxes and to fulfill our business obligations as necessary to manage risk as required
+            under applicable law. Without processing your personal information for such purposes, we
+            cannot perform the Services in accordance with our legal and regulatory requirements.
           </p>
         </li>
       </ul>
       <p className="text-1xl py-3">
-        We may also use your information to contact you about our own and third
-        parties’ goods and services that may be of interest to you. If you do
-        not want us to use your information in this way, please use the contact
-        information in the “Contact Us” section below to notify us of your
-        opt-out preference.
+        We may also use your information to contact you about our own and third parties’ goods and
+        services that may be of interest to you. If you do not want us to use your information in
+        this way, please use the contact information in the “Contact Us” section below to notify us
+        of your opt-out preference.
       </p>
       <p className="text-1xl py-3">
-        We may use the information we have collected from you to enable us to
-        display advertisements to our advertisers’ target audiences. Even though
-        we do not disclose your personal information for these purposes without
-        your consent, if you click on or otherwise interact with an
-        advertisement, the advertiser may assume that you meet its target
-        criteria.
+        We may use the information we have collected from you to enable us to display advertisements
+        to our advertisers’ target audiences. Even though we do not disclose your personal
+        information for these purposes without your consent, if you click on or otherwise interact
+        with an advertisement, the advertiser may assume that you meet its target criteria.
       </p>
-      <h2 className="text-2xl font-bold py-3">
-        4. SHARING AND DISCLOSURE OF YOUR INFORMATION
-      </h2>
+      <h2 className="text-2xl font-bold py-3">4. SHARING AND DISCLOSURE OF YOUR INFORMATION</h2>
       <p className="text-1xl py-3">
-        If you choose to provide personal information, we may use it ourselves
-        or share it with entities who provide services for us in connection with
-        our Services. We do not otherwise share, sell, or lease personal
-        information to any third parties for their marketing or other uses. We
-        may disclose your personal information as described below.
+        If you choose to provide personal information, we may use it ourselves or share it with
+        entities who provide services for us in connection with our Services. We do not otherwise
+        share, sell, or lease personal information to any third parties for their marketing or other
+        uses. We may disclose your personal information as described below.
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
           <p className="text-1xl pt-3 underline">Service Providers</p>
           <p className="text-1xl pb-3">
-            We may employ companies and individuals to facilitate our Services
-            (“Service Providers”), provide the Services on our behalf, perform
-            Service-related services or assist us in analyzing how our Services
-            are used. The Service Providers are bound by contractual obligations
-            to keep personal information confidential and use it only for the
-            purposes for which we disclose it to them.
+            We may employ companies and individuals to facilitate our Services (“Service
+            Providers”), provide the Services on our behalf, perform Service-related services or
+            assist us in analyzing how our Services are used. The Service Providers are bound by
+            contractual obligations to keep personal information confidential and use it only for
+            the purposes for which we disclose it to them.
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            Within Our Corporate Organization
-          </p>
+          <p className="text-1xl pt-3 underline">Within Our Corporate Organization</p>
           <p className="text-1xl pb-3">
-            Frederique Constant is a part of a corporate organization that has
-            many legal entities, business processes, management structures and
-            technical systems. Frederique Constant may share your personal
-            information with this organization to provide you with the Services
+            Frederique Constant is a part of a corporate organization that has many legal entities,
+            business processes, management structures and technical systems. Frederique Constant may
+            share your personal information with this organization to provide you with the Services
             and take actions based on your request.
           </p>
         </li>
         <li>
           <p className="text-1xl pt-3 underline">Corporate Transactions</p>
           <p className="text-1xl pb-3">
-            If Frederique Constant is involved in a merger, acquisition or asset
-            sale, your personal information may be transferred. We will provide
-            notice before your personal information is transferred and becomes
-            subject to a different privacy policy.
+            If Frederique Constant is involved in a merger, acquisition or asset sale, your personal
+            information may be transferred. We will provide notice before your personal information
+            is transferred and becomes subject to a different privacy policy.
           </p>
         </li>
 
         <li>
           <p className="text-1xl pt-3 underline">Third-Party Advertisers</p>
           <p className="text-1xl pb-3">
-            In certain circumstances we may share your personal information with
-            third parties to market their products or services to you if you
-            have not opted out of these disclosures. We contractually require
-            these third parties to keep personal information confidential and
-            use it only for the purposes for which we disclose it to them.
+            In certain circumstances we may share your personal information with third parties to
+            market their products or services to you if you have not opted out of these disclosures.
+            We contractually require these third parties to keep personal information confidential
+            and use it only for the purposes for which we disclose it to them.
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            Co-Branded Services and Features
-          </p>
+          <p className="text-1xl pt-3 underline">Co-Branded Services and Features</p>
           <p className="text-1xl pb-3">
-            Portions of our Site or services may be offered as part of
-            co-branded services and features. We will share your personal
-            information with our co-branded partners based on your voluntary use
-            of or participation in a co-branded service or feature. The
-            co-branded partners will be identified on the co-branded feature or
-            service, along with an applicable co-branded partner's privacy
-            policy. Use of your personal information by a co-branded partner
-            will be subject to a co-branded partner's privacy policy. If you
-            wish to opt-out of a co-branded partner's future use of your
-            personal information, you will need to contact the co-branded
-            partner directly.
+            Portions of our Site or services may be offered as part of co-branded services and
+            features. We will share your personal information with our co-branded partners based on
+            your voluntary use of or participation in a co-branded service or feature. The
+            co-branded partners will be identified on the co-branded feature or service, along with
+            an applicable co-branded partner's privacy policy. Use of your personal information by a
+            co-branded partner will be subject to a co-branded partner's privacy policy. If you wish
+            to opt-out of a co-branded partner's future use of your personal information, you will
+            need to contact the co-branded partner directly.
           </p>
         </li>
         <li>
           <p className="text-1xl pt-3 underline">Consent</p>
           <p className="text-1xl pb-3">
-            We may disclose your personal information for any purpose with your
-            consent.
+            We may disclose your personal information for any purpose with your consent.
           </p>
         </li>
         <li>
-          <p className="text-1xl pt-3 underline">
-            Disclosure for Law Enforcement
-          </p>
+          <p className="text-1xl pt-3 underline">Disclosure for Law Enforcement</p>
           <p className="text-1xl pb-3">
-            We may disclose personal information to governmental authorities
-            when legally required to do so, and may cooperate with such
-            authorities investigating claims of illegal activities including,
-            but not limited to, illegal transfer of copyrighted material, fraud,
-            and/or postings or email messages containing threats of violence.
-            Frederique Constant may disclose your personal information in the
-            good faith belief that such action is necessary to: comply with a
-            legal obligation, protect and defend the rights or property of
-            Frederique Constant, prevent or investigate possible wrongdoing in
-            connection with the Service. protect the personal safety of users of
-            the Service or the public or protect against legal liability.
+            We may disclose personal information to governmental authorities when legally required
+            to do so, and may cooperate with such authorities investigating claims of illegal
+            activities including, but not limited to, illegal transfer of copyrighted material,
+            fraud, and/or postings or email messages containing threats of violence. Frederique
+            Constant may disclose your personal information in the good faith belief that such
+            action is necessary to: comply with a legal obligation, protect and defend the rights or
+            property of Frederique Constant, prevent or investigate possible wrongdoing in
+            connection with the Service. protect the personal safety of users of the Service or the
+            public or protect against legal liability.
           </p>
         </li>
       </ul>
       <p className="text-1xl py-3">
-        Please note that we may disclose, without restriction, aggregated or
-        anonymized information about our users, which is information that does
-        not identify any specific individual.
+        Please note that we may disclose, without restriction, aggregated or anonymized information
+        about our users, which is information that does not identify any specific individual.
       </p>
       <h2 className="text-2xl font-bold py-3">5. COMMUNICATION PREFERENCES</h2>
       <p className="text-1xl py-3">
-        To provide our Services to you, we may send you communications related
-        to your transactions, security, or the administration of our Services.
-        From time to time, we may also send you other messages or updates about
-        Frederique Constant, our website, and promotions or other activities. If
-        you do not wish to receive non-transaction/security related
-        communications from us, you may opt-out by clicking the “unsubscribe”
-        link in the communication or contact us where specified in the “Contact
-        Us” section, below.
+        To provide our Services to you, we may send you communications related to your transactions,
+        security, or the administration of our Services. From time to time, we may also send you
+        other messages or updates about Frederique Constant, our website, and promotions or other
+        activities. If you do not wish to receive non-transaction/security related communications
+        from us, you may opt-out by clicking the “unsubscribe” link in the communication or contact
+        us where specified in the “Contact Us” section, below.
       </p>
       <p className="text-1xl py-3">
-        If you opt out of receiving communications from us, we may still send
-        you service communications such as emails about your account, your
-        purchases, or services we are providing to you. Please note that
-        &quot;opt-out&quot; and &quot;unsubscribe&quot; requests may not take
-        effect immediately and may take a reasonable amount of time to receive,
-        process and apply, during which time your Information shall remain
-        subject to the prior privacy settings. Additionally, you should be aware
-        that any information provided to third parties prior to your election to
-        opt-out or unsubscribe will not be retrieved or rescinded, unless
+        If you opt out of receiving communications from us, we may still send you service
+        communications such as emails about your account, your purchases, or services we are
+        providing to you. Please note that &quot;opt-out&quot; and &quot;unsubscribe&quot; requests
+        may not take effect immediately and may take a reasonable amount of time to receive, process
+        and apply, during which time your Information shall remain subject to the prior privacy
+        settings. Additionally, you should be aware that any information provided to third parties
+        prior to your election to opt-out or unsubscribe will not be retrieved or rescinded, unless
         required by applicable law.
       </p>
       <h2 className="text-2xl font-bold py-3">
         6. ACCESS, CORRECTION, AND DELETION OF YOUR PERSONAL INFORMATION
       </h2>
       <p className="text-1xl py-3">
-        You have the right to access, correct and delete your personal
-        information that you shared with us on our Site or by using our
-        Services. We are committed to ensuring that your personal information is
-        kept accurate and up to date. However, it is up to you to update it with
-        any changes. You may notify us via the information in the “Contact Us”
-        section below to request access to, or to correct any personal
-        information that you have provided to us. We may not accommodate a
-        request to change information if we believe the change would violate any
-        law or legal requirement or cause the information to be incorrect.
+        You have the right to access, correct and delete your personal information that you shared
+        with us on our Site or by using our Services. We are committed to ensuring that your
+        personal information is kept accurate and up to date. However, it is up to you to update it
+        with any changes. You may notify us via the information in the “Contact Us” section below to
+        request access to, or to correct any personal information that you have provided to us. We
+        may not accommodate a request to change information if we believe the change would violate
+        any law or legal requirement or cause the information to be incorrect.
       </p>
       <p className="text-1xl py-3">
-        If you no longer wish to have your personal information processed, you
-        may request to delete your account and the information in your account,
-        subject to certain limitations, by emailing us as described below. Once
-        you submit your request, we will send an email to the email address
-        linked to your account requesting that you confirm your deletion
-        request. Once you confirm your request to delete your account and data,
-        your account will no longer be accessible while we process your request.
-        Once you confirm your request, this process cannot be cancelled, undone,
-        withdrawn, or reversed. When your account is deleted, all associated
+        If you no longer wish to have your personal information processed, you may request to delete
+        your account and the information in your account, subject to certain limitations, by
+        emailing us as described below. Once you submit your request, we will send an email to the
+        email address linked to your account requesting that you confirm your deletion request. Once
+        you confirm your request to delete your account and data, your account will no longer be
+        accessible while we process your request. Once you confirm your request, this process cannot
+        be cancelled, undone, withdrawn, or reversed. When your account is deleted, all associated
         personal information is deleted.
       </p>
       <h2 className="text-2xl font-bold py-3">7. RETENTION</h2>
       <p className="text-1xl py-3">
-        We will retain your personal information only for as long as is
-        necessary for the purposes set out in this Privacy Policy. We will
-        retain and use your personal information to the extent necessary to
-        comply with our legal obligations (for example, if we are required to
-        retain your data to comply with applicable laws), resolve disputes and
-        enforce our legal agreements and policies. Frederique Constant will also
-        retain Site and services usage data for internal analysis purposes.
-        Usage data is generally retained for a shorter period of time, except
-        when this data is used to strengthen the security or to improve the
-        functionality of our Site, or we are legally obligated to retain this
-        data for longer periods.
+        We will retain your personal information only for as long as is necessary for the purposes
+        set out in this Privacy Policy. We will retain and use your personal information to the
+        extent necessary to comply with our legal obligations (for example, if we are required to
+        retain your data to comply with applicable laws), resolve disputes and enforce our legal
+        agreements and policies. Frederique Constant will also retain Site and services usage data
+        for internal analysis purposes. Usage data is generally retained for a shorter period of
+        time, except when this data is used to strengthen the security or to improve the
+        functionality of our Site, or we are legally obligated to retain this data for longer
+        periods.
       </p>
       <h2 className="text-2xl font-bold py-3">8. CALIFORNIA PRIVACY RIGHTS</h2>
       <p className="text-1xl py-3">
-        This section applies only to California residents. Pursuant to the
-        California Consumer Privacy Act of 2018 (“CCPA”), below is a summary of
-        the Personal Information categories, as identified and defined by the
-        CCPA (see California Civil Code section 1798.140 (o)), that we collect,
-        the reason we collect your Personal Information, where we obtain the
-        Personal Information, and the third parties with whom we share your
-        Personal Information:
+        This section applies only to California residents. Pursuant to the California Consumer
+        Privacy Act of 2018 (“CCPA”), below is a summary of the Personal Information categories, as
+        identified and defined by the CCPA (see California Civil Code section 1798.140 (o)), that we
+        collect, the reason we collect your Personal Information, where we obtain the Personal
+        Information, and the third parties with whom we share your Personal Information:
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
-          identifiers such as a name, address, unique personal identifier,
-          email, phone number, your device’s IP address, software, and
-          identification numbers associated with your devices;
+          identifiers such as a name, address, unique personal identifier, email, phone number, your
+          device’s IP address, software, and identification numbers associated with your devices;
         </li>
         <li>protected classifications, such as gender;</li>
         <li>
-          commercial information such as records of products or services
-          purchased, obtained, or considered by you;
+          commercial information such as records of products or services purchased, obtained, or
+          considered by you;
         </li>
         <li>
-          Internet or other electronic information regarding you browsing
-          history, search history, the webpage visited before you came to our
-          Site, length of visit and number of page views, click-stream data,
-          locale preferences, your mobile carrier, date and time stamps
+          Internet or other electronic information regarding you browsing history, search history,
+          the webpage visited before you came to our Site, length of visit and number of page views,
+          click-stream data, locale preferences, your mobile carrier, date and time stamps
           associated with transactions, and system configuration information;
         </li>
         <li>
-          your geolocation, to the extent you have configured your device to
-          permit us to collect such information;
+          your geolocation, to the extent you have configured your device to permit us to collect
+          such information;
         </li>
         <li>
-          audio recordings of your voice to the extent you call us, as permitted
-          under applicable law; and
+          audio recordings of your voice to the extent you call us, as permitted under applicable
+          law; and
         </li>
-        <li>
-          inferences about your preferences, characteristics, behavior and
-          attitudes.
-        </li>
+        <li>inferences about your preferences, characteristics, behavior and attitudes.</li>
       </ul>
       <p className="text-1xl py-3">
-        We generally do not collect education-related information. For more
-        information about the Personal Information we collect and how we collect
-        it, please refer to Sections 1 and 2, above.
+        We generally do not collect education-related information. For more information about the
+        Personal Information we collect and how we collect it, please refer to Sections 1 and 2,
+        above.
       </p>
       <p className="text-1xl py-3">
-        We collect your Personal Information for the business purposes described
-        in Section 3, above. The CCPA defines a “business purpose” as the use of
-        Personal Information for the business’s operational purposes, or other
-        notified purposes, provided the use of Personal Information is
-        reasonably necessary and proportionate to achieve the operational
-        purpose for which the Personal Information was collected or another
-        operational purpose that is compatible with the context in which the
-        Personal Information was collected.
+        We collect your Personal Information for the business purposes described in Section 3,
+        above. The CCPA defines a “business purpose” as the use of Personal Information for the
+        business’s operational purposes, or other notified purposes, provided the use of Personal
+        Information is reasonably necessary and proportionate to achieve the operational purpose for
+        which the Personal Information was collected or another operational purpose that is
+        compatible with the context in which the Personal Information was collected.
       </p>
       <p className="text-1xl py-3">
-        The categories of third parties with whom we may share your Personal
-        Information are listed in Section 4, above.
+        The categories of third parties with whom we may share your Personal Information are listed
+        in Section 4, above.
       </p>
 
       <p className="text-1xl pt-3 underline">Privacy Rights</p>
       <p className="text-1xl pb-3">
-        If you are a California resident, you have rights in relation to your
-        Personal Information; however, your rights are subject to certain
-        exceptions. For instance, we cannot disclose specific pieces of Personal
-        Information if the disclosure would create a substantial, articulable,
-        and unreasonable risk to the security of the Personal Information, your
-        account with us or the security of our network systems.
+        If you are a California resident, you have rights in relation to your Personal Information;
+        however, your rights are subject to certain exceptions. For instance, we cannot disclose
+        specific pieces of Personal Information if the disclosure would create a substantial,
+        articulable, and unreasonable risk to the security of the Personal Information, your account
+        with us or the security of our network systems.
       </p>
       <ul className="text-1xl list-disc px-7">
         <li>
-          Right Against Discrimination. You have the right not to be
-          discriminated against for exercising any of the rights described in
-          this section. We will not discriminate against you for exercising your
-          right to know, delete or opt-out of sales.
+          Right Against Discrimination. You have the right not to be discriminated against for
+          exercising any of the rights described in this section. We will not discriminate against
+          you for exercising your right to know, delete or opt-out of sales.
         </li>
         <li>
-          Right to Know. You have the right to request in writing: (i) a list of
-          the categories of Personal Information, such as name, address, email
-          address, that a business has disclosed to third parties during the
-          immediately preceding calendar year for the third parties&#39; direct
-          marketing purposes, and (ii) the names and addresses of all such third
-          parties. In addition, you have the right to request: (i) the
-          categories of personal information we have collected about you, (ii)
-          the categories of sources from which personal information is
-          collected, (iii) the business or commercial purpose for the
-          information collection, (iv) the categories of third parties with whom
-          we have shared Personal Information, and (v) the specific pieces of
-          Personal Information we hold about an individual. You have the right
-          to request a copy of the specific Personal Information we collected
-          about you during the 12 months before your request.
+          Right to Know. You have the right to request in writing: (i) a list of the categories of
+          Personal Information, such as name, address, email address, that a business has disclosed
+          to third parties during the immediately preceding calendar year for the third parties&#39;
+          direct marketing purposes, and (ii) the names and addresses of all such third parties. In
+          addition, you have the right to request: (i) the categories of personal information we
+          have collected about you, (ii) the categories of sources from which personal information
+          is collected, (iii) the business or commercial purpose for the information collection,
+          (iv) the categories of third parties with whom we have shared Personal Information, and
+          (v) the specific pieces of Personal Information we hold about an individual. You have the
+          right to request a copy of the specific Personal Information we collected about you during
+          the 12 months before your request.
         </li>
         <li>
-          Right to Delete. You have the right to request us to delete any
-          Personal Information we have collected from you or maintain about you,
-          subject to certain exceptions. To assert your right to know or your
-          right to delete your Personal Information, please contact us according
-          to the “Contact Us” section below. To verify your identity, we may ask
-          you to verify Personal Information we already have on file for you. If
-          we cannot verify your identity from the information we have on file,
-          we may request additional information from you, which we will only use
-          to verify your identity, and for security or fraud-prevention
+          Right to Delete. You have the right to request us to delete any Personal Information we
+          have collected from you or maintain about you, subject to certain exceptions. To assert
+          your right to know or your right to delete your Personal Information, please contact us
+          according to the “Contact Us” section below. To verify your identity, we may ask you to
+          verify Personal Information we already have on file for you. If we cannot verify your
+          identity from the information we have on file, we may request additional information from
+          you, which we will only use to verify your identity, and for security or fraud-prevention
           purposes.
         </li>
         <li>
-          Right to Opt-Out of Selling. As described in this Privacy Policy, in
-          certain situations we may share your Personal Information with our
-          partners, third parties or affiliates for our marketing or other
-          purposes. To the extent such sharing is considered a “sale” under the
-          CCPA, as a California resident you have the right to opt-out of such
-          sharing. If you would like us to no longer share your Personal
-          Information in this way, please visit our Do Not Sell My Personal
-          Information page: https://us.frederiqueconstant.com/pages/ccpa.html.
-          If you opt-out, we may be unable to offer you some of our Services
-          which require sharing of Personal Information. In addition, California
-          Civil Code Section 1798.83 permits customers of Frederique
-          Constant who are California residents to request certain information
-          regarding our disclosure of Personal Information to third parties for
-          their direct marketing purposes. In your request, please specify that
-          you want a “Frederique Constant California Privacy Rights Notice.”
-          Please allow 30 days for a response. To make such a request, please
-          call us at 1- 800 -321-1023 or write us at: COA, 1000 W 190th Street,
-          Dept R, Torrance, CA 90502-1040.
+          Right to Opt-Out of Selling. As described in this Privacy Policy, in certain situations we
+          may share your Personal Information with our partners, third parties or affiliates for our
+          marketing or other purposes. To the extent such sharing is considered a “sale” under the
+          CCPA, as a California resident you have the right to opt-out of such sharing. If you would
+          like us to no longer share your Personal Information in this way, please visit our Do Not
+          Sell My Personal Information page: https://us.frederiqueconstant.com/pages/ccpa.html. If
+          you opt-out, we may be unable to offer you some of our Services which require sharing of
+          Personal Information. In addition, California Civil Code Section 1798.83 permits customers
+          of Frederique Constant who are California residents to request certain information
+          regarding our disclosure of Personal Information to third parties for their direct
+          marketing purposes. In your request, please specify that you want a “Frederique
+          Constant California Privacy Rights Notice.” Please allow 30 days for a response. To make
+          such a request, please call us at 1- 800 -321-1023 or write us at: COA, 1000 W 190th
+          Street, Dept R, Torrance, CA 90502-1040.
         </li>
       </ul>
       <h2 className="text-2xl font-bold py-3">9. DATA SECURITY</h2>
       <p className="text-1xl py-3">
-        We take precautions to protect personal information under our control
-        from misuse, loss or alteration. Our security measures include
-        industry-standard physical, technical and administrative measures to
-        prevent unauthorized access to or disclosure of your information, to
-        maintain data accuracy, to ensure the appropriate use of information,
-        and otherwise safeguard your personal information. Please recognize that
-        protecting your personal information is also your responsibility. We ask
-        you to be responsible for safeguarding your password and other
-        information you share with us through our Services.
+        We take precautions to protect personal information under our control from misuse, loss or
+        alteration. Our security measures include industry-standard physical, technical and
+        administrative measures to prevent unauthorized access to or disclosure of your information,
+        to maintain data accuracy, to ensure the appropriate use of information, and otherwise
+        safeguard your personal information. Please recognize that protecting your personal
+        information is also your responsibility. We ask you to be responsible for safeguarding your
+        password and other information you share with us through our Services.
       </p>
       <p className="text-1xl py-3">
-        Unfortunately, the transmission of information via the internet is not
-        completely secure. Although we do our best to protect your personal
-        information, we cannot guarantee the security of your personal
-        information transmitted to our Site. Any transmission of personal
-        information is at your own risk. We are not responsible for
-        circumvention of any privacy settings or security measures contained on
-        the Site.
+        Unfortunately, the transmission of information via the internet is not completely secure.
+        Although we do our best to protect your personal information, we cannot guarantee the
+        security of your personal information transmitted to our Site. Any transmission of personal
+        information is at your own risk. We are not responsible for circumvention of any privacy
+        settings or security measures contained on the Site.
       </p>
       <h2 className="text-2xl font-bold py-3">
         10. INTEGRATION OF THIRD-PARTY PLATFORMS AND SERVICES
       </h2>
       <p className="text-1xl py-3">
-        The Site may be linked to, rely on and be integrated with websites,
-        applications, interfaces, services and platforms operated by other
-        companies, including third-party services. The Site may also feature
-        advertisements from these companies. We are not responsible for the
-        privacy practices of such websites, applications, interfaces, services
-        and platforms operated by third parties that are linked to, rely on
-        and/or integrated with the Site or for the services or the privacy
-        practices of third-party advertising companies. Once you leave this Site
-        or our Services via a link, access a third-party service or click on an
-        advertisement, you should check applicable privacy policies to
-        determine, among other things, how related companies process personal
-        information they may collect about you. This Privacy Policy applies
-        solely to information collected by Frederique Constant.
+        The Site may be linked to, rely on and be integrated with websites, applications,
+        interfaces, services and platforms operated by other companies, including third-party
+        services. The Site may also feature advertisements from these companies. We are not
+        responsible for the privacy practices of such websites, applications, interfaces, services
+        and platforms operated by third parties that are linked to, rely on and/or integrated with
+        the Site or for the services or the privacy practices of third-party advertising companies.
+        Once you leave this Site or our Services via a link, access a third-party service or click
+        on an advertisement, you should check applicable privacy policies to determine, among other
+        things, how related companies process personal information they may collect about you. This
+        Privacy Policy applies solely to information collected by Frederique Constant.
       </p>
       <h2 className="text-2xl font-bold py-3">11. CHILDREN’S PRIVACY</h2>
       <p className="text-1xl py-3">
-        Our Services are not intended to attract children under 18. Accordingly,
-        we do not knowingly solicit or collect personal information from anyone
-        we know to be under 18 years of age. If you are a parent or guardian and
-        you are aware that your child has provided us with personal information,
-        please contact us at info@us.frederiqueconstant.com. If we become aware
-        that we have collected personal information from children without
-        verification of parental consent, we take steps to remove that
-        information from our servers.
+        Our Services are not intended to attract children under 18. Accordingly, we do not knowingly
+        solicit or collect personal information from anyone we know to be under 18 years of age. If
+        you are a parent or guardian and you are aware that your child has provided us with personal
+        information, please contact us at info@us.frederiqueconstant.com. If we become aware that we
+        have collected personal information from children without verification of parental consent,
+        we take steps to remove that information from our servers.
       </p>
     </div>
-  );
+  )
 }

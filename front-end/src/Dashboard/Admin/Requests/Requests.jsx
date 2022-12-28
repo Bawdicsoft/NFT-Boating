@@ -5,7 +5,7 @@ import { collection, getDocs } from "firebase/firestore"
 import RequstSidePanel from "./RequstSidePanel"
 import { auth, db } from "../../../DB/firebase-config"
 
-export default function Requsts() {
+export default function Requests() {
   const [user, loading, error] = useAuthState(auth)
   const [open, setOpen] = useState(false)
 
@@ -52,16 +52,11 @@ export default function Requsts() {
 
   return (
     <>
-      <RequstSidePanel
-        open={open}
-        setOpen={setOpen}
-        state={state}
-        setState={setState}
-      />
+      <RequstSidePanel open={open} setOpen={setOpen} state={state} setState={setState} />
       <div className="OffersReceived min-h-full">
         <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-gray-900">All Request</h1>
+            <h1 className="text-3xl font-bold text-gray-900">All Requests</h1>
           </div>
         </header>
         <main>

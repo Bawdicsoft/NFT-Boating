@@ -29,6 +29,11 @@ export default function Home() {
             }`
           )
 
+          console.log(
+            `%c${res.data?.error_message}`,
+            "color: black; background: white; font-size: 24px"
+          )
+
           location = {
             lat: res.data.results[0].geometry.location.lat,
             lng: res.data.results[0].geometry.location.lng,

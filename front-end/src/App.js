@@ -25,7 +25,7 @@ const Collected = React.lazy(() => import("./Dashboard/User/Collected/Collected"
 const Boats = React.lazy(() => import("./Dashboard/Host/Boats/Boats"))
 const NFT = React.lazy(() => import("./Dashboard/User/NFT/NFT"))
 const BookedDates = React.lazy(() => import("./Dashboard/Admin/BookedDates/BookedDates"))
-const Requsts = React.lazy(() => import("./Dashboard/Admin/Requsts/Requsts"))
+const Requests = React.lazy(() => import("./Dashboard/Admin/Requests/Requests"))
 const AllUsers = React.lazy(() => import("./Dashboard/Admin/AllUsers/AllUsers"))
 const ContractBookedDates = React.lazy(() =>
   import("./Dashboard/Host/ContractBookedDates/ContractBookedDates")
@@ -176,10 +176,10 @@ export default function App() {
                 }
               />
               <Route
-                path="/requsts"
+                path="/requests"
                 element={
                   <Suspense fallback={<Loading />}>
-                    <Requsts />
+                    <Requests />
                   </Suspense>
                 }
               />

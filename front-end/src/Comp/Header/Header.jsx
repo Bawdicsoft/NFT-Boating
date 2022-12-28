@@ -26,7 +26,7 @@ const hostNavigation = [
 ]
 const adminNavigation = [
   { name: "All Users", href: "/all-users" },
-  { name: "Requsts", href: "/requsts" },
+  { name: "Requests", href: "/requests" },
   { name: "Booked Dates", href: "/booked-dates" },
   { name: "Add Food", href: "/add-food" },
   { name: "Update Contract", href: "/update-contract" },
@@ -265,10 +265,7 @@ export default function Header() {
                       {open ? (
                         <XIcon className="block h-6 w-6" aria-hidden="true" />
                       ) : (
-                        <MenuIcon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
+                        <MenuIcon className="block h-6 w-6" aria-hidden="true" />
                       )}
                     </Disclosure.Button>
                   </div>
@@ -297,11 +294,7 @@ export default function Header() {
                 <div className="pt-4 pb-3 border-t border-gray-700">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user?.displayName}
-                        alt=""
-                      />
+                      <img className="h-10 w-10 rounded-full" src={user?.displayName} alt="" />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">

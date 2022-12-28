@@ -1,9 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react"
+import { Fragment, useMemo } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { XIcon } from "@heroicons/react/outline"
 import { useForm } from "react-hook-form"
-import { addDoc, collection } from "firebase/firestore"
+import { doc, updateDoc } from "firebase/firestore"
 import { db, storage } from "../../../DB/firebase-config"
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 
@@ -34,19 +34,28 @@ async function uploadImg({ name, fileName, file }) {
   })
 }
 
-export default function Form({ open, setOpen, setState }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+export default function UpdateForm({ data, open, setOpen, setState }) {
+  const { register, reset, handleSubmit } = useForm({
+    defaultValues: useMemo(() => {
+      return data
+    }, [data]),
+  })
+
+  useMemo(() => {
+    reset(data)
+  }, [data])
 
   const onSubmit = async (e) => {
     try {
-      const file = e.image[0]
-      const name = e.name
-      const fileName = file.name
-      const img = await uploadImg({ name, fileName, file })
+      let img
+      if (typeof e.image[0] === "object") {
+        const file = e.image[0]
+        const name = e.name
+        const fileName = file.name
+        img = await uploadImg({ name, fileName, file })
+      } else {
+        img = data.image
+      }
 
       const myObj = {
         name: e.name,
@@ -55,21 +64,18 @@ export default function Form({ open, setOpen, setState }) {
         image: img,
       }
 
-      const docId = await addDoc(collection(db, "foodMenu"), myObj)
-
+      await updateDoc(doc(db, "foodMenu", data.id), myObj)
       setState((e) => {
-        e.food.unshift({
-          id: docId.id,
+        e.food[data.index] = {
+          id: data.id,
           ...myObj,
-        })
+        }
       })
-
       setOpen(false)
     } catch (error) {
       console.error(error)
     }
   }
-  console.log(errors)
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -149,9 +155,7 @@ export default function Form({ open, setOpen, setState }) {
                           <input
                             type="file"
                             className="w-full px-3 border mb-4 rounded-md "
-                            {...register("image", {
-                              required: true,
-                            })}
+                            {...register("image", {})}
                           />
 
                           <textarea
